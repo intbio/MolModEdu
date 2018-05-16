@@ -5,4 +5,4 @@
 
 ## Example - stitching two DNA segments together
 - Download and install PHENIX
-- Rund ```phenix.geometry_minimization dna.pdb min.params```
+- Run ```phenix.geometry_minimization dna.pdb min.params```

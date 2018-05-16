@@ -1,0 +1,9 @@
+pdb_interpretation {
+  link_distance_cutoff = 43.0
+  max_reasonable_bond_distance = 60.0
+  secondary_structure {
+  enabled = True
+
+  }
+}
+selection = (chain A and (resid 5 through 8)) or (chain B and (resid 1 through 4))

@@ -1,4 +1,4 @@
-# Tutorial on simulating molecular dynamics of nucleosome core particle in Gromacs
+# Tutorial on simulating molecular dynamics of a nucleosome core particle in Gromacs
 ## Directory structure
 [docs](docs) - documentation for the current tutorial  
 [prep](prep) - scripts to prepare the structure for simulations  

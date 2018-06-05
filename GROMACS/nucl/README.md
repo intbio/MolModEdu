@@ -6,7 +6,7 @@
 [analisys](analisys) - scripts to perform trajectory analysis  
 
 ## Contents
-- [Introduction](#Introduction) 
+1. [Introduction](#Introduction) 
 + [Objectives](#Objectives) 
 
 
@@ -16,7 +16,7 @@
 
 <a name="Introduction"/>
 
-## Introduction
+## 1. Introduction
 
 
 <a name="Objectives"/>

@@ -1,0 +1,133 @@
+#We get raw data frames for DNA-PROTein interactions in nucleosome
+#This version is for crystal
+# is produces a bit different data frame - since we do not know the positions of hydrogens
+
+
+from VMD import *
+from Molecule import *
+from atomsel import *
+from animate import *
+import pandas as pd
+import numpy as np
+from datetime import datetime
+import sys
+sys.path.append('/Volumes/MDBD/Dropbox/work/MYSOFT/structure_analysis')
+
+
+from int_analyze import find_contacts
+from int_analyze import find_hbonds
+from int_analyze import find_watermed_bonds
+from int_analyze import find_watermed_bonds2
+from int_analyze import find_ionmed_bonds
+
+# from collections import OrderedDict
+#import sys
+
+from vmd_int_analyze import get_contacts
+from vmd_int_analyze import get_hbonds, get_hbonds_imp, get_salt_bridges_imp, get_watermed_bonds_imp, get_ionmed_bonds_imp
+
+#Let's define data frame panel
+sum_df=pd.DataFrame()
+
+startTime = datetime.now()
+
+mol=Molecule()
+
+mol.load("../input/1kx5_ready.psf")
+mol.load("../analysis_data/md_nucl_solv.dcd",first=0,step=1)
+nf=mol.numFrames()
+
+#Here we need to produce a raw data frame for PROTein-DNA interactions
+#See definitions in our report
+
+###Here we start a loop over frames
+for i in range(0,nf):
+	goto(i)
+	print "Frame",i
+	
+	DNA=atomsel("nucleic and noh")
+	PROT=atomsel("protein and noh")
+		
+	df_cont=get_contacts(DNA,PROT,columns=['DNA_chain','DNA_resid','DNA_atom','PROT_chain','PROT_resid','PROT_atom','type','param1'],code='SC')
+	df_hbonds=get_hbonds_imp(DNA,PROT,3.5,30,columns=['DNA_chain','DNA_resid','DNA_atom','PROT_chain','PROT_resid','PROT_atom','type','param1','param2','param3'])
+
+	df_ionpairs=get_salt_bridges_imp(DNA,PROT,3.9,False,columns=['DNA_chain','DNA_resid','DNA_atom','PROT_chain','PROT_resid','PROT_atom','type','param1'])
+	df_watermed_bonds=get_watermed_bonds_imp(DNA,PROT,3.5,30,columns=['DNA_chain','DNA_resid','DNA_atom','PROT_chain','PROT_resid','PROT_atom','type','param3'])
+	df_ionmed_bonds=get_ionmed_bonds_imp(DNA,PROT,3.9,columns=['DNA_chain','DNA_resid','DNA_atom','PROT_chain','PROT_resid','PROT_atom','type','param1','param3'],code='IM')
+
+	df=pd.concat([df_cont,df_hbonds,df_ionpairs,df_watermed_bonds,df_ionmed_bonds])
+	df = df.reset_index(drop=True)
+	#Let's add time
+	df['Time']=i
+	sum_df=pd.concat([sum_df,df])
+sum_df = sum_df.reset_index(drop=True)
+
+# print df
+# print df_contacts
+# panel_dict[0]=df
+#
+# p=pd.Panel(panel_dict)
+
+# bdf = pd.DataFrame()
+# for key in panel_dict:
+# 	value=panel_dict[key]
+# 	value['Time']=key
+# 	bdf=bdf.append(value)
+sum_df.to_csv('../analysis_data/dna_prot_raw_df.csv',index=False)
+###Here are some display snippets
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or PROTein) and noh")
+	a,b,d=zip(*contacts)
+	c=0
+	for i,j in zip(a,b):
+		vdw=MoleculeRep(style='VDW', material='Opaque')
+		mol.addRep(vdw)     
+		#index=" ".join(map(str,(list(a)+list(b))))
+		vdw.changeSelection('index %d %d'%(i,j))
+		vdw.changeColor("ColorID %d"%(c%32))
+		c=c+1
+
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or PROTein) and noh")
+	a,b,d=zip(*contacts)
+	vdw=MoleculeRep(style='VDW', material='Opaque')
+	mol.addRep(vdw)     
+	index=" ".join(map(str,(list(a))))
+	vdw.changeSelection('index %s'%index)
+	# vdw.changeColor("ColorID %d"%(c%32))
+
+# mol load psf only_nucl_init.psf
+# mol addfile only_nucl_aligned.pdb waitfor all
+
+
+# set hlist [list "segname CHA" "segname CHE" "segname CHB" "segname CHF" "segname CHC" "segname CHG" "segname CHD" "segname CHH"]
+# set hname [list "H3_A" "H3_E" "H4_B" "H4_F" "H2A_C" "H2A_G" "H2B_D" "H2B_H"]
+
+
+
+
+# set nframes [expr  [molinfo top get numframes]  ]
+
+# set sel [atomselect top "nucleic"]
+# set sel2 [atomselect top "PROTein"]
+
+
+# set atoms [$sel list]
+
+#do something
+print "Execution time:"
+print(datetime.now()-startTime)
+print "Total interactions",len(sum_df)
+print "Total H-bonds",len(sum_df[sum_df.type=='HB'])
+
+# if not (len(sum_df)==2651):
+    # raise AssertionError()
+# exit
+exit()
+
+
+

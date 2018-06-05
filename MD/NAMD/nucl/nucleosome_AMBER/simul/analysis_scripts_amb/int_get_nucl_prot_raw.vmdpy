@@ -1,0 +1,445 @@
+#We get raw data frames for DNA-PROTein interactions in nucleosome
+#This version is for crystal
+# is produces a bit different data frame - since we do not know the positions of hydrogens
+#changes for amber
+#OP1, OP2 instead of O1P and O2P
+# Water is O not OH2, residue is needed
+#ions are Cl- and Na+
+
+from VMD import *
+from Molecule import *
+from atomsel import *
+from animate import *
+import pandas as pd
+import numpy as np
+from datetime import datetime
+
+
+from int_analyze import find_contacts
+from int_analyze import find_hbonds
+from int_analyze import find_watermed_bonds
+from int_analyze import find_watermed_bonds2
+from int_analyze import find_ionmed_bonds
+
+# from collections import OrderedDict
+#import sys
+
+#Let's define data frame panel
+sum_df=pd.DataFrame()
+
+startTime = datetime.now()
+
+
+
+#print sys.path
+### Let's load the structure
+
+mol=Molecule()
+# mol.load("only_nucl_init.psf")
+# mol.load("only_nucl_aligned.pdb")
+
+# mol.load("structs/CCGG.pdb")
+
+
+mol.load("../analysis_data/system_aligned.pdb")
+mol.load("../analysis_data/md_nucl_solv.dcd",first=250,step=1)
+nf=mol.numFrames()
+
+#Here we need to produce a raw data frame for PROTein-DNA interactions
+#See definitions in our report
+
+###Here we start a loop over frames
+for i in range(1,nf):
+	goto(i)
+	print "Frame",i-1
+	######Contacts calculation
+	### distance between non H-bonded atoms less than 3.9A
+	#Let's define selections
+	# To comply with our truncated model system, for crystal we do truncation here
+	
+	DNA=atomsel("nucleic and noh")
+	PROT=atomsel("protein and noh")
+	
+	DNA_ind=DNA.get('index')
+	DNA_name=DNA.get('name')
+	DNA_resid=DNA.get('resid')
+	DNA_chain=DNA.get('segname')
+	DNA_xyz=zip(DNA.get('x'),DNA.get('y'),DNA.get('z'))
+	DNA_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(DNA_ind,DNA_chain,DNA_resid,DNA_name))
+	#DNA_xyz=zip(DNA.get('x'),DNA.get('y'),DNA.get('z'))
+	
+	PROT_ind=PROT.get('index')
+	PROT_name=PROT.get('name')
+	PROT_resid=PROT.get('resid')
+	PROT_chain=PROT.get('segname')
+	PROT_xyz=zip(PROT.get('x'),PROT.get('y'),PROT.get('z'))
+	PROT_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(PROT_ind,PROT_chain,PROT_resid,PROT_name))
+	
+	
+	## Now we can call a contact kernel
+	# Input: coordinates and indices of group A, coordinates ans indices of group B, threshold
+	
+	contacts=find_contacts(PROT_xyz,PROT_ind,DNA_xyz,DNA_ind,3.9,False)
+	# print contacts
+	num_cont=len(contacts)
+	print "DNA protein contacts found: ", num_cont
+	#let's form numpy arrays and convert them to data frame
+	cont_np=np.array(contacts)
+	
+	#get DNA chain list
+	DNA_chain_list=np.array([DNA_params[x][0] for x in cont_np[:,1] ],ndmin=2)
+	DNA_resid_list=np.array([DNA_params[x][1] for x in cont_np[:,1] ],ndmin=2)
+	DNA_atom_list=np.array([DNA_params[x][2] for x in cont_np[:,1] ],ndmin=2)
+	# print DNA_chain_list
+	# print chains
+	
+	PROT_chain_list=np.array([PROT_params[x][0] for x in cont_np[:,0] ],ndmin=2)
+	PROT_resid_list=np.array([PROT_params[x][1] for x in cont_np[:,0] ],ndmin=2)
+	PROT_atom_list=np.array([PROT_params[x][2] for x in cont_np[:,0] ],ndmin=2)
+	
+	#let's make a numpy array for data frame
+	df_array=np.hstack((DNA_chain_list.T,DNA_resid_list.T,DNA_atom_list.T,PROT_chain_list.T,PROT_resid_list.T,PROT_atom_list.T,np.array(['C']*num_cont,ndmin=2).T,np.expand_dims(cont_np[:,2],axis=1).astype('|S7')))
+	# print df_array
+	df_cont=pd.DataFrame(df_array,columns=['DNA_chain','DNA_resid','DNA_atom','PROT_chain','PROT_resid','PROT_atom','type','param1'])
+	
+	######################################################
+	#Now let's proceed with hydrogen bonds               #
+	######################################################
+	
+	DNA_heavy=atomsel("nucleic and noh and (name \"N.*\" or name \"O.*\") ")
+	PROT_heavy=atomsel("(protein and noh and (name \"N.*\" or name \"O.*\" or name \"S.*\")) and ((segname CHA CHE and resid > 36) or (segname CHB CHF and resid > 15) or (segname CHC CHG and resid > 11 and resid < 119) or (segname CHD CHH and resid > 20))")
+	
+	#The bonds to Hydrogen in charmm are all less than 1.2 A
+	#Let's get the corresponding hydrogens
+	DNA_H=atomsel("hydrogen and within 1.4 of index %s" % " ".join(map(str,DNA_heavy.get('index'))))
+	PROT_H=atomsel("hydrogen and within 1.4 of index %s" % " ".join(map(str,PROT_heavy.get('index'))))
+	
+	DNA_heavy_ind=DNA_heavy.get('index')
+	DNA_heavy_name=DNA_heavy.get('name')
+	DNA_heavy_resid=DNA_heavy.get('resid')
+	DNA_heavy_chain=DNA_heavy.get('segname')
+	DNA_heavy_xyz=zip(DNA_heavy.get('x'),DNA_heavy.get('y'),DNA_heavy.get('z'))
+	DNA_H_xyz=zip(DNA_H.get('x'),DNA_H.get('y'),DNA_H.get('z'))
+	DNA_heavy_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(DNA_heavy_ind,DNA_heavy_chain,DNA_heavy_resid,DNA_heavy_name))
+	
+	# print DNA_heavy_ind[1711]
+	
+	PROT_heavy_ind=PROT_heavy.get('index')
+	PROT_heavy_name=PROT_heavy.get('name')
+	PROT_heavy_resid=PROT_heavy.get('resid')
+	PROT_heavy_chain=PROT_heavy.get('segname')
+	PROT_heavy_xyz=zip(PROT_heavy.get('x'),PROT_heavy.get('y'),PROT_heavy.get('z'))
+	PROT_H_xyz=zip(PROT_H.get('x'),PROT_H.get('y'),PROT_H.get('z'))
+	PROT_heavy_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(PROT_heavy_ind,PROT_heavy_chain,PROT_heavy_resid,PROT_heavy_name))
+	
+	## Now we can call a hbonds kernel
+	# Input: list of donors coordinates and indices, list of coordinates of all H, list of aceptor coordinates and indices
+	
+	#NOTE: for crystal we set D-H-A - any, since Hydrogen positions are arbitrary!
+	hbonds=find_hbonds(DNA_heavy_xyz,DNA_heavy_ind,DNA_H_xyz,PROT_heavy_xyz,PROT_heavy_ind,PROT_H_xyz,3.5,30)
+	
+	num_hbonds=len(hbonds)
+	print "DNA-protein H-bonds found: ", num_hbonds
+	
+	# print hbonds
+	
+	hbonds_np=np.array(hbonds)
+	#get DNA chain list
+	# print type(DNA_heavy_params.keys()[1726])
+	# print type(hbonds_np[0,0])
+	DNA_chain_list=np.array([DNA_heavy_params[int(x)][0] for x in hbonds_np[:,0] ],ndmin=2)
+	DNA_resid_list=np.array([DNA_heavy_params[int(x)][1] for x in hbonds_np[:,0] ],ndmin=2)
+	DNA_atom_list=np.array([DNA_heavy_params[int(x)][2] for x in hbonds_np[:,0] ],ndmin=2)
+	# print DNA_chain_list
+	# print chains
+	
+	PROT_chain_list=np.array([PROT_heavy_params[int(x)][0] for x in hbonds_np[:,1] ],ndmin=2)
+	PROT_resid_list=np.array([PROT_heavy_params[int(x)][1] for x in hbonds_np[:,1] ],ndmin=2)
+	PROT_atom_list=np.array([PROT_heavy_params[int(x)][2] for x in hbonds_np[:,1] ],ndmin=2)
+	
+	
+	
+	#let's make a numpy array for data frame
+	df_array=np.hstack((DNA_chain_list.T,DNA_resid_list.T,DNA_atom_list.T,PROT_chain_list.T,PROT_resid_list.T,PROT_atom_list.T,np.array(['HB']*num_hbonds,ndmin=2).T,np.expand_dims(hbonds_np[:,3],axis=1).astype('|S7'),np.expand_dims(hbonds_np[:,4],axis=1).astype('|S7'),np.expand_dims(hbonds_np[:,2],axis=1).astype('|S7')))
+	# print df_array
+	df_hbonds=pd.DataFrame(df_array,columns=['DNA_chain','DNA_resid','DNA_atom','PROT_chain','PROT_resid','PROT_atom','type','param1','param2','param3'])
+	
+	#################################################
+	## Now let's calculate ion pairs
+	## less than 4A distance between chared atoms
+	## Charged in DNA: O1P O2P, amber is OP1 and OP2
+	## Charged in  protein: ARG - NH1, NH2, LYS - NZ, 
+	#############
+	
+	DNA=atomsel("nucleic and noh and (name OP1 OP2 O1P O2P) ")
+	PROT=atomsel("(resname ARG LYS ASP GLU and (name NH1 NH2 NZ)) and ((segname CHA CHE and resid > 36) or (segname CHB CHF and resid > 15) or (segname CHC CHG and resid > 11 and resid < 119) or (segname CHD CHH and resid > 20))")
+	
+	
+	DNA_ind=DNA.get('index')
+	DNA_name=DNA.get('name')
+	DNA_resid=DNA.get('resid')
+	DNA_chain=DNA.get('segname')
+	DNA_xyz=zip(DNA.get('x'),DNA.get('y'),DNA.get('z'))
+	DNA_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(DNA_ind,DNA_chain,DNA_resid,DNA_name))
+	#DNA_xyz=zip(DNA.get('x'),DNA.get('y'),DNA.get('z'))
+	# print DNA_ind
+	
+	PROT_ind=PROT.get('index')
+	PROT_name=PROT.get('name')
+	PROT_resid=PROT.get('resid')
+	PROT_chain=PROT.get('segname')
+	PROT_xyz=zip(PROT.get('x'),PROT.get('y'),PROT.get('z'))
+	PROT_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(PROT_ind,PROT_chain,PROT_resid,PROT_name))
+	# print PROT_inds
+	
+	
+	## Now we can call a contact kernel
+	# Input: coordinates and indices of group A, coordinates ans indices of group B, threshold
+	
+	contacts=find_contacts(PROT_xyz,PROT_ind,DNA_xyz,DNA_ind,3.9,False)
+	# print contacts
+	num_cont=len(contacts)
+	print "DNA protein ion pairs found: ", num_cont
+	#let's form numpy arrays and convert them to data frame
+	cont_np=np.array(contacts)
+	
+	#get DNA chain list
+	DNA_chain_list=np.array([DNA_params[x][0] for x in cont_np[:,1] ],ndmin=2)
+	DNA_resid_list=np.array([DNA_params[x][1] for x in cont_np[:,1] ],ndmin=2)
+	DNA_atom_list=np.array([DNA_params[x][2] for x in cont_np[:,1] ],ndmin=2)
+	# print DNA_chain_list
+	# print chains
+	
+	PROT_chain_list=np.array([PROT_params[x][0] for x in cont_np[:,0] ],ndmin=2)
+	PROT_resid_list=np.array([PROT_params[x][1] for x in cont_np[:,0] ],ndmin=2)
+	PROT_atom_list=np.array([PROT_params[x][2] for x in cont_np[:,0] ],ndmin=2)
+	
+	#let's make a numpy array for data frame
+	df_array=np.hstack((DNA_chain_list.T,DNA_resid_list.T,DNA_atom_list.T,PROT_chain_list.T,PROT_resid_list.T,PROT_atom_list.T,np.array(['IP']*num_cont,ndmin=2).T,np.expand_dims(cont_np[:,2],axis=1).astype('|S7')))
+	# print df_array
+	df_ionpairs=pd.DataFrame(df_array,columns=['DNA_chain','DNA_resid','DNA_atom','PROT_chain','PROT_resid','PROT_atom','type','param1'])
+	
+	#############
+	# Now let's go for Water mediated interactions
+	#
+	#
+	#
+	
+	DNA_heavy=atomsel("nucleic and noh and (name \"N.*\" or name \"O.*\") ")
+	PROT_heavy=atomsel("(protein and noh and (name \"N.*\" or name \"O.*\" or name \"S.*\")) and ((segname CHA CHE and resid > 36) or (segname CHB CHF and resid > 15) or (segname CHC CHG and resid > 11 and resid < 119) or (segname CHD CHH and resid > 20))")
+	WAT_heavy=atomsel("water and name O and within 3.9 of index %s" % " ".join(map(str,DNA_heavy.get('index'))))
+	
+	
+	#The bonds to Hydrogen in charmm are all less than 1.2 A
+	#Let's get the corresponding hydrogens
+	DNA_H=atomsel("hydrogen and within 1.4 of index %s" % " ".join(map(str,DNA_heavy.get('index'))))
+	PROT_H=atomsel("hydrogen and within 1.4 of index %s" % " ".join(map(str,PROT_heavy.get('index'))))
+	WAT_H=atomsel("hydrogen and within 1.4 of index %s" % " ".join(map(str,WAT_heavy.get('index'))))
+	
+	DNA_heavy_ind=DNA_heavy.get('index')
+	DNA_heavy_name=DNA_heavy.get('name')
+	DNA_heavy_resid=DNA_heavy.get('resid')
+	DNA_heavy_chain=DNA_heavy.get('segname')
+	DNA_heavy_xyz=zip(DNA_heavy.get('x'),DNA_heavy.get('y'),DNA_heavy.get('z'))
+	DNA_H_xyz=zip(DNA_H.get('x'),DNA_H.get('y'),DNA_H.get('z'))
+	DNA_heavy_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(DNA_heavy_ind,DNA_heavy_chain,DNA_heavy_resid,DNA_heavy_name))
+	
+	# print DNA_heavy_ind[1711]
+	
+	PROT_heavy_ind=PROT_heavy.get('index')
+	PROT_heavy_name=PROT_heavy.get('name')
+	PROT_heavy_resid=PROT_heavy.get('resid')
+	PROT_heavy_chain=PROT_heavy.get('segname')
+	PROT_heavy_xyz=zip(PROT_heavy.get('x'),PROT_heavy.get('y'),PROT_heavy.get('z'))
+	PROT_H_xyz=zip(PROT_H.get('x'),PROT_H.get('y'),PROT_H.get('z'))
+	PROT_heavy_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(PROT_heavy_ind,PROT_heavy_chain,PROT_heavy_resid,PROT_heavy_name))
+	
+	WAT_heavy_ind=WAT_heavy.get('index')
+	WAT_heavy_name=WAT_heavy.get('name')
+	WAT_heavy_resid=WAT_heavy.get('resid')
+	WAT_heavy_chain=WAT_heavy.get('segname')
+	WAT_heavy_xyz=zip(WAT_heavy.get('x'),WAT_heavy.get('y'),WAT_heavy.get('z'))
+	WAT_H_xyz=zip(WAT_H.get('x'),WAT_H.get('y'),WAT_H.get('z'))
+	WAT_heavy_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(WAT_heavy_ind,WAT_heavy_chain,WAT_heavy_resid,WAT_heavy_name))
+	
+	
+	## Now we can call a hbonds kernel
+	# Input: list of donors coordinates and indices, list of coordinates of all H, list of aceptor coordinates and indices
+	
+	#NOTE: for crystal we set D-H-A - any, since Hydrogen positions are arbitrary!
+	hbonds=find_watermed_bonds(DNA_heavy_xyz,DNA_heavy_ind,DNA_H_xyz,PROT_heavy_xyz,PROT_heavy_ind,PROT_H_xyz,WAT_heavy_xyz,WAT_heavy_ind,WAT_H_xyz,3.5,30)
+	
+	num_hbonds=len(hbonds)
+	print "DNA-protein water mediated bonds found: ", num_hbonds
+	
+	# print hbonds
+	
+	hbonds_np=np.array(hbonds)
+	#get DNA chain list
+	# print type(DNA_heavy_params.keys()[1726])
+	# print type(hbonds_np[0,0])
+	DNA_chain_list=np.array([DNA_heavy_params[int(x)][0] for x in hbonds_np[:,0] ],ndmin=2)
+	DNA_resid_list=np.array([DNA_heavy_params[int(x)][1] for x in hbonds_np[:,0] ],ndmin=2)
+	DNA_atom_list=np.array([DNA_heavy_params[int(x)][2] for x in hbonds_np[:,0] ],ndmin=2)
+	# print DNA_chain_list
+	# print chains
+	
+	PROT_chain_list=np.array([PROT_heavy_params[int(x)][0] for x in hbonds_np[:,1] ],ndmin=2)
+	PROT_resid_list=np.array([PROT_heavy_params[int(x)][1] for x in hbonds_np[:,1] ],ndmin=2)
+	PROT_atom_list=np.array([PROT_heavy_params[int(x)][2] for x in hbonds_np[:,1] ],ndmin=2)
+	
+	
+	
+	#let's make a numpy array for data frame
+	df_array=np.hstack((DNA_chain_list.T,DNA_resid_list.T,DNA_atom_list.T,PROT_chain_list.T,PROT_resid_list.T,PROT_atom_list.T,np.array(['WM']*num_hbonds,ndmin=2).T,np.expand_dims(hbonds_np[:,2],axis=1).astype('|S7').astype(np.str)))
+	# print df_array
+	df_watermed_bonds=pd.DataFrame(df_array,columns=['DNA_chain','DNA_resid','DNA_atom','PROT_chain','PROT_resid','PROT_atom','type','param3'])
+	
+	##########################
+	#Now let's see ion mediated bonds
+	#
+	# where a mobile ion is in stable contact with two or more charged or polar atoms.
+	#
+	
+	DNA_heavy=atomsel("nucleic and noh and (name \"N.*\" or name \"O.*\" or name P) ")
+	PROT_heavy=atomsel("(protein and noh and (name \"N.*\" or name \"O.*\" or name \"S.*\")) and ((segname CHA CHE and resid > 36) or (segname CHB CHF and resid > 15) or (segname CHC CHG and resid > 11 and resid < 119) or (segname CHD CHH and resid > 20))")
+	ION_heavy=atomsel("name 'Na+' 'Cl-'")
+	# print(ION_heavy.get('name'))
+	
+	DNA_heavy_ind=DNA_heavy.get('index')
+	DNA_heavy_name=DNA_heavy.get('name')
+	DNA_heavy_resid=DNA_heavy.get('resid')
+	DNA_heavy_chain=DNA_heavy.get('segname')
+	DNA_heavy_xyz=zip(DNA_heavy.get('x'),DNA_heavy.get('y'),DNA_heavy.get('z'))
+	DNA_heavy_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(DNA_heavy_ind,DNA_heavy_chain,DNA_heavy_resid,DNA_heavy_name))
+	
+	
+	PROT_heavy_ind=PROT_heavy.get('index')
+	PROT_heavy_name=PROT_heavy.get('name')
+	PROT_heavy_resid=PROT_heavy.get('resid')
+	PROT_heavy_chain=PROT_heavy.get('segname')
+	PROT_heavy_xyz=zip(PROT_heavy.get('x'),PROT_heavy.get('y'),PROT_heavy.get('z'))
+	PROT_heavy_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(PROT_heavy_ind,PROT_heavy_chain,PROT_heavy_resid,PROT_heavy_name))
+	
+	ION_heavy_ind=ION_heavy.get('index')
+	ION_heavy_name=ION_heavy.get('name')
+	ION_heavy_resid=ION_heavy.get('resid')
+	ION_heavy_chain=ION_heavy.get('segname')
+	ION_heavy_xyz=zip(ION_heavy.get('x'),ION_heavy.get('y'),ION_heavy.get('z'))
+	ION_heavy_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(ION_heavy_ind,ION_heavy_chain,ION_heavy_resid,ION_heavy_name))
+	
+	# print ION_heavy_ind
+	## Now we can call a hbonds kernel
+	
+	hbonds=find_ionmed_bonds(DNA_heavy_xyz,DNA_heavy_ind,PROT_heavy_xyz,PROT_heavy_ind,ION_heavy_xyz,ION_heavy_ind,3.9)
+	
+	num_hbonds=len(hbonds)
+	print "DNA-protein ion mediated bonds found: ", num_hbonds
+	
+	df_ionmed_bonds=pd.DataFrame()
+	
+	if(num_hbonds!=0):
+	# print hbonds
+	
+		hbonds_np=np.array(hbonds)
+		# print hbonds_np
+		#get DNA chain list
+		# print type(DNA_heavy_params.keys()[1726])
+		# print type(hbonds_np[0,0])
+		DNA_chain_list=np.array([DNA_heavy_params[int(x)][0] for x in hbonds_np[:,0] ],ndmin=2)
+		DNA_resid_list=np.array([DNA_heavy_params[int(x)][1] for x in hbonds_np[:,0] ],ndmin=2)
+		DNA_atom_list=np.array([DNA_heavy_params[int(x)][2] for x in hbonds_np[:,0] ],ndmin=2)
+		# print DNA_chain_list
+		# print chains
+		
+		PROT_chain_list=np.array([PROT_heavy_params[int(x)][0] for x in hbonds_np[:,1] ],ndmin=2)
+		PROT_resid_list=np.array([PROT_heavy_params[int(x)][1] for x in hbonds_np[:,1] ],ndmin=2)
+		PROT_atom_list=np.array([PROT_heavy_params[int(x)][2] for x in hbonds_np[:,1] ],ndmin=2)
+		
+		ION_atom_list=np.array([ION_heavy_params[int(x)][2] for x in hbonds_np[:,2] ],ndmin=2)
+		
+		# print hbonds_np[:,2]
+		# print np.expand_dims(hbonds_np[:,2],axis=1).astype('|S7')
+		#let's make a numpy array for data frame
+		df_array=np.hstack((DNA_chain_list.T,DNA_resid_list.T,DNA_atom_list.T,PROT_chain_list.T,PROT_resid_list.T,PROT_atom_list.T,np.array(['IM']*num_hbonds,ndmin=2).T,ION_atom_list.T,np.expand_dims(hbonds_np[:,2],axis=1).astype('|S7').astype(np.str)))
+		# print df_array
+		# df_array=np.hstack((DNA_chain_list.T,DNA_resid_list.T,DNA_atom_list.T,PROT_chain_list.T,PROT_resid_list.T,PROT_atom_list.T,np.array(['IM']*num_hbonds,ndmin=2).T,np.expand_dims(hbonds_np[:,2],axis=1).astype('|S7')))
+		# print df_array
+		# df_ionmed_bonds=pd.DataFrame(df_array,columns=['DNA_chain','DNA_resid','DNA_atom','PROT_chain','PROT_resid','PROT_atom','type','param3'])
+		df_ionmed_bonds=pd.DataFrame(df_array,columns=['DNA_chain','DNA_resid','DNA_atom','PROT_chain','PROT_resid','PROT_atom','type','param1','param3'])
+		
+		
+	
+	
+	df=pd.concat([df_cont,df_hbonds,df_ionpairs,df_watermed_bonds,df_ionmed_bonds])
+	df = df.reset_index(drop=True)
+	#Let's add time
+	df['Time']=i-1
+	sum_df=pd.concat([sum_df,df])
+sum_df = sum_df.reset_index(drop=True)
+
+# print df
+# print df_contacts
+# panel_dict[0]=df
+#
+# p=pd.Panel(panel_dict)
+
+# bdf = pd.DataFrame()
+# for key in panel_dict:
+# 	value=panel_dict[key]
+# 	value['Time']=key
+# 	bdf=bdf.append(value)
+sum_df.to_csv('../analysis_data/dna_prot_raw_df.csv',index=False)
+###Here are some display snippets
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or PROTein) and noh")
+	a,b,d=zip(*contacts)
+	c=0
+	for i,j in zip(a,b):
+		vdw=MoleculeRep(style='VDW', material='Opaque')
+		mol.addRep(vdw)     
+		#index=" ".join(map(str,(list(a)+list(b))))
+		vdw.changeSelection('index %d %d'%(i,j))
+		vdw.changeColor("ColorID %d"%(c%32))
+		c=c+1
+
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or PROTein) and noh")
+	a,b,d=zip(*contacts)
+	vdw=MoleculeRep(style='VDW', material='Opaque')
+	mol.addRep(vdw)     
+	index=" ".join(map(str,(list(a))))
+	vdw.changeSelection('index %s'%index)
+	# vdw.changeColor("ColorID %d"%(c%32))
+
+# mol load psf only_nucl_init.psf
+# mol addfile only_nucl_aligned.pdb waitfor all
+
+
+# set hlist [list "segname CHA" "segname CHE" "segname CHB" "segname CHF" "segname CHC" "segname CHG" "segname CHD" "segname CHH"]
+# set hname [list "H3_A" "H3_E" "H4_B" "H4_F" "H2A_C" "H2A_G" "H2B_D" "H2B_H"]
+
+
+
+
+# set nframes [expr  [molinfo top get numframes]  ]
+
+# set sel [atomselect top "nucleic"]
+# set sel2 [atomselect top "PROTein"]
+
+
+# set atoms [$sel list]
+
+#do something
+print "Execution time:"
+print(datetime.now()-startTime)
+
+# exit
+exit()
+
+
+

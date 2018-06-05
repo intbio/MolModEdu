@@ -1,0 +1,200 @@
+#The purpose of this script to understand arginine positions in minor grooves
+# We want to build contact histograms
+# between DNA sequence and arginines interactions
+
+# to quntify interaction strength we calculate distances between posphates and
+# carbon of guanidinum group
+# we need to project this to the phosphate sequence by calculating the interaction strength
+# to define the interaction strength we can introduce and sum up some simple function of distance
+# I suggest to follow coulomb law and sum -1/d
+# otherwise we can just calculate average distance with a threshold
+
+#on the other hand we need to understand that guanidinum group can rotate
+# so probably we can use not the carbon but both the two nitrogens
+# we can do both!
+
+# resname ARG and segname CHA CHE and resid 83 63
+# resname ARG and segname CHB CHF and resid 45
+# resname ARG and segname CHC CHG and resid 42 77
+# resname ARG and segname CHD CHH and resid 30
+
+#(resname ARG and segname CHA CHE and resid 49)
+
+
+from VMD import *
+from Molecule import *
+from atomsel import *
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+
+from int_analyze import find_contacts
+from collections import OrderedDict
+
+
+#import sys
+
+#print sys.path
+### Let's load the structure
+
+mol=Molecule()
+# mol.load("only_nucl_init.psf")
+# mol.load("only_nucl_aligned.pdb")
+
+# mol.load("structs/CCGG.pdb")
+
+
+mol.load("../analysis_data/only_nucl_init.psf")
+mol.load("../analysis_data/only_nucl_init.pdb")
+mol.load("../analysis_data/md_nucl.dcd", first=2500, step=10, waitfor=-1)
+
+#We have to decide how to define positions
+
+dnabbI=atomsel("nucleic and name P and segname CHI")
+dnabbJ=atomsel("nucleic and name P and segname CHJ")
+
+#let's define argininges CZ or NH2 and NH1 atoms
+arg_cz=atomsel("name CZ and ((segname CHA CHE and resid 83 63 49) or (segname CHB CHF and resid 45) or (segname CHC CHG and resid 42 77) or (segname CHD CHH and resid 30))")
+arg_NH=atomsel("name NH1 NH2 and ((segname CHA CHE and resid 83 63 49) or (segname CHB CHF and resid 45) or (segname CHC CHG and resid 42 77) or (segname CHD CHH and resid 30))")
+
+# arg_cz=atomsel("name CZ and resname ARG")
+
+
+dnabbI_ind=dnabbI.get('index')
+dnabbI_name=dnabbI.get('name')
+dnabbI_resid=dnabbI.get('resid')
+
+dnabbJ_ind=dnabbJ.get('index')
+dnabbJ_name=dnabbJ.get('name')
+dnabbJ_resid=dnabbJ.get('resid')
+
+arg_cz_ind=arg_cz.get('index')
+arg_cz_name=arg_cz.get('name')
+
+
+
+dnaI_inter=dict.fromkeys(range(-72,74,1),0)
+dnaJ_inter=dict.fromkeys(range(-72,74,1),0)
+
+# set nframes [expr  [molinfo top get numframes] - 1 ]
+nf=mol.numFrames()
+
+for i in range(1,nf):
+	dnabbI.frame=i
+	dnabbI.update()
+	dnabbJ.frame=i
+	dnabbJ.update()
+	arg_cz.frame=i
+	arg_cz.update()
+
+	dnabbI_xyz=zip(dnabbI.get('x'),dnabbI.get('y'),dnabbI.get('z'))
+	dnabbJ_xyz=zip(dnabbJ.get('x'),dnabbJ.get('y'),dnabbJ.get('z'))
+	arg_cz_xyz=zip(arg_cz.get('x'),arg_cz.get('y'),arg_cz.get('z'))
+
+	contactsI=find_contacts(arg_cz_xyz,arg_cz_ind,dnabbI_xyz,dnabbI_ind,10,False)
+	contactsJ=find_contacts(arg_cz_xyz,arg_cz_ind,dnabbJ_xyz,dnabbJ_ind,10,False)
+
+	for ai,di,d in contactsI:
+		dnaI_inter[dnabbI_resid[dnabbI_ind.index(di)]]+=1/d
+
+	for ai,di,d in contactsJ:
+		dnaJ_inter[dnabbJ_resid[dnabbJ_ind.index(di)]]+=1/d
+# print dnaI_inter
+# print dnaJ_inter.items()
+
+
+dnaI_int=np.array(sorted(dnaI_inter.items()))
+dnaJ_int=np.array(sorted(dnaJ_inter.items()))
+
+# print dnaI_int
+
+
+fig=plt.figure(figsize={12,6})
+ax = fig.add_subplot(111) 
+
+plt.plot((dnaI_int[:,0]/10),dnaI_int[:,1],'bo-', linewidth=2, label="DNA_I")
+plt.plot(((-1)*dnaJ_int[:,0]/10),dnaJ_int[:,1],'ro-', linewidth=2, label="DNA_J")
+
+plt.ylabel("Interaction")
+plt.title("MD: Interaction of key arginines with DNA phosphates, as defined by CZ")
+plt.xlabel("SHL")
+plt.legend(loc="upper right",ncol=3)
+# plt.ylim((0,max_y[0]))
+plt.xlim((-7.7,0.0))
+
+SHL_loc=np.array(np.arange(-7.5,0,0.5))
+plt.xticks(SHL_loc)
+
+
+ax.xaxis.grid(True, which='major') 
+
+# sp.set_xticklabels(SHL_loc_ticksx)
+plt.tick_params(which='major', length=7)
+
+plt.tight_layout()
+
+# plt.show()
+
+plt.savefig("../analysis_data/arg_pos_int_cz.png",dpi=(200))
+
+
+# ## Now we can call a contact kernel
+# # Input: coordinates and indices of group A, coordinates ans indices of group B, threshold
+
+# contacts=find_contacts(prot_xyz,prot_ind,dna_xyz,dna_ind,4.5,False)
+
+# print "DNA protein contacts found: ", len(contacts)
+
+# ###To-do: discriminate by group and type,
+# ###omit H-bonds
+
+# ###Here are some display snippets
+
+# if(1):
+# 	reps=mol.reps()
+# 	reps[0].changeSelection("(nucleic or protein) and noh")
+# 	a,b,d=zip(*contacts)
+# 	c=0
+# 	for i,j in zip(a,b):
+# 		vdw=MoleculeRep(style='VDW', material='Opaque')
+# 		mol.addRep(vdw)     
+# 		#index=" ".join(map(str,(list(a)+list(b))))
+# 		vdw.changeSelection('index %d %d'%(i,j))
+# 		vdw.changeColor("ColorID %d"%(c%32))
+# 		c=c+1
+
+
+# if(0):
+# 	reps=mol.reps()
+# 	reps[0].changeSelection("(nucleic or protein) and noh")
+# 	a,b,d=zip(*contacts)
+# 	vdw=MoleculeRep(style='VDW', material='Opaque')
+# 	mol.addRep(vdw)     
+# 	index=" ".join(map(str,(list(a))))
+# 	vdw.changeSelection('index %s'%index)
+# 	# vdw.changeColor("ColorID %d"%(c%32))
+
+# mol load psf only_nucl_init.psf
+# mol addfile only_nucl_aligned.pdb waitfor all
+
+
+# set hlist [list "segname CHA" "segname CHE" "segname CHB" "segname CHF" "segname CHC" "segname CHG" "segname CHD" "segname CHH"]
+# set hname [list "H3_A" "H3_E" "H4_B" "H4_F" "H2A_C" "H2A_G" "H2B_D" "H2B_H"]
+
+
+
+
+# set nframes [expr  [molinfo top get numframes]  ]
+
+# set sel [atomselect top "nucleic"]
+# set sel2 [atomselect top "protein"]
+
+
+# set atoms [$sel list]
+
+
+
+# exit
+
+

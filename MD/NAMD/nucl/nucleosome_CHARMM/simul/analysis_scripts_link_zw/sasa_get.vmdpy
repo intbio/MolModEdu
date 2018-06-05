@@ -1,0 +1,123 @@
+#We get raw data frames for PROTEIN-PROTein interactions in nucleosome
+#This version is for trajectory
+# is produces a bit different data frame - since we do not know the positions of hydrogens
+
+
+from VMD import *
+from Molecule import *
+from atomsel import *
+import pandas as pd
+import numpy as np
+from datetime import datetime
+import itertools
+from animate import *
+import sys
+#print sys.path
+### Let's load the structure
+
+sum_df=pd.DataFrame()
+
+
+mol=Molecule()
+
+mol.load("../analysis_data/only_nucl_init.psf")
+mol.load("../analysis_data/md_nucl.dcd",first=0,step=10)
+nf=mol.numFrames()
+
+#Here we need to produce a raw data frame for PROTein-DNA interactions
+#See definitions in our report
+all_prot="(noh and ((segname CHA CHE and resid > 36) or (segname CHB CHF and resid > 15) or (segname CHC CHG and resid > 11 and resid < 119) or (segname CHD CHH and resid > 20)))"
+chains=['CHA','CHB','CHC','CHD','CHE','CHF','CHG','CHH']
+
+for i in range(0,nf):
+	goto(i)
+	print "Frame",i
+	SELALL=atomsel("noh")
+	for chain in chains:
+		print "\nAnalyzing sasa in ", chain
+		SEL=atomsel("segname %s and name CA"%chain)
+		resname=SEL.get('resname')
+		resid=SEL.get('resid')
+		sasa=list()
+		for r,rid in zip(resname,resid):
+			SELrsch=atomsel("segname %s and noh and sidechain and resid %d"%(chain,rid))
+			SELCALC=atomsel("noh and within 10 of (segname %s and resid %d)"%(chain,rid))
+			sasa.append(SELCALC.sasa(1.4,restrict=SELrsch))
+		sasa_df=pd.DataFrame({'Resname':resname,'Resid':resid,'SASA':sasa})
+		sasa_df['Time']=i
+		sasa_df['Chain']=chain
+		sum_df=pd.concat([sum_df,sasa_df])
+
+# print sum_df
+
+
+	# print df
+	# print df_contacts
+# panel_dict[0]=df
+#
+# p=pd.Panel(panel_dict)
+
+# bdf = pd.DataFrame()
+# for key in panel_dict:
+# 	value=panel_dict[key]
+# 	value['Time']=key
+# 	bdf=bdf.append(value)
+sum_df.to_csv('../analysis_data/sasa_nucl.csv',index=False)
+###Here are some display snippets
+# print "Total interactions",len(sum_df_time)
+# print "Total H-bonds",len(sum_df[sum_df_time.type=='HB'])
+
+# if not (len(sum_df_time)==3342):
+    # raise AssertionError()
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or PROTein) and noh")
+	a,b,d=zip(*contacts)
+	c=0
+	for i,j in zip(a,b):
+		vdw=MoleculeRep(style='VDW', material='Opaque')
+		mol.addRep(vdw)     
+		#index=" ".join(map(str,(list(a)+list(b))))
+		vdw.changeSelection('index %d %d'%(i,j))
+		vdw.changeColor("ColorID %d"%(c%32))
+		c=c+1
+
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or PROTein) and noh")
+	a,b,d=zip(*contacts)
+	vdw=MoleculeRep(style='VDW', material='Opaque')
+	mol.addRep(vdw)     
+	index=" ".join(map(str,(list(a))))
+	vdw.changeSelection('index %s'%index)
+	# vdw.changeColor("ColorID %d"%(c%32))
+
+# mol load psf only_nucl_init.psf
+# mol addfile only_nucl_aligned.pdb waitfor all
+
+
+# set hlist [list "segname CHA" "segname CHE" "segname CHB" "segname CHF" "segname CHC" "segname CHG" "segname CHD" "segname CHH"]
+# set hname [list "H3_A" "H3_E" "H4_B" "H4_F" "H2A_C" "H2A_G" "H2B_D" "H2B_H"]
+
+
+
+
+# set nframes [expr  [molinfo top get numframes]  ]
+
+# set sel [atomselect top "nucleic"]
+# set sel2 [atomselect top "PROTein"]
+
+
+# set atoms [$sel list]
+
+#do something
+# print "Execution time:"
+# print(datetime.now()-startTime)
+
+# exit
+exit()
+
+
+

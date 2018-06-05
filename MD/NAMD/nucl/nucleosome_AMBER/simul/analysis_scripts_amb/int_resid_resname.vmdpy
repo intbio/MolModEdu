@@ -1,0 +1,96 @@
+#This script generates an auxillary data frame which makes
+#a correspondence between resid and resnames
+
+from VMD import *
+from Molecule import *
+from atomsel import *
+import pandas as pd
+import numpy as np
+from datetime import datetime
+
+
+
+startTime = datetime.now()
+
+
+
+#print sys.path
+### Let's load the structure
+
+mol=Molecule()
+# mol.load("only_nucl_init.psf")
+# mol.load("only_nucl_aligned.pdb")
+
+# mol.load("structs/CCGG.pdb")
+
+
+# mol.load("../analysis_data/1kx5_cryst_w_ions.psf")
+mol.load("../analysis_data/only_nucl_aligned.pdb")
+
+#selection
+
+NUCL=atomsel("(protein or nucleic) and (name CA C1\')")
+
+NUCL_resid=NUCL.get('resid')
+NUCL_chain=NUCL.get('segname')
+NUCL_resname=NUCL.get('resname')
+
+df_array=np.array((NUCL_chain,NUCL_resid,NUCL_resname))
+# print df_array
+df=pd.DataFrame(df_array.T,columns=['chain','resid','resname'])
+print df
+
+# 	bdf=bdf.append(value)
+df.to_csv('../analysis_data/resid_resname_df.csv',index=False)
+###Here are some display snippets
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or PROTein) and noh")
+	a,b,d=zip(*contacts)
+	c=0
+	for i,j in zip(a,b):
+		vdw=MoleculeRep(style='VDW', material='Opaque')
+		mol.addRep(vdw)     
+		#index=" ".join(map(str,(list(a)+list(b))))
+		vdw.changeSelection('index %d %d'%(i,j))
+		vdw.changeColor("ColorID %d"%(c%32))
+		c=c+1
+
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or PROTein) and noh")
+	a,b,d=zip(*contacts)
+	vdw=MoleculeRep(style='VDW', material='Opaque')
+	mol.addRep(vdw)     
+	index=" ".join(map(str,(list(a))))
+	vdw.changeSelection('index %s'%index)
+	# vdw.changeColor("ColorID %d"%(c%32))
+
+# mol load psf only_nucl_init.psf
+# mol addfile only_nucl_aligned.pdb waitfor all
+
+
+# set hlist [list "segname CHA" "segname CHE" "segname CHB" "segname CHF" "segname CHC" "segname CHG" "segname CHD" "segname CHH"]
+# set hname [list "H3_A" "H3_E" "H4_B" "H4_F" "H2A_C" "H2A_G" "H2B_D" "H2B_H"]
+
+
+
+
+# set nframes [expr  [molinfo top get numframes]  ]
+
+# set sel [atomselect top "nucleic"]
+# set sel2 [atomselect top "PROTein"]
+
+
+# set atoms [$sel list]
+
+#do something
+print "Execution time:"
+print(datetime.now()-startTime)
+
+# exit
+exit()
+
+

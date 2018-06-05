@@ -1,0 +1,152 @@
+#This script is to deterimine nucleosomal axis and
+#align it as proposed by Zhurkin
+
+from VMD import *
+from Molecule import *
+from atomsel import *
+import pandas as pd
+import numpy as np
+from datetime import datetime
+from scipy.optimize import minimize
+import pandas as pd
+
+from transformations import euler_matrix
+from transformations import translation_matrix
+from transformations import rotation_matrix
+
+
+from dna_param import X3DNA_analyze
+from dna_param import X3DNA_find_pair
+
+def calc_dist(v):
+	"""
+	Calculates sum(d-<d>)^2 from Z-axis
+	"""
+	np=v.shape[1]
+	#Get average
+	dav=0
+	for i in range(np):
+		dav=dav+(v[0,i]**2+v[1,i]**2)**0.5
+	dav=dav/np
+	dsum=0
+	for i in range(np):
+		dsum=dsum+((v[0,i]**2+v[1,i]**2)**0.5-dav)**2
+	return dsum
+
+
+
+#we need rotation and calculation
+def fun(p):
+	"""
+	does rotation and calls calc_dist
+	p[0] - alpha, p[1] - beta, p[2] -gamma, p[3] - x transl, p[4] - y transl
+	"""
+	Re = euler_matrix(p[0], p[1], p[2], 'rzxz')
+	T=translation_matrix([p[3],p[4],0])
+	M=np.dot(T,Re)
+	vn=np.dot(M,np.concatenate((vertices,np.array([[1]*vertices.shape[1]])),0))[:-1,:]
+	return(calc_dist(vn))
+	
+def funv(p):
+	"""
+	does rotation and calls calc_dist
+	p[0] - alpha, p[1] - beta, p[2] -gamma, p[3] - x transl, p[4] - y transl
+	"""
+	Re = euler_matrix(p[0], p[1], p[2], 'rzxz')
+	T=translation_matrix([p[3],p[4],0])
+	M=np.dot(T,Re)
+	vn=np.dot(M,np.concatenate((vertices,np.array([[1]*vertices.shape[1]])),0))[:-1,:]
+	return(vn)
+
+def funm(p):
+	"""
+	does rotation and calls calc_dist
+	p[0] - alpha, p[1] - beta, p[2] -gamma, p[3] - x transl, p[4] - y transl
+	"""
+	Re = euler_matrix(p[0], p[1], p[2], 'rzxz')
+	T=translation_matrix([p[3],p[4],0])
+	M=np.dot(T,Re)
+	return(M)
+# from collections import OrderedDict
+#import sys
+
+
+startTime = datetime.now()
+
+
+
+#print sys.path
+### Let's load the structure
+
+mol=Molecule()
+
+
+mol.load("../input/1kx5_ready.psf")
+mol.load("../input/1kx5_ready.pdb")
+
+#At first let's get base pair centers
+
+DNA=atomsel("nucleic and noh and resid '-73' to 73")
+all=atomsel("all")
+nucl=atomsel("protein or nucleic")
+
+ref_fp_id=X3DNA_find_pair(DNA)
+df=X3DNA_analyze(DNA,ref_fp_id)
+
+vertices=(df[['x','y','z']].values).T
+#Now we need to get nucleosome axis
+print calc_dist(vertices)
+x0 = [0.1]*5
+
+res = minimize(fun, x0,method='Nelder-Mead')
+print res
+print res.x
+print fun(res.x)
+vnew=funv(res.x)
+MAT1=funm(res.x)
+
+
+#Now let's get a perpendicular
+
+cbp=vnew[:,73]
+z=cbp[2]
+y=cbp[1]
+x=cbp[0]
+
+#we need this point to lie on Y axis! According to Zhurkin
+
+#Seems that it is better to take
+#Z as geometrical center of all BP
+z=np.mean(vnew[2,:])
+
+tmz=translation_matrix([0,0,-z])
+MAT2=np.dot(tmz,MAT1)
+print x
+print y
+rmzt=rotation_matrix(3.14159/2-np.angle(x+y*1j),[0,0,1])
+# rmzt=rotation_matrix(3.14,[0,0,1])
+
+MAT3=np.dot(rmzt,MAT2)
+# MAT3=MAT2
+# t=(-0.9996969699859619, -0.002169886138290167, 0.024519488215446472, 0.0, -0.0014522717101499438, 0.9995711445808411, 0.0292470995336771, 0.0, -0.02457243576645851, 0.029202627018094063, -0.9992714524269104, 0.0, 0.3103618621826172, -0.13102436065673828, -0.9151911735534668, 1.0)
+MATFIT=(MAT3.T).reshape((1,16))[0] #Magic
+print MATFIT # this is the final matix
+
+all.move(MATFIT)
+all.write('pdb','../analysis_data/system_aligned.pdb')
+nucl.write('pdb','../analysis_data/only_nucl_aligned.pdb')
+
+#
+
+
+print "Execution time:"
+print(datetime.now()-startTime)
+
+# exit
+exit()
+
+
+
+
+
+

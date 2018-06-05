@@ -1,0 +1,169 @@
+#We get raw data frames for PROTEIN-PROTein interactions in nucleosome
+#This version is for trajectory
+# is produces a bit different data frame - since we do not know the positions of hydrogens
+
+
+from VMD import *
+from Molecule import *
+from atomsel import *
+import pandas as pd
+import numpy as np
+from datetime import datetime
+import itertools
+from animate import *
+import sys
+sys.path.append('/Volumes/MDBD/Dropbox/work/MYSOFT/structure_analysis')
+
+
+from int_analyze import find_contacts
+from int_analyze import find_hbonds
+from int_analyze import find_watermed_bonds
+from int_analyze import find_watermed_bonds2
+from int_analyze import find_ionmed_bonds
+
+from vmd_int_analyze import get_contacts
+from vmd_int_analyze import get_hbonds, get_hbonds_imp, get_salt_bridges_imp, get_watermed_bonds_imp, get_ionmed_bonds_imp
+
+# from collections import OrderedDict
+#import sys
+
+#Let's define data frame panel
+panel_dict_contacts={}
+
+startTime = datetime.now()
+
+sum_df_time=pd.DataFrame()
+
+
+#print sys.path
+### Let's load the structure
+
+mol=Molecule()
+
+mol.load("../input/1kx5_ready.psf")
+mol.load("../analysis_data/md_nucl_solv.dcd",first=0,step=10)
+nf=mol.numFrames()
+
+#Here we need to produce a raw data frame for PROTein-DNA interactions
+#See definitions in our report
+all_prot="(noh and ((segname CHA CHE and resid > 36) or (segname CHB CHF and resid > 15) or (segname CHC CHG and resid > 11 and resid < 119) or (segname CHD CHH and resid > 20)))"
+chains=['CHA','CHB','CHC','CHD','CHE','CHF','CHG','CHH']
+
+for i in range(0,nf):
+	goto(i)
+	print "Frame",i
+	sum_df=pd.DataFrame()
+
+#Since we want interactions between separate chains but not inside chains
+#we will have to loop through chains
+	for chain1,chain2 in itertools.combinations(chains,2):
+		print "\nAnalyzing chain interactions", chain1, chain2
+		PROT1=atomsel("segname %s and "%chain1 + all_prot)
+		PROT2=atomsel("segname %s and "%chain2 + all_prot)
+
+		df_cont=get_contacts(PROT1,PROT2,columns=['PROT1_chain','PROT1_resid','PROT1_atom','PROT2_chain','PROT2_resid','PROT2_atom','type','param1'],code='SC')
+		df_hbonds=get_hbonds_imp(PROT1,PROT2,3.5,30,columns=['PROT1_chain','PROT1_resid','PROT1_atom','PROT2_chain','PROT2_resid','PROT2_atom','type','param1','param2','param3'])
+		df_ionpairs=get_salt_bridges_imp(PROT1,PROT2,3.9,False,columns=['PROT1_chain','PROT1_resid','PROT1_atom','PROT2_chain','PROT2_resid','PROT2_atom','type','param1'])
+		df_watermed_bonds=get_watermed_bonds_imp(PROT1,PROT2,3.5,30,columns=['PROT1_chain','PROT1_resid','PROT1_atom','PROT2_chain','PROT2_resid','PROT2_atom','type','param3'])
+		df_ionmed_bonds=get_ionmed_bonds_imp(PROT1,PROT2,3.9,columns=['PROT1_chain','PROT1_resid','PROT1_atom','PROT2_chain','PROT2_resid','PROT2_atom','type','param1','param3'],code='IM')
+		
+		
+		df=pd.concat([df_cont,df_hbonds,df_ionpairs,df_watermed_bonds,df_ionmed_bonds])
+		df = df.reset_index(drop=True)
+		
+		sum_df=pd.concat([sum_df,df])
+
+	for chain in chains:
+		print "\nAnalyzing intrachain interactions", chain
+		PROT1=atomsel("segname %s and "%chain + all_prot)
+		PROT2=atomsel("segname %s and "%chain + all_prot)
+		# df_cont=get_contacts(PROT1,PROT2,3.9,True,columns=['PROT1_chain','PROT1_resid','PROT1_atom','PROT2_chain','PROT2_resid','PROT2_atom','type','param1'],code='SC')
+		df_cont=pd.DataFrame()
+		
+		df_hbonds=get_hbonds_imp(PROT1,PROT2,3.5,30,True,columns=['PROT1_chain','PROT1_resid','PROT1_atom','PROT2_chain','PROT2_resid','PROT2_atom','type','param1','param2','param3'])
+		df_ionpairs=get_salt_bridges_imp(PROT1,PROT2,3.9,True,columns=['PROT1_chain','PROT1_resid','PROT1_atom','PROT2_chain','PROT2_resid','PROT2_atom','type','param1'])
+		df_watermed_bonds=get_watermed_bonds_imp(PROT1,PROT2,3.5,30,True,columns=['PROT1_chain','PROT1_resid','PROT1_atom','PROT2_chain','PROT2_resid','PROT2_atom','type','param3'])
+		df_ionmed_bonds=get_ionmed_bonds_imp(PROT1,PROT2,3.9,True,columns=['PROT1_chain','PROT1_resid','PROT1_atom','PROT2_chain','PROT2_resid','PROT2_atom','type','param1','param3'],code='IM')
+		df=pd.concat([df_cont,df_hbonds,df_ionpairs,df_watermed_bonds,df_ionmed_bonds])
+		df = df.reset_index(drop=True)
+		df = df[df.PROT1_resid!=df.PROT2_resid]
+		sum_df=pd.concat([sum_df,df])
+
+
+
+	sum_df = sum_df.reset_index(drop=True)
+	sum_df['Time']=i
+	sum_df_time=pd.concat([sum_df_time,sum_df])
+sum_df_time = sum_df_time.reset_index(drop=True)
+
+
+	# print df
+	# print df_contacts
+# panel_dict[0]=df
+#
+# p=pd.Panel(panel_dict)
+
+# bdf = pd.DataFrame()
+# for key in panel_dict:
+# 	value=panel_dict[key]
+# 	value['Time']=key
+# 	bdf=bdf.append(value)
+sum_df_time.to_csv('../analysis_data/prot_prot_raw_df.csv',index=False)
+###Here are some display snippets
+print "Total interactions",len(sum_df_time)
+print "Total H-bonds",len(sum_df[sum_df_time.type=='HB'])
+
+# if not (len(sum_df_time)==3342):
+    # raise AssertionError()
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or PROTein) and noh")
+	a,b,d=zip(*contacts)
+	c=0
+	for i,j in zip(a,b):
+		vdw=MoleculeRep(style='VDW', material='Opaque')
+		mol.addRep(vdw)     
+		#index=" ".join(map(str,(list(a)+list(b))))
+		vdw.changeSelection('index %d %d'%(i,j))
+		vdw.changeColor("ColorID %d"%(c%32))
+		c=c+1
+
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or PROTein) and noh")
+	a,b,d=zip(*contacts)
+	vdw=MoleculeRep(style='VDW', material='Opaque')
+	mol.addRep(vdw)     
+	index=" ".join(map(str,(list(a))))
+	vdw.changeSelection('index %s'%index)
+	# vdw.changeColor("ColorID %d"%(c%32))
+
+# mol load psf only_nucl_init.psf
+# mol addfile only_nucl_aligned.pdb waitfor all
+
+
+# set hlist [list "segname CHA" "segname CHE" "segname CHB" "segname CHF" "segname CHC" "segname CHG" "segname CHD" "segname CHH"]
+# set hname [list "H3_A" "H3_E" "H4_B" "H4_F" "H2A_C" "H2A_G" "H2B_D" "H2B_H"]
+
+
+
+
+# set nframes [expr  [molinfo top get numframes]  ]
+
+# set sel [atomselect top "nucleic"]
+# set sel2 [atomselect top "PROTein"]
+
+
+# set atoms [$sel list]
+
+#do something
+print "Execution time:"
+print(datetime.now()-startTime)
+
+# exit
+exit()
+
+
+

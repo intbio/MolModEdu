@@ -1,0 +1,194 @@
+#We get raw data frames for nucleosome-water interactions in nucleosome
+#This version is for crystal
+# is produces a bit different data frame - since we do not know the positions of hydrogens
+
+
+from VMD import *
+from Molecule import *
+from atomsel import *
+import pandas as pd
+import numpy as np
+from datetime import datetime
+from animate import *
+
+
+from int_analyze import find_contacts
+from int_analyze import find_hbonds
+from int_analyze import find_watermed_bonds
+from int_analyze import find_watermed_bonds2
+from int_analyze import find_ionmed_bonds
+
+# from collections import OrderedDict
+#import sys
+
+#Let's define data frame panel
+sum_df=pd.DataFrame()
+
+startTime = datetime.now()
+
+
+
+#print sys.path
+### Let's load the structure
+
+mol=Molecule()
+# mol.load("only_nucl_init.psf")
+# mol.load("only_nucl_aligned.pdb")
+
+# mol.load("structs/CCGG.pdb")
+
+mol.load("../analysis_data/system_aligned.pdb")
+mol.load("../analysis_data/md_nucl_solv.dcd",first=250,step=1)
+nf=mol.numFrames()
+
+#Here we need to produce a raw data frame for WATein-DNA interactions
+#See definitions in our report
+
+for i in range(1,nf):
+	goto(i)
+	print "Frame",i-1
+
+	######################################################
+	#Now let's proceed with hydrogen bonds               #
+	######################################################
+
+	INT_heavy=atomsel("(nucleic and noh and (name \"N.*\" or name \"O.*\")) or ((protein and noh and (name \"N.*\" or name \"O.*\" or name \"S.*\")) and ((segname CHA CHE and resid > 36) or (segname CHB CHF and resid > 15) or (segname CHC CHG and resid > 11 and resid < 119) or (segname CHD CHH and resid > 20)))")
+	WAT_heavy=atomsel("water and name O and within 4.0 of index %s" % " ".join(map(str,INT_heavy.get('index'))))
+
+	#The bonds to Hydrogen in charmm are all less than 1.2 A
+	#Let's get the corresponding hydrogens
+	INT_H=atomsel("hydrogen and within 1.4 of index %s" % " ".join(map(str,INT_heavy.get('index'))))
+	WAT_H=atomsel("hydrogen and within 1.4 of index %s" % " ".join(map(str,WAT_heavy.get('index'))))
+
+	INT_heavy_ind=INT_heavy.get('index')
+	INT_heavy_name=INT_heavy.get('name')
+	INT_heavy_resid=INT_heavy.get('resid')
+	INT_heavy_chain=INT_heavy.get('segname')
+	INT_heavy_xyz=zip(INT_heavy.get('x'),INT_heavy.get('y'),INT_heavy.get('z'))
+	INT_H_xyz=zip(INT_H.get('x'),INT_H.get('y'),INT_H.get('z'))
+	INT_heavy_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(INT_heavy_ind,INT_heavy_chain,INT_heavy_resid,INT_heavy_name))
+
+	# print INT_heavy_ind[1711]
+
+	WAT_heavy_ind=WAT_heavy.get('index')
+	WAT_heavy_name=WAT_heavy.get('name')
+	WAT_heavy_resid=WAT_heavy.get('resid')
+	WAT_heavy_chain=WAT_heavy.get('segname')
+	WAT_heavy_xyz=zip(WAT_heavy.get('x'),WAT_heavy.get('y'),WAT_heavy.get('z'))
+	WAT_H_xyz=zip(WAT_H.get('x'),WAT_H.get('y'),WAT_H.get('z'))
+	WAT_heavy_params=dict((key, (chain,resid,name)) for (key,chain,resid,name) in zip(WAT_heavy_ind,WAT_heavy_chain,WAT_heavy_resid,WAT_heavy_name))
+
+	## Now we can call a hbonds kernel
+	# Input: list of donors coordinates and indices, list of coordinates of all H, list of aceptor coordinates and indices
+
+	#NOTE: for crystal we set D-H-A - any, since Hydrogen positions are arbitrary!
+	hbonds=find_hbonds(INT_heavy_xyz,INT_heavy_ind,INT_H_xyz,WAT_heavy_xyz,WAT_heavy_ind,WAT_H_xyz,3.5,30)
+
+	num_hbonds=len(hbonds)
+	print "Nuceosome water H-bonds found: ", num_hbonds
+
+	# print hbonds
+
+	hbonds_np=np.array(hbonds)
+	#get INT chain list
+	# print type(INT_heavy_params.keys()[1726])
+	# print type(hbonds_np[0,0])
+	INT_chain_list=np.array([INT_heavy_params[int(x)][0] for x in hbonds_np[:,0] ],ndmin=2)
+	INT_resid_list=np.array([INT_heavy_params[int(x)][1] for x in hbonds_np[:,0] ],ndmin=2)
+	INT_atom_list=np.array([INT_heavy_params[int(x)][2] for x in hbonds_np[:,0] ],ndmin=2)
+	# print INT_chain_list
+	# print chains
+
+	WAT_chain_list=np.array([WAT_heavy_params[int(x)][0] for x in hbonds_np[:,1] ],ndmin=2)
+	WAT_resid_list=np.array([WAT_heavy_params[int(x)][1] for x in hbonds_np[:,1] ],ndmin=2)
+	WAT_atom_list=np.array([WAT_heavy_params[int(x)][2] for x in hbonds_np[:,1] ],ndmin=2)
+
+
+
+	#let's make a numpy array for data frame
+	df_array=np.hstack((INT_chain_list.T,INT_resid_list.T,INT_atom_list.T,np.expand_dims(hbonds_np[:,3],axis=1).astype('|S7'),np.expand_dims(hbonds_np[:,4],axis=1).astype('|S7')))
+	# print df_array
+	df=pd.DataFrame(df_array,columns=['INT_chain','INT_resid','INT_atom','param1','param2'])
+	df=df.convert_objects(convert_numeric=True)
+	sum_df=pd.concat([sum_df,df])
+
+	# print df2.dtypes
+grouped=sum_df.groupby(['INT_chain','INT_resid','INT_atom'])
+c=grouped['param1'].count()
+p1m=grouped['param1'].mean()
+p2m=grouped['param2'].mean()
+
+adf=pd.DataFrame({'num_HB':c,'param1':p1m,'param2':p2m})
+adf=adf.reset_index()
+adf['num_HB']=adf['num_HB']/float(nf)
+	# adf['Time']=i
+	# sum_df=pd.concat([sum_df,adf])
+# sum_df = sum_df.reset_index(drop=True)
+
+# print cc[:5]	
+# df=pd.concat([df_cont,df_hbonds,df_ionpairs,df_watermed_bonds,df_ionmed_bonds])
+# df = df.reset_index(drop=True)
+# print df
+# print df_contacts
+# panel_dict[0]=df
+#
+# p=pd.Panel(panel_dict)
+
+# bdf = pd.DataFrame()
+# for key in panel_dict:
+# 	value=panel_dict[key]
+# 	value['Time']=key
+# 	bdf=bdf.append(value)
+adf.to_csv('../analysis_data/wat_int_raw_df.csv',index=False)
+###Here are some display snippets
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or WATein) and noh")
+	a,b,d=zip(*contacts)
+	c=0
+	for i,j in zip(a,b):
+		vdw=MoleculeRep(style='VDW', material='Opaque')
+		mol.addRep(vdw)     
+		#index=" ".join(map(str,(list(a)+list(b))))
+		vdw.changeSelection('index %d %d'%(i,j))
+		vdw.changeColor("ColorID %d"%(c%32))
+		c=c+1
+
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or WATein) and noh")
+	a,b,d=zip(*contacts)
+	vdw=MoleculeRep(style='VDW', material='Opaque')
+	mol.addRep(vdw)     
+	index=" ".join(map(str,(list(a))))
+	vdw.changeSelection('index %s'%index)
+	# vdw.changeColor("ColorID %d"%(c%32))
+
+# mol load psf only_nucl_init.psf
+# mol addfile only_nucl_aligned.pdb waitfor all
+
+
+# set hlist [list "segname CHA" "segname CHE" "segname CHB" "segname CHF" "segname CHC" "segname CHG" "segname CHD" "segname CHH"]
+# set hname [list "H3_A" "H3_E" "H4_B" "H4_F" "H2A_C" "H2A_G" "H2B_D" "H2B_H"]
+
+
+
+
+# set nframes [expr  [molinfo top get numframes]  ]
+
+# set sel [atomselect top "nucleic"]
+# set sel2 [atomselect top "WATein"]
+
+
+# set atoms [$sel list]
+
+#do something
+print "Execution time:"
+print(datetime.now()-startTime)
+
+# exit
+
+exit()
+

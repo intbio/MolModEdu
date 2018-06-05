@@ -1,0 +1,87 @@
+#The idea is to get data frames with all DNA parameters
+
+#Important is that we need to input a structre
+#aligned according to Zhurkin
+
+from VMD import *
+from Molecule import *
+from atomsel import *
+from animate import *
+from VMD import evaltcl
+
+import pandas as pd
+import numpy as np
+from datetime import datetime
+
+import pandas as pd
+
+evaltcl("package require pbctools")
+
+
+mol=Molecule()
+
+
+mol.load("../input/1kx5_ready.psf")
+mol.load("/Users/alexeyshaytan/temp/t.dcd",first=0,step=1)
+
+# mol.load("../output/md.dcd",first=0,step=10)
+# mol.load("../output/md2.dcd",first=0,step=10)
+# evaltcl('pbc wrap -all -center com -compound res  -centersel "protein" -sel "resname SOD or resname CLA"')
+# mol.load("../analysis_data/md_nucl_solv.dcd",first=0,step=1)
+# evaltcl('set nframes [expr  [molinfo top get numframes] - 1 ]')
+# evaltcl('set all [atomselect top "all"]')
+# evaltcl('animate write dcd /Users/alexeyshaytan/temp/t.dcd beg 1 end $nframes waitfor all sel $all')
+
+def avr_conc(conc):
+	return sum(conc)/float(len(conc))*10**4/6.02
+
+def errest_conc(conc):
+	avr=avr_conc(conc)
+	er=0.
+	N=float(len(conc))
+	# print N, "points"
+	for i in conc:
+		er=er+(avr-i)**2
+	return (er/(N*(N-1)))**0.5
+
+nf=mol.numFrames()
+
+
+goto(0)
+
+sod_conc=[]
+cla_conc=[]
+
+w=2
+s=0
+
+for i in range(1,nf):
+	goto(i)
+	# print "Frame",i
+	pbc=evaltcl("pbc get").strip("{}")
+	(xd,yd,zd,ax,ay,az)=map(float,pbc.split(' '))
+	P=atomsel("protein")
+	av=P.center()[0]
+	rb=av+xd/2.-s
+	lb=av-xd/2.+s
+	SOD=atomsel("name SOD and ((x < %f and x > %f) or (x < %f and x > %f))"%(rb,rb-w,lb+w,lb))
+	CLA=atomsel("name CLA and ((x < %f and x > %f) or (x < %f and x > %f))"%(rb,rb-w,lb+w,lb))
+
+
+	sod_conc.append(len(SOD.get('x'))/(2*2*yd*zd))
+	cla_conc.append(len(CLA.get('x'))/(2*2*yd*zd))
+
+
+print avr_conc(sod_conc)*1000,"+-", errest_conc(sod_conc)*1000,"mM Na"
+print avr_conc(cla_conc)*1000,"+-", errest_conc(cla_conc)*1000,"mM CL"
+
+#groove params are for levels from 1.5 to 146.5
+#to be able to merge them we need to take only half of them
+
+
+
+
+# exit
+exit()
+
+

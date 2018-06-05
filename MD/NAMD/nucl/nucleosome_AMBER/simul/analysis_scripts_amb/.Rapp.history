@@ -1,0 +1,741 @@
+rollmean(dccd$num.x,10)
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(y=rollmean(num.x),color='red')+geom_point(aes(y=num.y),color='blue')+stat_smooth(aes(y=num.y),color='blue')
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(y=rollmean(dccd$num.x),color='red')+geom_point(aes(y=num.y),color='blue')+stat_smooth(aes(y=num.y),color='blue')
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(y=rollmean(dccd$num.x,10),color='red')+geom_point(aes(y=num.y),color='blue')+stat_smooth(aes(y=num.y),color='blue')
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(y=rollmean(dccd$num.x,10),color='red')+geom_point(aes(y=num.y),color='blue')
+c=seq(1,10)
+rollmean(c,5)
+?rollmean
+rollmean(c,5,fill=c(NA,NULL,NA))
+rollmean(c,5,fill=c(NULL,NULL,NA))
+rollmean(c,5,fill=c(NULL))
+rollmean(c,5,fill=c(NA))
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(y=rollmean(dccd$num.x,10),fill=c(NA),color='red')+geom_point(aes(y=num.y),color='blue')
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(y=rollmean(dccd$num.x,10),fill=c(NA))+geom_point(aes(y=num.y),color='blue')
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(data=dccd,x=dccd$Time, y=rollmean(dccd$num.x,10),fill=c(NA))+geom_point(aes(y=num.y),color='blue')
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(data=dccd,x=dccd$Time, y=dccd$num.x)+geom_point(aes(y=num.y),color='blue')
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(data=dccd,x=dccd$Time*10, y=dccd$num.x)+geom_point(aes(y=num.y),color='blue')
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(data=dccd,x=dccd$Time*10, y=rollmean(dccd$num.x,10,fill=c(NA,NULL,NA)))+geom_point(aes(y=num.y),color='blue')
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(data=dccd,x=dccd$Time*10, y=rollmean(dccd$num.x,10,fill=c(NA,NULL,NA)),color='red')+geom_point(aes(y=num.y),color='blue')
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(data=dccd,x=dccd$Time*10, y=rollmean(dccd$num.x,10,fill=c(NA,NULL,NA)),color='blue')+geom_point(aes(y=num.y),color='blue')+geom_line(data=dccd,x=dccd$Time*10, y=rollmean(dccd$num.y,10,fill=c(NA,NULL,NA)),color='red')
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(data=dccd,x=dccd$Time*10, y=rollmean(dccd$num.x,50,fill=c(NA,NULL,NA)),color='blue')+geom_point(aes(y=num.y),color='blue')+geom_line(data=dccd,x=dccd$Time*10, y=rollmean(dccd$num.y,50,fill=c(NA,NULL,NA)),color='red')
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(data=dccd,x=dccd$Time*10, y=rollmean(dccd$num.x,100,fill=c(NA,NULL,NA)),color='blue',size=2)+geom_point(aes(y=num.y),color='blue')+geom_line(data=dccd,x=dccd$Time*10, y=rollmean(dccd$num.y,100,fill=c(NA,NULL,NA)),color='red')
+ggplot(data=dccd,aes(x=Time*10))+geom_point(aes(y=num.x),color='red')+geom_line(data=dccd,x=dccd$Time*10, y=rollmean(dccd$num.x,100,fill=c(NA,NULL,NA)),color='blue',size=2)+geom_point(aes(y=num.y),color='blue')+geom_line(data=dccd,x=dccd$Time*10, y=rollmean(dccd$num.y,100,fill=c(NA,NULL,NA)),color='red',size=2)
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+# library(gridExtra)#
+###############
+INDEP=1 # frequency of independent points#
+errest<-function(x,numf){#
+#
+return(sd(x)/sqrt(numf/INDEP))#
+}#
+#
+myshift<-function(x){ #fits the vector to the left by 1, add 1 on end#
+return(c(x[-1],1))#
+#
+}#
+#
+dna<-read.csv('../analysis_data/dna2_param_df_md.csv',na.strings=c("NA",'---'))#
+nf=length(table(dna$Time))
+nf
+dna_pair=ddply(dna,'BPnum',summarize,Pairing2_av=mean(Pairing))
+head(dna_pair)
+summary(dna)
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(foreach)#
+library(doParallel)#
+# library(gridExtra)#
+###############
+FREQ=10 #number of data points in 1 ns#
+errest<-function(x,numf){#
+#
+return(sd(x)/sqrt(numf))#
+}#
+#
+myshift<-function(x){ #fits the vector to the left by 1, add 1 on end#
+return(c(x[-1],1))#
+#
+}#
+#
+dna<-read.csv('../analysis_data/dna2_param_df_md.csv',na.strings=c("NA",'---'))#
+nf=length(table(dna$Time))
+summary(dna)
+lapply(dna,class)
+get_act<-function(x){ #fits the vector to the left by 1, add 1 on end#
+if(NA%in%x){return(NA)}#
+else{#
+xt=ts(x,frequency=FREQ)#
+a=acf(xt,plot=FALSE)$acf#
+t=seq(length(a))/FREQ#
+res=nls(a~exp(-t/tau),start=list(tau=1),control=list(minFactor=1e-12,warnOnly = TRUE))#
+print(coef(res)[[1]])#
+return(coef(res)[[1]])#
+}#
+}
+dna_act=ddply(dna,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna_act=ddply(dna,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))#
+dnaseq<-"ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAAAAGGCATGTTCAGCTGGAATCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATACACTTTTGGTAGTATCTGCAGGTGGATATTGAT"#
+seqdf=data.frame(sequence=substring(dnaseq, seq(1,nchar(dnaseq)),seq(1,nchar(dnaseq))),X=seq(-73,73,1))#
+###############
+################
+##Loading data frames#
+#DNA-protein interactions#
+# dna_prot<-read.csv('../analysis_data/dna_prot_raw_df.csv')#
+dna_avr<-read.csv('../analysis_data/dna2_param_df_md_avr.csv')#
+dna_avr=rename(dna_avr, c('Shear_av'='Shear','Stretch_av'='Stretch','Stagger_av'='Stagger','Buckle_av'='Buckle','Prop.Tw_av'='Prop.Tw','Opening_av'='Opening','Shift_av'='Shift','Tilt_av'='Tilt','Rise_av'='Rise','Pairing_av'='Pairing',"x_av"='x',"y_av"='y',"z_av"='z', "Roll_av"="Roll",'Twist_av'='Twist','Slide_av'='Slide','P_1_av'='P_1','P_2_av'='P_2','chi_1_av'='chi_1','chi_2_av'='chi_2'))#
+#
+dna_cryst<-read.csv('../analysis_data/dna2_param_df_cryst.csv')#
+#
+d_c=melt(dna_cryst,id.vars=c('BPnum'),measure.vars=c('Shear','Stretch','Stagger','Buckle','Prop.Tw','Opening','Shift','Tilt','Rise','x','y','z','Roll','Twist','Slide','chi_1','chi_2'))#
+d_md=melt(dna_avr,id.vars=c('BPnum'),measure.vars=c('Shear','Stretch','Stagger','Buckle','Prop.Tw','Opening','Shift','Tilt','Rise','x','y','z','Roll','Twist','Slide','chi_1','chi_2'))#
+d_c$data='X-ray'#
+d_md$data='MD average'#
+d=rbind(d_c,d_md)#
+theme_set(theme_bw(base_size = 18))#
+#
+#Pairing before all#
+p<-ggplot(data=dna_avr,aes(x=BPnum-74,y=Pairing*100)) + ggtitle("Pairing") + #
+xlab("Base pair")+ylab("Percentage")+geom_bar(stat='identity',size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank())+#
+geom_text(data=seqdf,aes(x=X,y=-1.1,label=sequence),size=3)#
+#
+ggsave(filename="../analysis_data/dna2_param_pairing.png",plot=p,width=15,height=6)#
+###Roll and z-profiles#
+r<-ggplot(data=d[d$variable=='Roll'&d$BPnum<147,],aes(x=BPnum-74.5,y=value)) + ggtitle("Roll") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank())+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Roll'&d$BPnum<147,]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+#
+z<-ggplot(data=d[d$variable=='z',],aes(x=BPnum-74,y=value)) + ggtitle("Z axis distance") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank())+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='z',]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+#
+q<-arrangeGrob(r,z,ncol=1)#
+#
+ggsave(filename="../analysis_data/dna2_param_roll_z.png",plot=q,width=15,height=10)#
+#adding RMSD#
+rd=r+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>2,],aes(x=BPnum-74.5,y=Roll,ymin=Roll-Roll_sd,ymax=Roll+Roll_sd))+#
+ggtitle("Roll and RMSD")#
+#
+re=r+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>2,],aes(x=BPnum-74.5,y=Roll,ymin=Roll-Roll_er,ymax=Roll+Roll_er))+#
+ggtitle("Roll and error estimate for mean")#
+#
+q<-arrangeGrob(rd,re,ncol=1)#
+ggsave(filename="../analysis_data/dna2_param_roll_z_fluct.png",plot=q,width=15,height=10)#
+t<-ggplot(data=d[d$variable=='Twist'&d$BPnum<147,],aes(x=BPnum-74.5,y=value)) + ggtitle("Twist") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank())+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Twist'&d$BPnum<147,]$value,na.rm=TRUE)*0.95,label=sequence),size=3)#
+#
+s<-ggplot(data=d[d$variable=='Slide'&d$BPnum<147,],aes(x=BPnum-74.5,y=value)) + ggtitle("Slide") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank())+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Slide'&d$BPnum<147,]$value,na.rm=TRUE)*1.2,label=sequence),size=3)#
+q<-arrangeGrob(t,s,ncol=1)#
+ggsave(filename="../analysis_data/dna2_param_twist_slide.png",plot=q,width=15,height=10)#
+#
+q<-arrangeGrob(r,t,ncol=1)#
+ggsave(filename="../analysis_data/dna2_param_roll_twist.png",plot=q,width=15,height=10)#
+q<-arrangeGrob(r,s,ncol=1)#
+ggsave(filename="../analysis_data/dna2_param_roll_slide.png",plot=q,width=15,height=10)
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+####################
+dnaseq<-"ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAAAAGGCATGTTCAGCTGGAATCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATACACTTTTGGTAGTATCTGCAGGTGGATATTGAT"#
+seqdf=data.frame(sequence=substring(dnaseq, seq(1,nchar(dnaseq)),seq(1,nchar(dnaseq))),X=seq(-73,73,1))#
+###############
+################
+##Loading data frames#
+#DNA-protein interactions#
+# dna_prot<-read.csv('../analysis_data/dna_prot_raw_df.csv')#
+dna_avr<-read.csv('../analysis_data/dna2_param_df_md_avr.csv')#
+dna_avr=rename(dna_avr, c('Shear_av'='Shear','Stretch_av'='Stretch','Stagger_av'='Stagger','Buckle_av'='Buckle','Prop.Tw_av'='Prop.Tw','Opening_av'='Opening','Shift_av'='Shift','Tilt_av'='Tilt','Rise_av'='Rise','Pairing_av'='Pairing',"x_av"='x',"y_av"='y',"z_av"='z', "Roll_av"="Roll",'Twist_av'='Twist','Slide_av'='Slide','P_1_av'='P_1','P_2_av'='P_2','chi_1_av'='chi_1','chi_2_av'='chi_2'))#
+#
+dna_cryst<-read.csv('../analysis_data/dna2_param_df_cryst.csv')#
+#
+d_c=melt(dna_cryst,id.vars=c('BPnum'),measure.vars=c('Shear','Stretch','Stagger','Buckle','Prop.Tw','Opening','Shift','Tilt','Rise','x','y','z','Roll','Twist','Slide','chi_1','chi_2'))#
+d_md=melt(dna_avr,id.vars=c('BPnum'),measure.vars=c('Shear','Stretch','Stagger','Buckle','Prop.Tw','Opening','Shift','Tilt','Rise','x','y','z','Roll','Twist','Slide','chi_1','chi_2'))#
+d_c$data='X-ray'#
+d_md$data='MD average'#
+d=rbind(d_c,d_md)#
+theme_set(theme_bw(base_size = 18))#
+#
+#Pairing before all#
+p<-ggplot(data=dna_avr,aes(x=BPnum-74,y=Pairing*100)) + ggtitle("Pairing") + #
+xlab("Base pair")+ylab("Percentage")+geom_bar(stat='identity',size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank())+#
+geom_text(data=seqdf,aes(x=X,y=-1.1,label=sequence),size=3)#
+#
+ggsave(filename="../analysis_data/dna2_param_pairing.png",plot=p,width=15,height=6)#
+###Roll and z-profiles#
+r<-ggplot(data=d[d$variable=='Roll'&d$BPnum<147,],aes(x=BPnum-74.5,y=value)) + ggtitle("Roll") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank())+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Roll'&d$BPnum<147,]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+#
+z<-ggplot(data=d[d$variable=='z',],aes(x=BPnum-74,y=value)) + ggtitle("Z axis distance") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank())+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='z',]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+#
+q<-arrangeGrob(r,z,ncol=1)#
+#
+ggsave(filename="../analysis_data/dna2_param_roll_z.png",plot=q,width=15,height=10)#
+#adding RMSD#
+rd=r+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>2,],aes(x=BPnum-74.5,y=Roll,ymin=Roll-Roll_sd,ymax=Roll+Roll_sd))+#
+ggtitle("Roll and RMSD")#
+#
+re=r+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>2,],aes(x=BPnum-74.5,y=Roll,ymin=Roll-Roll_er,ymax=Roll+Roll_er))+#
+ggtitle("Roll and error estimate for mean")#
+#
+q<-arrangeGrob(rd,re,ncol=1)#
+ggsave(filename="../analysis_data/dna2_param_roll_z_fluct.png",plot=q,width=15,height=10)#
+t<-ggplot(data=d[d$variable=='Twist'&d$BPnum<147,],aes(x=BPnum-74.5,y=value)) + ggtitle("Twist") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank())+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Twist'&d$BPnum<147,]$value,na.rm=TRUE)*0.95,label=sequence),size=3)#
+#
+s<-ggplot(data=d[d$variable=='Slide'&d$BPnum<147,],aes(x=BPnum-74.5,y=value)) + ggtitle("Slide") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank())+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Slide'&d$BPnum<147,]$value,na.rm=TRUE)*1.2,label=sequence),size=3)#
+q<-arrangeGrob(t,s,ncol=1)#
+ggsave(filename="../analysis_data/dna2_param_twist_slide.png",plot=q,width=15,height=10)#
+#
+q<-arrangeGrob(r,t,ncol=1)#
+ggsave(filename="../analysis_data/dna2_param_roll_twist.png",plot=q,width=15,height=10)#
+q<-arrangeGrob(r,s,ncol=1)#
+ggsave(filename="../analysis_data/dna2_param_roll_slide.png",plot=q,width=15,height=10)
+r=r#
+rd=rd+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))+ggtitle('Roll')#
+t=t+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))#
+td=t+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>4,],aes(x=BPnum-74.5,y=Twist,ymin=Twist-Twist_sd,ymax=Twist+Twist_sd))#
+s=s+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))#
+sd=s+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>4,],aes(x=BPnum-74.5,y=Slide,ymin=Slide-Slide_sd,ymax=Slide+Slide_sd))
+sh<-ggplot(data=d[d$variable=='Shift'&d$BPnum<147&d$BPnum>0,],aes(x=BPnum-74.5,y=value)) + ggtitle("Shift") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Shift'&d$BPnum<147,]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+shd=sh+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>4,],aes(x=BPnum-74.5,y=Shift,ymin=Shift-Shift_sd,ymax=Shift+Shift_sd))
+tl<-ggplot(data=d[d$variable=='Tilt'&d$BPnum<147&d$BPnum>3,],aes(x=BPnum-74.5,y=value)) + ggtitle("Tilt") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Tilt'&d$BPnum<147,]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+tld=tl+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>4,],aes(x=BPnum-74.5,y=Tilt,ymin=Tilt-Tilt_sd,ymax=Tilt+Tilt_sd))
+ri<-ggplot(data=d[d$variable=='Rise'&d$BPnum<147&d$BPnum>0,],aes(x=BPnum-74.5,y=value)) + ggtitle("Rise") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Rise'&d$BPnum<147,]$value,na.rm=TRUE)*0.9,label=sequence),size=3)#
+rid=ri+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>4,],aes(x=BPnum-74.5,y=Rise,ymin=Rise-Rise_sd,ymax=Rise+Rise_sd))#
+she<-ggplot(data=d[d$variable=='Shear'&d$BPnum<147&d$BPnum>0,],aes(x=BPnum-74,y=value)) + ggtitle("Shear") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Shear'&d$BPnum<147,]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+shed=she+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>4,],aes(x=BPnum-74,y=Shear,ymin=Shear-Shear_sd,ymax=Shear+Shear_sd))#
+st<-ggplot(data=d[d$variable=='Stretch'&d$BPnum<147&d$BPnum>0,],aes(x=BPnum-74,y=value)) + ggtitle("Stretch") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Stretch'&d$BPnum<147,]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+std=st+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>4,],aes(x=BPnum-74,y=Stretch,ymin=Stretch-Stretch_sd,ymax=Stretch+Stretch_sd))#
+sta<-ggplot(data=d[d$variable=='Stagger'&d$BPnum<147&d$BPnum>0,],aes(x=BPnum-74,y=value)) + ggtitle("Stagger") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Stagger'&d$BPnum<147,]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+stad=sta+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>4,],aes(x=BPnum-74,y=Stagger,ymin=Stagger-Stagger_sd,ymax=Stagger+Stagger_sd))#
+b<-ggplot(data=d[d$variable=='Buckle'&d$BPnum<147&d$BPnum>0,],aes(x=BPnum-74,y=value)) + ggtitle("Buckle") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Buckle'&d$BPnum<147,]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+bd=b+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>4,],aes(x=BPnum-74,y=Buckle,ymin=Buckle-Buckle_sd,ymax=Buckle+Buckle_sd))#
+pt<-ggplot(data=d[d$variable=='Prop.Tw'&d$BPnum<147&d$BPnum>0,],aes(x=BPnum-74,y=value)) + ggtitle("Prop.Tw") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Prop.Tw'&d$BPnum<147,]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+ptd=pt+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>4,],aes(x=BPnum-74,y=Prop.Tw,ymin=Prop.Tw-Prop.Tw_sd,ymax=Prop.Tw+Prop.Tw_sd))#
+o<-ggplot(data=d[d$variable=='Opening'&d$BPnum<147&d$BPnum>3,],aes(x=BPnum-74,y=value)) + ggtitle("Opening") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Opening'&d$BPnum<147,]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+od=o+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>4,],aes(x=BPnum-74,y=Opening,ymin=Opening-Opening_sd,ymax=Opening+Opening_sd))#
+###And  all x y z #
+z=z+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))#
+zd=z+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>2,],aes(x=BPnum-74,y=z,ymin=z-z_sd,ymax=z+z_sd))#
+#
+x<-ggplot(data=d[d$variable=='x',],aes(x=BPnum-74,y=value)) + ggtitle("X axis distance") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='x',]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+xd=x+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>2,],aes(x=BPnum-74,y=x,ymin=x-x_sd,ymax=x+x_sd))#
+y<-ggplot(data=d[d$variable=='y',],aes(x=BPnum-74,y=value)) + ggtitle("Y axis distance") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='y',]$value,na.rm=TRUE)*1.1,label=sequence),size=3)#
+yd=y+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>2,],aes(x=BPnum-74,y=y,ymin=y-y_sd,ymax=y+y_sd))#
+##Plot all profiles#
+#Manual tweeks#
+shed=shed+ylim(-2,1.5)#
+od=od+ylim(-20,20)#
+td=td+ylim(10,45)
+q<-arrangeGrob(shed,shd,std,sd,stad,rid,bd,tld,ptd,rd,od,td,ncol=2)
+shed
+shd
+std
+sd
+stad
+rid
+bd
+tld
+ptd
+rd
+od
+td
+t<-ggplot(data=d[d$variable=='Twist'&d$BPnum<147,],aes(x=BPnum-74.5,y=value)) + ggtitle("Twist") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank())+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Twist'&d$BPnum<147,]$value,na.rm=TRUE)*0.95,label=sequence),size=3)
+t
+t=t+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank(),legend.position = "none",axis.title.x=element_blank(),plot.margin = unit(c(-0.15,0.2,-0.15,0), "cm"))
+t
+td=t+geom_errorbar(data=dna_avr[dna_avr$BPnum<147&dna_avr$BPnum>4,],aes(x=BPnum-74.5,y=Twist,ymin=Twist-Twist_sd,ymax=Twist+Twist_sd))
+td
+td=td+ylim(10,45)
+td
+t<-ggplot(data=d[d$variable=='Twist'&d$BPnum<147&d$BPnum>2,],aes(x=BPnum-74.5,y=value)) + ggtitle("Twist") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank())+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Twist'&d$BPnum<147,]$value,na.rm=TRUE)*0.95,label=sequence),size=3)
+t
+t=t+ylim(10,45)
+t
+t=t+ylim(0,45)
+t
+t<-ggplot(data=d[d$variable=='Twist'&d$BPnum<147&d$BPnum>2,],aes(x=BPnum-74.5,y=value)) + ggtitle("Twist") + #
+xlab("Base pair")+geom_line(aes(color=data),size=1)+geom_point(aes(color=data),size=3)+#
+scale_x_continuous(breaks = round(seq(-80,80, by = 10),1))+scale_color_manual(values=c('blue','red','green'))+#
+theme(panel.grid.major = element_line(colour = "grey90",size=2),panel.grid.minor = element_blank())+#
+geom_text(data=seqdf,aes(x=X,y=min(d[d$variable=='Twist'&d$BPnum<147&d$BPnum>2,]$value,na.rm=TRUE)*0.95,label=sequence),size=3)
+t=t+ylim(0,45)
+t
+summary(dna)
+dna2=subset(dna,BPnum%in%c(1,2,147))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna2=subset(dna,BPnum>100)
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna2=subset(dna,BPnum>120)
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna2=subset(dna,BPnum>130)
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna2=subset(dna,BPnum>140)
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna2=subset(dna,BPnum>135)
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna2=subset(dna,BPnum>136)
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna2=subset(dna,BPnum==137)
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna2=subset(dna,BPnum==138)
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna2=subset(dna,BPnum==139)
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna2=subset(dna,BPnum==140)
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna2=subset(dna,BPnum==139)
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&(seq(1,10)],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&(seq(1,10))],2,get_act))
+ncolumns(dna2)
+ncolumn(dna2)
+ncols(dna2)
+ncol(dna2)
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&(seq(1,63))],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,lapply(df,class)%in%c('numeric')&(seq(1,63)>10)],2,get_act))
+seq(1,63)>10
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)>10)&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)<10)&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)>40)&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)>50)&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)>45)&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)==40)&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)>40)&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)>41)&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)>42)&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)>43)&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)>44)&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)>45)&!(names(df)%in%c('Pairing','Level','Time'))],2,get_act))
+dna2[44]
+head(dna2[44])
+get_acf(dna2[44])
+get_act(dna2[44])
+get_act(dna2[45])
+get_act(dna2[43])
+get_act(dna2[45])
+head(dna2[45])
+plot(dna2$Time,dna2$gamma_1)
+139-74
+failwith(NA,get_act(dna2[45]))
+?failwith
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)>44)&!(names(df)%in%c('Pairing','Level','Time'))],2,failwith(NA,get_act)))
+?failwith
+dna_act=ddply(dna2,'BPnum',function(df) apply(df[,(lapply(df,class)%in%c('numeric'))&(seq(1,63)>44)&!(names(df)%in%c('Pairing','Level','Time'))],2,failwith(NA,get_act,quiet=TRUE)))
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+# library(gridExtra)#
+###############
+#########Starting with DNA-protein interactions##########
+################
+##Loading data frames#
+#DNA-protein interactions#
+# dna_prot<-read.csv('../analysis_data/dna_prot_raw_df.csv')#
+# dna_prot_cryst<-read.csv('../analysis_data/dna_prot_raw_df_cryst.csv')#
+dna_prot<-read.csv('../analysis_data/dna_prot_raw_df.csv')#
+#
+#################
+# #Here we need to filter out HB and IP from contacts, and recalcualte WM interactions.#
+# #############
+# #data frame SQL-like magic#
+# a=split(dna_prot_cryst,dna_prot_cryst$type)#
+# #Important in raw df C-means all contacts#
+# #in average we wnated C -to be contacts without HB and IP#
+# #now we understand that we still need original C, but all downstream scripts already #
+# # assume C is without HB and IP#
+# #we want to transition to new nomenclature#
+# # VdW - contacts without HB and IP#
+# # Z - all contacts#
+# # to transition we retain all C type, but add Z and VdW#
+# a$Z=a$C#
+# a$Z$type<-factor('Z')#
+# #get rid of duplicated in contacts via tricky merge and join#
+# m=merge(a$C,a$IP,by.x=c("DNA_atom","DNA_chain","DNA_resid","PROT_atom","PROT_chain","PROT_resid"),by.y=c("DNA_atom","DNA_chain","DNA_resid","PROT_atom","PROT_chain","PROT_resid"),all.x=TRUE,suffix=c('','y'))#
+# m2=merge(m,a$HB,by.x=c("DNA_atom","DNA_chain","DNA_resid","PROT_atom","PROT_chain","PROT_resid"),by.y=c("DNA_atom","DNA_chain","DNA_resid","PROT_atom","PROT_chain","PROT_resid"),all.x=TRUE,suffix=c('','z'))#
+# a$C=m2[is.na(m2$typez) & is.na(m2$typey),-(11:20)]#
+# a$C$type<-factor('VdW')#
+#
+# #Let's simlify now the water mediated interactions#
+# a$WM=a$WM[!duplicated(a$WM),]#
+#
+# dna_prot_cryst=do.call(rbind,a)#
+#
+a=split(dna_prot,dna_prot$type)#
+a$Z=a$C#
+a$Z$type<-factor('Z')#
+#
+#get rid of duplicated in contacts via tricky merge and join#
+m=merge(a$C,a$IP,by.x=c("Time","DNA_atom","DNA_chain","DNA_resid","PROT_atom","PROT_chain","PROT_resid"),by.y=c("Time","DNA_atom","DNA_chain","DNA_resid","PROT_atom","PROT_chain","PROT_resid"),all.x=TRUE,suffix=c('','y'))#
+m2=merge(m,a$HB,by.x=c("Time","DNA_atom","DNA_chain","DNA_resid","PROT_atom","PROT_chain","PROT_resid"),by.y=c("Time","DNA_atom","DNA_chain","DNA_resid","PROT_atom","PROT_chain","PROT_resid"),all.x=TRUE,suffix=c('','z'))#
+a$C=m2[is.na(m2$typez) & is.na(m2$typey),-(12:20)]#
+# a$VdW=a$C#
+a$C$type<-factor('VdW')#
+#
+#Let's simlify now the water mediated interactions#
+a$WM=a$WM[!duplicated(a$WM),]#
+#
+dna_prot=do.call(rbind,a)#
+#
+#-----------#
+#let's do averaging and combination#
+##########
+nf=length(table(dna_prot$Time))#
+#nf=750#
+#
+#####
+cn=colnames(dna_prot)#
+avl=cn[!(cn=='Time' | cn=='param1' | cn=='param2' | cn=='param3')]#
+#
+dna_prot=ddply(dna_prot,avl,summarize,av_num=length(param1)/nf)#
+##############
+#adding important name columns, resnames, etc.#
+#
+rr<-read.csv('../analysis_data/resid_resname_df.csv',stringsAsFactors=FALSE)#
+#
+#AMBER#
+sugar<-c('C1\'','C2\'','C3\'','C4\'','C5\'','O4\'')#
+phosphate<-c('O3\'','O5\'','OP1','OP2','P')#
+protbb<-c('C','O','N','CA')#
+#
+#Let's define levels order for better graphics#
+prot_rn_lev=c('ARG','LYS','THR','SER','TYR','HIE','GLN','ASN','VAL','ILE','ALA','GLY','PRO','PHE','LEU','GLU','ASP','MET','CYS')#
+type_lev=c('IP','HB','VdW','IM','WM','Z')#
+#
+#We want to know for every interaction type get number of interactions between different types#
+# of amino acids and DNA groups#
+dp <- function(name){#
+#
+if(name %in% sugar) { return('sugar') }#
+else if(name %in% phosphate){return('phosphate')}#
+else {return('base')}#
+#
+}#
+#
+pp <- function(name){#
+#
+if(name %in% protbb) { return('backbone') }#
+else {return('side chain')}#
+#
+}
+dna_prot$DNA_part<-as.factor(sapply(dna_prot$DNA_atom,dp))
+dna_prot$PROT_part<-as.factor(sapply(dna_prot$PROT_atom,pp))
+colnames(rr)<-c('DNA_chain','DNA_resid','DNA_resname')
+dna_prot=merge(dna_prot,rr)
+colnames(rr)<-c('PROT_chain','PROT_resid','PROT_resname')
+dna_prot=merge(dna_prot,rr)
+dna_prot$type<-factor(dna_prot$type,levels=type_lev)
+dna_prot$DNA_part<-factor(dna_prot$DNA_part,levels=c('phosphate','sugar','base'))
+dna_prot$PROT_resname<-factor(dna_prot$PROT_resname,levels=prot_rn_lev)
+pol_nonpol <- function(df){#
+#
+if(!(df['type']%in%c('C','VdW','Z'))) { return('NA') }#
+else {#
+if(substring(df['DNA_atom'],1,1) %in% c('O','P','N')){#
+if(substring(df['PROT_atom'],1,1) %in% c('C')) {return('PN')}#
+else{return('PP')}#
+}#
+else{#
+if(substring(df['PROT_atom'],1,1) %in% c('C')) {return('NN')}#
+else{return('PN')}#
+#
+}#
+}#
+}
+dna_prot$C_type<-as.factor(apply(dna_prot[,c('DNA_atom','PROT_atom','type')],1,pol_nonpol))
+m_m <- function(df){#
+if(df['DNA_resname']=='DA') {#
+	if(df['DNA_atom'] %in% c('N6','C6','C5','N7','C8')){ return('major')}#
+	else if(df['DNA_atom'] %in% c('C2','N3','C4')){ return('minor')}#
+	else return('NA')}#
+if(df['DNA_resname']=='DG') {#
+	if(df['DNA_atom'] %in% c('O6','C6','C5','N7','C8')){ return('major')}#
+	else if(df['DNA_atom'] %in% c('N2','C2','N3','C4')){ return('minor')}#
+	else return('NA')}#
+if(df['DNA_resname']=='DT') {#
+	if(df['DNA_atom'] %in% c('C6','C5','C4','C7','O4')){ return('major')}#
+	else if(df['DNA_atom'] %in% c('N3','C2','O2')){ return('minor')}#
+	else return('NA')}#
+#
+if(df['DNA_resname']=='DC') {#
+	if(df['DNA_atom'] %in% c('C6','C5','C4','N4')){ return('major')}#
+	else if(df['DNA_atom'] %in% c('N3','C2','O2')){ return('minor')}#
+	else return('NA')}#
+#
+}
+dna_prot$groove<-as.factor(apply(dna_prot[,c('DNA_atom','DNA_resname')],1,m_m))
+apply(dna_prot[,c('DNA_atom','DNA_resname')],1,m_m)
+a=apply(dna_prot[,c('DNA_atom','DNA_resname')],1,m_m)
+as.factor(a)
+summary(a)
+table(a)
+a
+a=apply(dna_prot[seq(1,1000),c('DNA_atom','DNA_resname')],1,m_m)
+as.factor(a)
+dna_prot[seq(1,1000),c('DNA_atom','DNA_resname')]
+m_m <- function(df){#
+if(df['DNA_resname']%in%c('DA','DA3','DA5')) {#
+	if(df['DNA_atom'] %in% c('N6','C6','C5','N7','C8')){ return('major')}#
+	else if(df['DNA_atom'] %in% c('C2','N3','C4')){ return('minor')}#
+	else return('NA')}#
+if(df['DNA_resname']%in%c('DG','DG3','DG5')) {#
+	if(df['DNA_atom'] %in% c('O6','C6','C5','N7','C8')){ return('major')}#
+	else if(df['DNA_atom'] %in% c('N2','C2','N3','C4')){ return('minor')}#
+	else return('NA')}#
+if(df['DNA_resname']%in%c('DT','DT3','DT5')) {#
+	if(df['DNA_atom'] %in% c('C6','C5','C4','C7','O4')){ return('major')}#
+	else if(df['DNA_atom'] %in% c('N3','C2','O2')){ return('minor')}#
+	else return('NA')}#
+#
+if(df['DNA_resname']%in%c('DC','DC3','DC5')) {#
+	if(df['DNA_atom'] %in% c('C6','C5','C4','N4')){ return('major')}#
+	else if(df['DNA_atom'] %in% c('N3','C2','O2')){ return('minor')}#
+	else return('NA')}#
+#
+}#
+# dna_prot_cryst$groove<-as.factor(apply(dna_prot_cryst[,c('DNA_atom','DNA_resname')],1,m_m))#
+dna_prot$groove<-as.factor(apply(dna_prot[,c('DNA_atom','DNA_resname')],1,m_m))
+'asd'+'sdf'
+?replace
+dna_prot<-read.csv('../analysis_data/dna_prot_avr_df.csv')
+replace(dna_prot,'DA','ADE')
+?gsub
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+###############
+################
+##Loading data frames#
+#DNA-protein interactions#
+# dna_prot<-read.csv('../analysis_data/dna_prot_raw_df.csv')#
+dna_prot_cryst<-read.csv('../../../../6md_nucl_expl/6md_1kx5_notails_ge_cons/simul/analysis_scripts/../analysis_data/dna_prot_avr_df_cryst.csv')#
+dna_prot<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+#
+dna_prot<-subset(dna_prot,type=='Z')#
+dna_prot_cryst<-subset(dna_prot_cryst,type=='Z')
+prot_rn_lev=c('ARG','LYS','THR','SER','TYR','HSE','GLN','ASN','VAL','ILE','ALA','GLY','PRO','PHE','LEU','GLU','ASP','MET','CYS')#
+# type_lev=c('IP','HB','VdW','IM','WM')#
+#
+#Let's assign level order#
+# dna_prot_cryst$type<-factor(dna_prot_cryst$type,levels=type_lev)#
+# dna_prot$type<-factor(dna_prot$type,levels=type_lev)#
+#
+dna_prot$DNA_part<-factor(dna_prot$DNA_part,levels=c('phosphate','sugar','base'))#
+dna_prot_cryst$DNA_part<-factor(dna_prot_cryst$DNA_part,levels=c('phosphate','sugar','base'))#
+#
+dna_prot$groove<-factor(dna_prot$groove,levels=c('minor','major'))#
+dna_prot_cryst$groove<-factor(dna_prot_cryst$groove,levels=c('minor','major'))#
+dna_prot_cryst$PROT_resname<-factor(dna_prot_cryst$PROT_resname,levels=prot_rn_lev)#
+dna_prot$PROT_resname<-factor(dna_prot$PROT_resname,levels=prot_rn_lev)#
+#
+dna_prot$PROT_part<-factor(dna_prot$PROT_part,levels=c('side chain','backbone'))#
+dna_prot_cryst$PROT_part<-factor(dna_prot_cryst$PROT_part,levels=c('side chain','backbone'))
+summary(dna_prot)
+sum(subset(dna_prot,PROT_resname=='ARG'))
+sum(subset(dna_prot,PROT_resname=='ARG')$av_num)
+setwd("/Users/alexeyshaytan/work_HD/histones_work/6md_nucl_expl/6md_1kx5_notails_ge_cons/simul/analysis_scripts")
+setwd("/Users/alexeyshaytan/work_HD/histones_work/6md_nucl_expl_amb/6md_1kx5_notails_cons/simul/analysis_scripts_amb")
+arg_mask=with(dna_prot,((PROT_chain %in% c('CHA','CHE'))&(PROT_resid %in% c(83,63,49)))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid %in% c(45)))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid %in% c(42,77)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid %in% c(30))))
+sum(subset(subset(dna_prot,arg_mask),PROT_resname=='ARG')$av_num)
+664-498
+235-158
+arg_mask=with(dna_prot,((PROT_chain %in% c('CHA','CHE'))&(PROT_resid %in% c(83))))
+sum(subset(subset(dna_prot,arg_mask),PROT_resname=='ARG')$av_num)
+arg_mask=with(dna_prot,((PROT_chain %in% c('CHA'))&(PROT_resid %in% c(83))))
+sum(subset(subset(dna_prot,arg_mask),PROT_resname=='ARG')$av_num)
+subset(dna_prot,arg_mask)
+sum(subset(dna_prot,PROT_resname=='ARG')$av_num)
+sum(subset(dna_prot,PROT_resname=='TYR')$av_num)
+sum(dna_prot$av_num)
+prot_prot<-read.csv('../analysis_data/prot_prot_avr_df.csv')
+Let's define levels order for better graphics#
+prot_rn_lev=c('ARG','LYS','THR','SER','TYR','HSE','GLN','ASN','VAL','ILE','ALA','GLY','PRO','PHE','LEU','GLU','ASP','MET','CYS')
+prot_prot=subset(prot_prot,type=='Z')
+summary(prot_prot)
+sum(subset(prot_prot,PROT1_resname=='ARG')$av_num)
+sum(subset(dna_prot,PROT_resname=='ARG'&DNA_part=='phosphate')$av_num)
+sum(subset(dna_prot,PROT_resname=='ARG'&DNA_part=='base')$av_num)
+sum(subset(dna_prot,DNA_part=='base')$av_num)
+sum(subset(dna_prot,DNA_part=='phosphate')$av_num)
+sum(subset(dna_prot,DNA_part=='sugar')$av_num)
+sum(dna_prot$av_num)
+sum(subset(dna_prot,PROT_resname=='ARG')$av_num)
+rr<-read.csv('../analysis_data/resid_resname_df.csv',stringsAsFactors=FALSE)
+wat_int<-read.csv('../analysis_data/wat_int_raw_df.csv')
+summary(wat_int)
+wat_dna<-read.csv('../analysis_data/wat_dna_int_raw_df.csv')
+summary(wat_dna)
+hist(subset(wat_dna,type=='C'&DNA_atom=='P')$param1)
+hist(subset(wat_dna,type=='C')$param1)
+hist(subset(wat_dna,type=='C'&DNA_atom=='O1P')$param1)
+hist(subset(wat_dna,type=='C'&DNA_atom=='OP1')$param1)
+dna_prot<-read.csv('../analysis_data/dna_prot_raw_df.csv')
+summary(dna_prot)
+hist(subset(dna_prot,type=='C'&DNA_atom=='OP1')$param1)
+hist(subset(dna_prot,type=='C'&DNA_atom=='O1P')$param1)
+hist(subset(dna_prot,type=='C')$param1)
+hist(as.numeric(subset(dna_prot,type=='C')$param1))
+head(subset(dna_prot,type=='C')$param1)
+head(as.numeric(subset(dna_prot,type=='C')$param1))
+head(as.float(subset(dna_prot,type=='C')$param1))
+head(as.double(subset(dna_prot,type=='C')$param1))
+head(as.character(subset(dna_prot,type=='C')$param1))
+head(as.numeric(as.character(subset(dna_prot,type=='C')$param1)))
+hist(as.numeric(as.character(subset(dna_prot,type=='C')$param1)))
+sum(as.numeric(as.character(subset(dna_prot,type=='C')$param1)))
+hist(as.numeric(as.character(subset(dna_prot,type=='C')$param1)))
+dna_prot_chnt<-read.csv('../../../../6md_nucl_expl/6md_1kx5_notails_ge_cons/simul/analysis_data/dna_prot_raw_df.csv')
+dp_amb=as.numeric(as.character(subset(dna_prot,type=='C')$param1))
+dp_chm=as.numeric(as.character(subset(dna_prot_chnt,type=='C')$param1))
+dp_amb$data="AMBER notails"
+dp_amb=as.numeric(as.character(subset(dna_prot,type=='C')['param1']))
+dp_chm=data.frame(D=as.numeric(as.character(subset(dna_prot_chnt,type=='C')$param1)))
+dp_amb=data.frame(D=as.numeric(as.character(subset(dna_prot,type=='C')$param1)))
+dp_chm$data='CHARMM notails'
+dp_amb$data='ABMER notails'
+d=rbind(dp_chm,dp_amb)
+ggplot(data=d,aes(x=D,color=data))+freq_poly()
+ggplot(data=d,aes(x=D,color=data))+geom_freqpoly()
+dp_chm=data.frame(D=as.numeric(as.character(subset(dna_prot_chnt,type=='C'&DNA_atom%in%c('O1P','O2P','OP1','OP2','P'))$param1)))
+dp_amm=data.frame(D=as.numeric(as.character(subset(dna_prot,type=='C'&DNA_atom%in%c('O1P','O2P','OP1','OP2','P'))$param1)))
+dp_amb=data.frame(D=as.numeric(as.character(subset(dna_prot,type=='C'&DNA_atom%in%c('O1P','O2P','OP1','OP2','P'))$param1)))
+dp_chm$data='CHARMM notails'
+dp_amb$data='ABMER notails'
+d=rbind(dp_chm,dp_amb)
+ggplot(data=d,aes(x=D,color=data))+geom_freqpoly()
+dp_amb=data.frame(D=as.numeric(as.character(subset(dna_prot,type=='C'&!(DNA_atom%in%c('O1P','O2P','OP1','OP2','P')))$param1)))
+dp_chm=data.frame(D=as.numeric(as.character(subset(dna_prot_chnt,type=='C'&!(DNA_atom%in%c('O1P','O2P','OP1','OP2','P')))$param1)))
+dp_amb$data='ABMER notails'
+dp_chm$data='CHARMM notails'
+d=rbind(dp_chm,dp_amb)
+ggplot(data=d,aes(x=D,color=data))+geom_freqpoly()
+dp_amb=data.frame(D=as.numeric(as.character(subset(dna_prot,type=='C')$param1)))
+dp_chm=data.frame(D=as.numeric(as.character(subset(dna_prot_chnt,type=='C')$param1)))
+dp_amb$data='ABMER notails'
+dp_chm$data='CHARMM notails'
+ggplot(data=d,aes(x=D,color=data))+geom_freqpoly()
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)
+dna_prot<-read.csv('../analysis_data/dna_prot_avr_df.csv')
+summary(dna_prot)
+subset(dna_prot, DNA_part=='base')
+a=subset(dna_prot, DNA_part=='base')
+head(a)

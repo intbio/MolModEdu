@@ -1,0 +1,68 @@
+#The idea is to get data frames with all DNA parameters
+
+#Important is that we need to input a structre
+#aligned according to Zhurkin
+
+from VMD import *
+from Molecule import *
+from atomsel import *
+import pandas as pd
+import numpy as np
+from datetime import datetime
+
+import pandas as pd
+
+
+from dna_param import X3DNA_analyze
+from dna_param import X3DNA_find_pair
+from dna_param import CURVES_analyze
+
+
+# from collections import OrderedDict
+#import sys
+
+#Let's define data frame panel
+panel_dict_contacts={}
+
+startTime = datetime.now()
+
+
+
+#print sys.path
+### Let's load the structure
+
+mol=Molecule()
+
+
+mol.load("../analysis_data/only_nucl_init.psf")
+mol.load("../analysis_data/only_nucl_aligned.pdb")
+
+DNA=atomsel("nucleic and noh")
+
+ref_fp_id=X3DNA_find_pair(DNA)
+df=X3DNA_analyze(DNA,ref_fp_id)
+df_gr=CURVES_analyze(DNA,187)
+#groove params are for levels from 1.5 to 146.5
+#to be able to merge them we need to take only half of them
+levels=range(1,187)
+levels.append(1.5)
+levels.append(186.5)
+
+df_gr_filtered=df_gr[df_gr['Level'].isin(levels)]
+df_gr_filtered=df_gr_filtered.reset_index(drop=True)
+
+df2=pd.concat([df,df_gr_filtered],axis=1)
+
+# print(df)
+
+df2.to_csv('../analysis_data/dna2_param_df_cryst.csv',index=False)
+
+
+
+print "Execution time:"
+print(datetime.now()-startTime)
+
+# exit
+exit()
+
+

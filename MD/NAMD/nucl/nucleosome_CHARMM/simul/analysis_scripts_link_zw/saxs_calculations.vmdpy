@@ -1,0 +1,70 @@
+#Here we calcualte SAXS curves with CRYSOL
+
+from VMD import *
+from Molecule import *
+from atomsel import *
+from animate import *
+
+import pandas as pd
+import numpy as np
+from datetime import datetime
+
+import pandas as pd
+
+
+from saxs import crysol
+
+#Let's define data frame panel
+panel_dict_contacts={}
+
+startTime = datetime.now()
+
+sum_df=pd.DataFrame()
+
+
+#print sys.path
+### Let's load the structure
+
+mol=Molecule()
+
+
+mol.load("../analysis_data/only_nucl_init.psf")
+mol.load("../analysis_data/only_nucl_init.pdb")
+mol.load("../analysis_data/md_nucl.dcd",first=0,step=100)
+nf=mol.numFrames()
+
+
+# nucl=atomsel("nucleic or protein")
+nucl=atomsel("nucleic or (protein and (((segname CHA CHE and (resid 44 to 135)) or (segname CHB CHF and (resid 24 to 102))  or (segname CHC CHG and (resid 16 to 118)) or (segname CHD CHH and (resid 30 to 122)))))")
+
+
+goto(0)
+
+for i in range(1,nf):
+	goto(i)
+	print "Frame",i
+	df=crysol(nucl)
+	df['Time']=i
+	sum_df=pd.concat([sum_df,df])
+
+
+#groove params are for levels from 1.5 to 146.5
+#to be able to merge them we need to take only half of them
+
+
+
+# sum_df = sum_df.reset_index(drop=True)
+sum_df.to_csv('../analysis_data/saxs_df_md.csv',index=False)
+
+# print(df)
+
+
+
+
+print "Execution time:"
+print(datetime.now()-startTime)
+
+# exit
+exit()
+
+

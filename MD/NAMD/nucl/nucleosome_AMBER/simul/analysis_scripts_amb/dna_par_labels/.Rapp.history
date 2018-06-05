@@ -1,0 +1,270 @@
+list.files()
+setcwd("..")
+setwd("..")
+df=read.csv("mean_dna_params.dat")
+df
+plot(df)
+qplot(df)
+qplot(data=df,x=Shear)
+qplot(data=df,x=Twist)
+qplot(data=df,x=X,y=Twist)
+getwd()
+df=read.csv("dna_param_big_df.dat")
+df
+summary(df)
+qplot(data-df,x=Twist)
+qplot(data=df,x=Twist)
+qplot(data=df,y=Twist)
+qplot(data=df,x=Time,y=Twist)
+qplot(data=df,x=Time,y=Twist,grom=boxplot)
+qplot(data=df,x=Time,y=Twist,grom='boxplot')
+qplot(data=df,x=Time,y=Twist,geom='boxplot')
+qplot(data=df,x=Time,y=Twist,geom="boxplot")
+qplot(data=df,x=X,y=Twist,geom="boxplot")
+qplot(data=df,x=X,y=Twist)
+qplot(data=df,x=X,y=Twist,geom="boxplot")
+qplot(data=df,x=X,y=Twist)
+qplot(data=df,x=X,y=Twist,color=Time)
+df$X
+df$X<-as.factor(df$X)
+df
+summary(df)
+qplot(data=df,x=X,y=Twist,color=Time)
+qplot(data=df,x=X,y=Twist,geom="boxplot")
+mean(df$Twist)
+360/34.26
+sum(df$Twist)
+df[Time==1.0]
+df[df$Time==1.0]
+names(df)
+df[df$Time == 1.0]
+df[df$Time == 1.0,]
+a=df[df$Time == 1.0,]
+a$Time
+a$Twist
+mean(a$Twist)
+sum(a$Twist)
+sum(a$Twist)/147
+sum(a$Twist)/146
+sum(a$Twist)/145
+sum(a$Twist)/140
+360/34.1338
+qplot(data=df,x=X,y=Roll,geom="boxplot")
+qplot(data=df,x=X,y=Tilt,geom="boxplot")
+qplot(data=df,x=X,y=Roll,geom="boxplot")
+qplot(data=df,x=X,y=Rise,geom="boxplot")
+qplot(data=df,x=X,y=Slide,geom="boxplot")
+qplot(data=df,x=X,y=Shift,geom="boxplot")
+qplot(data=df,x=X,y=Propeller,geom="boxplot")
+summary(df)
+qplot(data=df,x=X,y=Prop.Tw,geom="boxplot")
+a
+sum(df$Twist)
+sum(a$Twist)
+sum(df$Twist)
+sum(df$Twist)/500
+sum(df$Twist)/500/147
+sum(df$Twist)/500/360
+147/sum(df$Twist)/500/360
+147/(sum(df$Twist)/500/360)
+qplot(data=df,x=X,y=Twist,geom="boxplot")
+qplot(data=df,x=X,y=Roll,geom="boxplot")
+qplot(data=df,x=X,y=Twist,geom="boxplot")
+147/10.4
+147/10.0
+qplot(data=df,x=X,y=Rise,geom="boxplot")
+qplot(data=df,x=X,y=Prop.Tw,geom="boxplot")
+qplot(data=df,x=X,y=Roll,geom="boxplot")
+qplot(data=df,x=X,y=Twist,geom="boxplot")
+sum(df$Twist)/500/360
+147/13.67
+columns(df)
+summary(df)
+df[df$X>10]
+df[as.number(df$X)>10]
+df[as.float(df$X)>10]
+help(as.number)
+df[as.numeric(df$X)>10]
+as.numeric(df$X)
+df[as.numeric(df[X])>10]
+df[as.numeric(df[,X])>10]
+df[as.numeric(df[,'X'])>10]
+df[as.numeric(df[,"X"])>10]
+df[1:2]
+df[1:2,]
+df[as.numeric(df[,"X"])>10,]
+df[(as.numeric(df[,"X"])>10) && (as.numeric(df[,"X"])<137),]
+df[(as.numeric(df[,"X"])>10) & (as.numeric(df[,"X"])<137),]
+df2=df[(as.numeric(df[,"X"])>10) & (as.numeric(df[,"X"])<137),]
+ls
+list.files
+list.file
+list.files()
+library(ggplot2)
+df<-read.csv("dna_param_big_df.csv")
+cdf<-read.csv("dna_param_cryst.csv")
+cdf
+qplot(data=cdf,x=X,y=Shear)
+qplot(data=cdf,x=X,y=Shear,geom="line")
+qplot(data=cdf,x=X,y=Shear,geom="line")
+qplot(data=cdf,x=X,y=Twist,geom="line")
+qplot(data=cdf,x=X,y=Roll,geom="line")
+qplot(data=cdf,x=X,y=Tilt,geom="line")
+qplot(data=df,x=X,y=Tilt)
+qplot(data=df,x=X,y=Tilt,geom="boxplot")
+df
+df$X
+df$X<-as.factor(df.$X)
+df$X<-as.factor(df$X)
+qplot(data=df,x=X,y=Tilt,geom="boxplot")
+qplot(data=df,x=X,y=Roll,geom="boxplot")
+p1<-qplot(data=df,x=X,y=Roll,geom="boxplot")
+p2<-qplot(data=df,x=X,y=Tilt,geom="boxplot")
+multiplot(p1,p2)
+grid.arrange(p1,p2)
+R-script to analyze DNA-param data#
+library(ggplot2)#
+df<-read.csv("../analysis_data/dna_param_big_df.csv")#
+df$X<-as.factor(df$X)#
+qplot(data=df,x=X,y=Roll,geom="boxplot")
+par(mfrow=c(2,2), pch=16)attach(Animals) # This dataset is in the MASS package, which must be attached plot(body, brain)plot(sqrt(body), sqrt(brain))plot((body)^0.1, (brain)^0.1)plot(log(body),log(brain))detach(Animals)par(mfrow=c(1,1), pch=1)
+ggplot
+library(ggplot2)#
+df<-read.csv("../analysis_data/dna_param_big_df.csv")#
+df$X<-as.factor(df$X)
+df[0,:]
+df[0]
+df[0,1:2]
+df[0,'Shear']
+df[1,'Shear']
+df[0,]
+df[1,]
+library(fitdist)
+library(fitdistrplus)
+summary(df$Roll)
+?fitdist
+fitdist(df$Roll,"norm",method="mle")
+?fitdist
+is.na(df$Roll)
+df$Roll[is.na(df$Roll)]
+df$Roll[!is.na(df$Roll)]
+fitdist(df$Roll[!is.na(df$Roll)],"norm",method="mle")
+dp<-fitdist(df$Roll[!is.na(df$Roll)],"norm",method="mle")
+dp
+dp[1]
+dp[mean]
+dp['mean']
+dp[estimate]
+dp['estimate']
+dp['estimate']['mean']
+dp
+dp$mean
+dp$estimate
+dp[1,1]
+dp[[1,1]]
+dp[c(1,1)]
+dp$estimate
+dp$estimate[1]
+df<-read.csv("../analysis_data/dna_param_big_df.csv")#
+df$X<-as.factor(df$X)#
+#qplot(data=df,x=Roll)#
+#hist(df$Roll,prob=TRUE)#
+#plot(density(df$Roll)) #
+dp<-fitdist(df$Roll[!is.na(df$Roll)],"norm",method="mle")#
+meand<-dp$estimate[1]
+meand
+meand[0]
+meand[1]
+meand[2]
+as.numeric(meand)
+pint df
+dp
+toString(dp)
+dp
+capture(dp)
+library(gtools)
+library(gtools)
+capture(dp)
+capture.output(dp)
+df<-read.csv("../analysis_data/dna_param_big_df.csv")#
+df$X<-as.factor(df$X)#
+#qplot(data=df,x=Roll)#
+#hist(df$Roll,prob=TRUE)#
+#plot(density(df$Roll)) #
+dp<-fitdist(df$Roll[!is.na(df$Roll)],"norm",method="mle")#
+str<-capture.output(dp)
+str
+str[0]
+str[1]
+paste(str, collapse = '')
+paste(str, collapse = '\n')
+f<-read.csv("../analysis_data/dna_param_big_df.csv")#
+df$X<-as.factor(df$X)
+df<-read.csv("../analysis_data/dna_param_big_df.csv")#
+df$X<-as.factor(df$X)
+names(df)
+for (i in names(df)) {df$i}
+for (i in names(df)) {df[i]}
+for (i in names(df)) {summary(df[i])}
+for (i in names(df)) {i}
+for (i in names(df)) {print i}
+for (i in names(df)) {print(i)}
+for (i in names(df)) {print(df[i])}
+for (i in names(df)) {print(i)}
+names(df)
+a="asd"
+b="qwe"
+a+b
+paste(a,b)
+p=list(1,2,3)
+p
+len(p)
+length(p)
+p[length(p)]
+p[length(p)]<-4
+p
+p=list()
+p["twist"]=1
+p
+p[1]
+p[2]
+i="twist"
+i
+p[i]=2
+p
+p[1]
+pl['twist']
+pl[['twist']]
+p[['twist']]
+p['twist']
+k
+k[1]=1
+k=c()
+k[1]=1
+k
+k["rt"]=2
+k
+?annotate_raster
+?annotate
+?geom_raster
+library(png)
+getwd()
+library(png)
+img <- readPNG(system.file("img", "dna_par_labels/Shear.png", package="png"))
+img <- readPNG(system.file("img", "dna_par_labels//Shear.png", package="png"))
+stwd("dna_par_labels")
+setwd("dna_par_labels")
+setwd("../analysis_scripts/dna_par_labels")
+stwd("..")
+setwd("..")
+img <- readPNG(system.file("img", "dna_par_labels//Shear.png", package="png"))
+setwd("dna_par_labels")
+img <- readPNG(system.file("img", "Shear.png", package="png"))
+system.file("img", "Shear.png", package = "png")
+?readPNG
+img <- readPNG("Shear.png")
+img
+g <- rasterGrob(img, interpolate=TRUE)
+library(grid)
+rasterGrob((img, interpolate=TRUE))
+rasterGrob(img, interpolate=TRUE)

@@ -1,0 +1,43 @@
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+###############
+################
+##Loading data frames#
+#INT-intein interactions#
+# wat_int<-read.csv('../analysis_data/wat_int_raw_df.csv')#
+wat_int_cryst<-read.csv('../../analysis_data/int_wat_details/wat_int_avr_df_3p5_cryst.csv')#
+wat_int<-read.csv('../../analysis_data/int_wat_details/wat_int_avr_df_3p5.csv')#
+#
+#Let's define levels order for better graphics#
+int_rn_lev=c('ARG','LYS','THR','SER','TYR','HSE','GLN','ASN','VAL','ILE','ALA','GLY','PRO','PHE','LEU','GLU','ASP','MET','CYS','ADE','THY','GUA','CYT')#
+#
+#Let's assign level order#
+#
+wat_int$INT_part<-factor(wat_int$INT_part,levels=c('phosphate','sugar','base','backbone','side chain'))#
+wat_int_cryst$INT_part<-factor(wat_int_cryst$INT_part,levels=c('phosphate','sugar','base','backbone','side chain'))#
+wat_int_cryst$INT_resname<-factor(wat_int_cryst$INT_resname,levels=int_rn_lev)#
+wat_int$INT_resname<-factor(wat_int$INT_resname,levels=int_rn_lev)#
+####General statistics section:#
+theme_set(theme_gray(base_size = 15))#
+#
+##########Histograms with INT_part classification#
+data_c=subset(wat_int_cryst,INT_resname %in% c('GUA','THY','CYT','ADE') & INT_part=='base')#
+data_c$data='Crystal'#
+data_m=subset(wat_int_cryst,INT_resname %in% c('GUA','THY','CYT','ADE') & INT_part=='base')#
+data_m$data='MD'#
+data=rbind(data_c,data_m)
+sumamry(data)
+summary(data)
+data$data=as.factor(data$data)
+summary(data)
+ggplot(data=data,aes(x=INT_resname,fill=data,weight=num_HB))+#
+geom_bar(aes(color=data,y=..count..),position='dodged')
+ggplot(data=data,aes(x=INT_resname,fill=data,weight=num_HB))+#
+geom_bar(aes(color=data,y=..count..),position='dodge')

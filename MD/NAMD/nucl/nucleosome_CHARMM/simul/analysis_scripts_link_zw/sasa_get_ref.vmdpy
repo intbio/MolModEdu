@@ -1,0 +1,105 @@
+#We get raw data frames for PROTEIN-PROTein interactions in nucleosome
+#This version is for trajectory
+# is produces a bit different data frame - since we do not know the positions of hydrogens
+
+
+from VMD import *
+from Molecule import *
+from atomsel import *
+import pandas as pd
+import numpy as np
+from datetime import datetime
+import itertools
+from animate import *
+import sys
+#print sys.path
+### Let's load the structure
+
+sum_df=pd.DataFrame()
+
+
+mol=Molecule()
+
+mol.load("beta20.pdb")
+SEL=atomsel("name CA")
+resnames=SEL.get('resname')
+
+for r in resnames:
+	print "Doing",r
+	SEL=atomsel("resname %s and noh"%r)
+	SELSCH=atomsel("resname %s and noh and sidechain"%r)
+	sasa=SEL.sasa(1.4,restrict=SELSCH)
+	sasa_df=pd.DataFrame({'Resname':[r],'SASA_ref':[sasa]})
+	sum_df=pd.concat([sum_df,sasa_df])
+	print sasa
+
+	# print df
+	# print df_contacts
+# panel_dict[0]=df
+#
+# p=pd.Panel(panel_dict)
+
+# bdf = pd.DataFrame()
+# for key in panel_dict:
+# 	value=panel_dict[key]
+# 	value['Time']=key
+# 	bdf=bdf.append(value)
+sum_df.to_csv('../analysis_data/sasa_ref.csv',index=False)
+###Here are some display snippets
+# print "Total interactions",len(sum_df_time)
+# print "Total H-bonds",len(sum_df[sum_df_time.type=='HB'])
+
+# if not (len(sum_df_time)==3342):
+    # raise AssertionError()
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or PROTein) and noh")
+	a,b,d=zip(*contacts)
+	c=0
+	for i,j in zip(a,b):
+		vdw=MoleculeRep(style='VDW', material='Opaque')
+		mol.addRep(vdw)     
+		#index=" ".join(map(str,(list(a)+list(b))))
+		vdw.changeSelection('index %d %d'%(i,j))
+		vdw.changeColor("ColorID %d"%(c%32))
+		c=c+1
+
+
+if(0):
+	reps=mol.reps()
+	reps[0].changeSelection("(nucleic or PROTein) and noh")
+	a,b,d=zip(*contacts)
+	vdw=MoleculeRep(style='VDW', material='Opaque')
+	mol.addRep(vdw)     
+	index=" ".join(map(str,(list(a))))
+	vdw.changeSelection('index %s'%index)
+	# vdw.changeColor("ColorID %d"%(c%32))
+
+# mol load psf only_nucl_init.psf
+# mol addfile only_nucl_aligned.pdb waitfor all
+
+
+# set hlist [list "segname CHA" "segname CHE" "segname CHB" "segname CHF" "segname CHC" "segname CHG" "segname CHD" "segname CHH"]
+# set hname [list "H3_A" "H3_E" "H4_B" "H4_F" "H2A_C" "H2A_G" "H2B_D" "H2B_H"]
+
+
+
+
+# set nframes [expr  [molinfo top get numframes]  ]
+
+# set sel [atomselect top "nucleic"]
+# set sel2 [atomselect top "PROTein"]
+
+
+# set atoms [$sel list]
+
+#do something
+# print "Execution time:"
+# print(datetime.now()-startTime)
+
+# exit
+exit()
+
+
+

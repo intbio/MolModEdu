@@ -1,0 +1,1103 @@
+sub('R', 'Y', 'AAAAA')
+grep("[a-z]", letters)
+gsub("([ab])", "\\1_\\1_", "abc and ABC")
+sub("([ab])", "\\1_\\1_", "abc and ABC")
+sub("([AG])", "R", "AAAA")
+gsub("([AG])", "R", "AAAA")
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+###############
+################
+##Loading data frames#
+#DNA-protein interactions#
+# dna_prot<-read.csv('../analysis_data/dna_prot_raw_df.csv')#
+dna_prot_cryst<-read.csv('../analysis_data/dna_prot_avr_df_cryst.csv')#
+dna_prot<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+#
+#Let's define levels order for better graphics#
+prot_rn_lev=c('ARG','LYS','THR','SER','TYR','HSE','GLN','ASN','VAL','ILE','ALA','GLY','PRO','PHE','LEU','GLU','ASP','MET','CYS')#
+type_lev=c('SC','SB','HB','vdW','IM','WM')#
+# head(subset(dna_prot_cryst,type=='SB'))#
+#Let's assign level order#
+dna_prot_cryst$type<-factor(dna_prot_cryst$type,levels=type_lev)#
+dna_prot$type<-factor(dna_prot$type,levels=type_lev)#
+#
+dna_prot$DNA_part<-factor(dna_prot$DNA_part,levels=c('phosphate','sugar','base'))#
+dna_prot_cryst$DNA_part<-factor(dna_prot_cryst$DNA_part,levels=c('phosphate','sugar','base'))#
+dna_prot_cryst$PROT_resname<-factor(dna_prot_cryst$PROT_resname,levels=prot_rn_lev)#
+dna_prot$PROT_resname<-factor(dna_prot$PROT_resname,levels=prot_rn_lev)#
+dna_prot_core=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+dna_prot_tails=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+dna_prot_core$hist_part='Core'#
+dna_prot_tails$hist_part='Tail'#
+dna_prot=rbind(dna_prot_core,dna_prot_tails)#
+#
+dna_prot_core_cryst=subset(dna_prot_cryst, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+dna_prot_tails_cryst=subset(dna_prot_cryst, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+dna_prot_core_cryst$hist_part='Core'#
+dna_prot_tails_cryst$hist_part='Tail'#
+dna_prot_cryst=rbind(dna_prot_core_cryst,dna_prot_tails_cryst)
+summary(dna_prot)
+summary(dna_prot_cryst)
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+###############
+################
+##Loading data frames#
+#DNA-protein interactions#
+# dna_prot<-read.csv('../analysis_data/dna_prot_raw_df.csv')#
+dna_prot_cryst<-read.csv('../analysis_data/dna_prot_avr_df_cryst.csv')#
+dna_prot<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+#
+#Let's define levels order for better graphics#
+prot_rn_lev=c('ARG','LYS','THR','SER','TYR','HSE','GLN','ASN','VAL','ILE','ALA','GLY','PRO','PHE','LEU','GLU','ASP','MET','CYS')#
+type_lev=c('SC','SB','HB','vdW','IM','WM')#
+# head(subset(dna_prot_cryst,type=='SB'))#
+#Let's assign level order#
+dna_prot_cryst$type<-factor(dna_prot_cryst$type,levels=type_lev)#
+dna_prot$type<-factor(dna_prot$type,levels=type_lev)#
+#
+dna_prot$DNA_part<-factor(dna_prot$DNA_part,levels=c('phosphate','sugar','base'))#
+dna_prot_cryst$DNA_part<-factor(dna_prot_cryst$DNA_part,levels=c('phosphate','sugar','base'))#
+dna_prot_cryst$PROT_resname<-factor(dna_prot_cryst$PROT_resname,levels=prot_rn_lev)#
+dna_prot$PROT_resname<-factor(dna_prot$PROT_resname,levels=prot_rn_lev)#
+dna_prot_core=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+dna_prot_tails=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+dna_prot_core$hist_part='Core'#
+dna_prot_tails$hist_part='Tail'#
+dna_prot=rbind(dna_prot_core,dna_prot_tails)#
+#
+dna_prot_core_cryst=subset(dna_prot_cryst, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+dna_prot_tails_cryst=subset(dna_prot_cryst, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+dna_prot_core_cryst$hist_part='Core'#
+dna_prot_tails_cryst$hist_part='Tail'#
+dna_prot_cryst=rbind(dna_prot_core_cryst,dna_prot_tails_cryst)#
+#
+dna_prot$DATA='MD'#
+dna_prot_cryst$DATA='X-ray'#
+cn=colnames(dna_prot_cryst)#
+avl=cn[!(cn=='param1' | cn=='param2' | cn=='param3')]#
+dna_prot_cryst=dna_prot_cryst(,avl)#
+dna_prot_cryst$av_num=1#
+#
+dna_prot_comb=rbind(dna_prot_cryst,dna_prot)
+summary(dna_prot_cryst)
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+###############
+################
+##Loading data frames#
+#DNA-protein interactions#
+# dna_prot<-read.csv('../analysis_data/dna_prot_raw_df.csv')#
+dna_prot_cryst<-read.csv('../analysis_data/dna_prot_avr_df_cryst.csv')#
+dna_prot<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+#
+#Let's define levels order for better graphics#
+prot_rn_lev=c('ARG','LYS','THR','SER','TYR','HSE','GLN','ASN','VAL','ILE','ALA','GLY','PRO','PHE','LEU','GLU','ASP','MET','CYS')#
+type_lev=c('SC','SB','HB','vdW','IM','WM')#
+# head(subset(dna_prot_cryst,type=='SB'))#
+#Let's assign level order#
+dna_prot_cryst$type<-factor(dna_prot_cryst$type,levels=type_lev)#
+dna_prot$type<-factor(dna_prot$type,levels=type_lev)#
+#
+dna_prot$DNA_part<-factor(dna_prot$DNA_part,levels=c('phosphate','sugar','base'))#
+dna_prot_cryst$DNA_part<-factor(dna_prot_cryst$DNA_part,levels=c('phosphate','sugar','base'))#
+dna_prot_cryst$PROT_resname<-factor(dna_prot_cryst$PROT_resname,levels=prot_rn_lev)#
+dna_prot$PROT_resname<-factor(dna_prot$PROT_resname,levels=prot_rn_lev)#
+dna_prot_core=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+dna_prot_tails=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+dna_prot_core$hist_part='Core'#
+dna_prot_tails$hist_part='Tail'#
+dna_prot=rbind(dna_prot_core,dna_prot_tails)#
+#
+dna_prot_core_cryst=subset(dna_prot_cryst, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+dna_prot_tails_cryst=subset(dna_prot_cryst, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+dna_prot_core_cryst$hist_part='Core'#
+dna_prot_tails_cryst$hist_part='Tail'#
+dna_prot_cryst=rbind(dna_prot_core_cryst,dna_prot_tails_cryst)#
+#
+dna_prot$DATA='MD'#
+dna_prot_cryst$DATA='X-ray'#
+cn=colnames(dna_prot_cryst)#
+avl=cn[!(cn=='param1' | cn=='param2' | cn=='param3')]#
+dna_prot_cryst=dna_prot_cryst[,avl]#
+dna_prot_cryst$av_num=1#
+#
+dna_prot_comb=rbind(dna_prot_cryst,dna_prot)
+summary(dna_prot_comb)
+seq(1,19)
+setwd("/Users/alexeyshaytan/work_HD/histones_work/6md_nucl_expl/6md_1kx5_link_cons_zw/simul/analysis_scripts_link_zw")
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+###############
+################
+#core H3 > 43 < 132#
+#H4 > 23 < 99#
+#H2A > 15 < 118#
+#H2B > 29 < 124#
+# dna_prot_cryst<-read.csv('../analysis_data/dna_prot_avr_df_cryst.csv')#
+dna_prot<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+dna_prot_cryst<-read.csv('../analysis_data/dna_prot_avr_df_cryst.csv')#
+#
+dna_prot$DATA='MD'#
+dna_prot_cryst$DATA='X-ray'#
+cn=colnames(dna_prot_cryst)#
+avl=cn[!(cn=='param1' | cn=='param2' | cn=='param3')]#
+dna_prot_cryst=dna_prot_cryst[,avl]#
+dna_prot_cryst$av_num=1#
+#
+dna_prot_comb=rbind(dna_prot_cryst,dna_prot)#
+dna_prot=dna_prot_comb#
+# q()#
+dna_prot<-subset(dna_prot,(type=='SC')&(DNA_part=='base'))#
+# dna_prot_cryst<-subset(dna_prot_cryst,type=='SC')#
+dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']=-dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']#
+dna_prot_core=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+dna_prot_tails=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+#
+dna_prot_core_temp=ddply(dna_prot_core,c('DATA','DNA_resid'),summarize,core=sum(av_num))#
+dna_prot_tails_temp=ddply(dna_prot_tails,c('DATA','DNA_resid'),summarize,tails=sum(av_num))#
+dna_prot_temp=merge(dna_prot_core_temp,dna_prot_tails_temp,all=TRUE)#
+dna_prot_temp[is.na(dna_prot_temp)] <- 0#
+# dna_prot_max_sc=ddply(dna_prot_temp,c('DNA_resid','PROT_chain'),summarize,max_sc=max(tot_num_core+tot_num_tails),core=tot_num_core[which.max(tot_num_core+tot_num_tails)],tails=tot_num_tails[which.max(tot_num_core+tot_num_tails)])#
+# dna_prot_avr=ddply(dna_prot_temp,c('DNA_resid','PROT_chain'),summarize,avr_sc=mean(tot_num_core)+mean(tot_num_tails),core=mean(tot_num_core),tails=mean(tot_num_tails))#
+dna_prot_avr=dna_prot_temp
+summary(dna_prot_avr)
+dna_prot_avr$turn=c('positive')#
+dna_prot_avr[dna_prot_avr$DNA_resid<0,'turn']=c('negative')#
+dna_prot_avr[dna_prot_avr$DNA_resid<0,'DNA_resid']=-dna_prot_avr[dna_prot_avr$DNA_resid<0,'DNA_resid']#
+# t=subset(dna_prot_avr,DNA_resid==0)#
+# t$turn=c('negative')#
+# dna_prot_avr=rbind(dna_prot_avr,t)#
+head(dna_prot_avr)#
+dna_prot_avr$turn<-factor(dna_prot_avr$turn,levels=c('negative','positive'),labels=c('SHL < 0','SHL > 0'))#
+#
+# dna_prot_avr$PROT_chain=revalue(dna_prot_avr$PROT_chain, c("CHA"="H3","CHE"="H3","CHB"="H4","CHF"="H4","CHC"="H2A","CHG"="H2A","CHD"="H2B","CHH"="H2B"))#
+# dna_prot_avr=ddply(dna_prot_avr,c('DNA_resid','PROT_chain','turn'),summarize,avr_sc=mean(avr_sc),core=mean(core),tails=mean(tails))#
+dna_prot_avr_m=melt(dna_prot_avr, id.vars=c('DATA','DNA_resid','turn'),measure.vars=c('core','tails'))#
+head(dna_prot_avr_m)#
+#
+dna_prot_avr_m=arrange(dna_prot_avr_m,DATA,variable)
+summary(dna_prot_avr_m)
+dna_prot_avr_m$variable<-factor(dna_prot_avr_m$variable,levels=c('core','tails'),labels=c('CORE','TAILS'))
+ann_text <- data.frame(x = c(8.3-0.15,0.8,4.85), y = c(36.5,36.5,36.5),lab = c('Linker DNA','Inner DNA turn','Outer DNA turn'),#
+                       variable = factor('CORE'),turn=factor('negative',levels=c('negative','positive'),labels=c('SHL < 0','SHL > 0')),PROT_chain='H3',#
+                       xmin=c(7.65-0.15,0,4.85-0.85),xmax=c(8.3+0.65-0.15,1.0+0.6,4.85+0.85),ymin=c(30,30,30),ymax=c(43,43,43))#
+#
+theme_set(theme_grey(base_size = 18))
+ann_sites <- data.frame(x = c(0.3,0.7,0.9,1.3,1.8,2.4,2.8,3.4,3.8,4.3,4.8,5.4,5.8,6.7), y = c(42),lab = c('L * 2','L * 1','alpha * N','alpha * 1','alpha * 1','L * 1','L * 2','L * 2','L * 1','alpha * 1','alpha * 1','L * 1','L * 2','alpha * N'),#
+                       variable = factor('CORE'),turn=factor('positive',levels=c('negative','positive'),labels=c('SHL < 0','SHL > 0')),PROT_chain=c('H3','H4','H3','H4','H3','H3','H4','H2B','H2A','H2A','H2B','H2B','H2A','H3'),#
+                       xmin=c(1.0),xmax=c(2.0),ymin=c(30),ymax=c(43))
+q<-ggplot(data=subset(dna_prot_avr_m,value>0),aes(x=DNA_resid/10,y=value,fill=DATA,color=DATA)) + ggtitle("Contacts with bases") + #
+xlab("Base pair")+#geom_line(aes(x=DNA_resid,y=number,color=PROT_chain),size=1)+#
+geom_bar(stat='identity',position='dodge',width=0.05)+#
+facet_grid(variable+turn~.,scales='fixed')+ylab('Protein-DNA contacts')+#
+scale_x_continuous(limits=c(-0.05,9.3),breaks = round(seq(0,9.0, by = 0.5),2),labels=c('0','±0.5','±1.0','±1.5','±2.0','±2.5','±3.0','±3.5','±4.0','±4.5','±5.0','±5.5','±6.0','±6.5','±7.0','±7.5','±8.0','±8.5','±9.0'),expand=c(0,0),name='Super helix location (SHL)')+scale_alpha_discrete(range = c(0.3, 1.0))+#
+# scale_fill_manual(breaks=c('H3','H4','H2A','H2B'),values=c('H3'='blue','H4'='green','H2A'='gold','H2B'='red','ALL'='black'),labels=c('H3','H4','H2A','H2B'),name='Histones')+#
+# scale_color_manual(breaks=c('H3','H4','H2A','H2B'),values=c('H3'='blue','H4'='green','H2A'='gold','H2B'='red','ALL'='black'),labels=c('H3','H4','H2A','H2B'),name='Histones')+#+#+xlim(-70,70)#
+geom_vline(xintercept = 7.35)+geom_vline(xintercept = 3.95)+#
+scale_y_continuous(limits=c(0,46),breaks = c(0,10,20,30,40),labels=c('','','20','','40'),name='Protein-DNA contacts average',expand=c(0,0))+#
+#
+geom_rect(data=ann_sites,aes(xmin=x-0.12,ymin=37,xmax=x+0.12,ymax=46,x=x,y=y),color='white',fill='grey')+#
+geom_text(data=ann_sites,aes(x=x,y=y,label=lab,color=PROT_chain),fill='black',size=6,parse=TRUE)
+ggsave(filename="../analysis_data/pub_dna_prot_base_prof.png",plot=q,width=15,height=5.5)
+subset(dna_prot_avr_m,value>0)
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+###############
+################
+#core H3 > 43 < 132#
+#H4 > 23 < 99#
+#H2A > 15 < 118#
+#H2B > 29 < 124#
+# dna_prot_cryst<-read.csv('../analysis_data/dna_prot_avr_df_cryst.csv')#
+dna_prot_avr<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+# q()#
+dna_prot<-subset(dna_prot_avr,type=='SC')#
+dna_prot=subset(dna_prot,av_num>0.8)#
+#
+# dna_prot_cryst<-subset(dna_prot_cryst,type=='SC')#
+dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']=-dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']#
+dna_prot_core=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+dna_prot_tails=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+#
+dna_prot_core_temp=ddply(dna_prot_core,c('DNA_resid','PROT_chain'),summarize,tot_num_core=sum(av_num))#
+dna_prot_tails_temp=ddply(dna_prot_tails,c('DNA_resid','PROT_chain'),summarize,tot_num_tails=sum(av_num))#
+dna_prot_temp=merge(dna_prot_core_temp,dna_prot_tails_temp,all=TRUE)#
+dna_prot_temp[is.na(dna_prot_temp)] <- 0#
+# dna_prot_max_sc=ddply(dna_prot_temp,c('DNA_resid','PROT_chain'),summarize,max_sc=max(tot_num_core+tot_num_tails),core=tot_num_core[which.max(tot_num_core+tot_num_tails)],tails=tot_num_tails[which.max(tot_num_core+tot_num_tails)])#
+dna_prot_avr=ddply(dna_prot_temp,c('DNA_resid','PROT_chain'),summarize,avr_sc=mean(tot_num_core)+mean(tot_num_tails),core=mean(tot_num_core),tails=mean(tot_num_tails))#
+#
+dna_prot_avr$turn=c('positive')#
+dna_prot_avr[dna_prot_avr$DNA_resid<0,'turn']=c('negative')#
+dna_prot_avr[dna_prot_avr$DNA_resid<0,'DNA_resid']=-dna_prot_avr[dna_prot_avr$DNA_resid<0,'DNA_resid']#
+# t=subset(dna_prot_avr,DNA_resid==0)#
+# t$turn=c('negative')#
+# dna_prot_avr=rbind(dna_prot_avr,t)#
+head(dna_prot_avr)#
+dna_prot_avr$turn<-factor(dna_prot_avr$turn,levels=c('negative','positive'),labels=c('SHL < 0','SHL > 0'))#
+#
+dna_prot_avr$PROT_chain=revalue(dna_prot_avr$PROT_chain, c("CHA"="H3","CHE"="H3","CHB"="H4","CHF"="H4","CHC"="H2A","CHG"="H2A","CHD"="H2B","CHH"="H2B"))#
+dna_prot_avr=ddply(dna_prot_avr,c('DNA_resid','PROT_chain','turn'),summarize,avr_sc=mean(avr_sc),core=mean(core),tails=mean(tails))#
+dna_prot_avr_m=melt(dna_prot_avr, id.vars=c('DNA_resid','PROT_chain','turn'),measure.vars=c('core','tails'))#
+head(dna_prot_avr_m)#
+#
+dna_prot_avr_m=arrange(dna_prot_avr_m,variable,PROT_chain)#
+dna_prot_avr_m$variable<-factor(dna_prot_avr_m$variable,levels=c('core','tails'),labels=c('CORE','TAILS'))
+summary(dna_prot_avr_m)
+dna_prot_avr<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+# q()#
+dna_prot<-subset(dna_prot_avr,type=='SC')#
+dna_prot=subset(dna_prot,av_num>0.8)#
+#
+# dna_prot_cryst<-subset(dna_prot_cryst,type=='SC')#
+dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']=-dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']#
+dna_prot_core=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+dna_prot_tails=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+#
+dna_prot_core_temp=ddply(dna_prot_core,c('DNA_resid','PROT_chain'),summarize,tot_num_core=sum(av_num))#
+dna_prot_tails_temp=ddply(dna_prot_tails,c('DNA_resid','PROT_chain'),summarize,tot_num_tails=sum(av_num))#
+dna_prot_temp=merge(dna_prot_core_temp,dna_prot_tails_temp,all=TRUE)#
+dna_prot_temp[is.na(dna_prot_temp)] <- 0#
+# dna_prot_max_sc=ddply(dna_prot_temp,c('DNA_resid','PROT_chain'),summarize,max_sc=max(tot_num_core+tot_num_tails),core=tot_num_core[which.max(tot_num_core+tot_num_tails)],tails=tot_num_tails[which.max(tot_num_core+tot_num_tails)])#
+dna_prot_avr=ddply(dna_prot_temp,c('DNA_resid','PROT_chain'),summarize,avr_sc=mean(tot_num_core)+mean(tot_num_tails),core=mean(tot_num_core),tails=mean(tot_num_tails))#
+#
+dna_prot_avr$turn=c('positive')#
+dna_prot_avr[dna_prot_avr$DNA_resid<0,'turn']=c('negative')#
+dna_prot_avr[dna_prot_avr$DNA_resid<0,'DNA_resid']=-dna_prot_avr[dna_prot_avr$DNA_resid<0,'DNA_resid']#
+# t=subset(dna_prot_avr,DNA_resid==0)#
+# t$turn=c('negative')#
+# dna_prot_avr=rbind(dna_prot_avr,t)#
+head(dna_prot_avr)#
+dna_prot_avr$turn<-factor(dna_prot_avr$turn,levels=c('negative','positive'),labels=c('SHL < 0','SHL > 0'))
+summary(dna_prot_avr)
+dna_prot_avr<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+# q()#
+dna_prot<-subset(dna_prot_avr,type=='SC')#
+dna_prot=subset(dna_prot,av_num>0.8)#
+#
+# dna_prot_cryst<-subset(dna_prot_cryst,type=='SC')#
+dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']=-dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']#
+dna_prot_core=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+dna_prot_tails=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))
+summary(dna_prot_core)
+dna_prot_core_temp=ddply(dna_prot_core,c('DNA_resid','PROT_chain','PROT_resid'),summarize,tot_num_core=sum(av_num))
+summary(dna_prot_core_temp)
+subset(dna_prot_core_temp,DNA_resid==18)
+subset(dna_prot_core_temp,DNA_resid==9)
+setwd("/Users/alexeyshaytan/work_HD/histones_work/6md_nucl_expl/6md_1kx5_link_cons_zw/simul/analysis_scripts_link_zw")
+dna_prot_avr<-read.csv('../analysis_data/dna_prot_avr_df.csv')
+summary(dna_prot_avr)
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+####################
+dnaseq<-"ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAAAAGGCATGTTCAGCTGGAATCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATACACTTTTGGTAGTATCTGCAGGTGGATATTGAT"#
+seqdf=data.frame(sequence=substring(dnaseq, seq(1,nchar(dnaseq)),seq(1,nchar(dnaseq))),X=seq(-73,73,1))#
+###############
+################
+##Loading data frames#
+# dna<-read.csv('../analysis_data/dna2_param_df_md.csv',na.strings=c("NA",'---'))#
+# nf=length(table(dna$Time))#
+#
+# ???df=dna[dna$Time %in% seq(250,nf,10),c('Time','BPnum','x','y','z')]#
+# write.csv(df, file="../analysis_data/dna2_param_df_md_xyz.csv")#
+#
+df<-read.csv('../analysis_data/dna2_param_df_md_xyz.csv',na.strings=c("NA",'---'))#
+# print(nf)#
+head(df)#
+dna_cryst<-read.csv('../analysis_data/dna2_param_df_cryst.csv')#
+dna_cryst$Time=1#
+#
+d_c=melt(dna_cryst,id.vars=c('Time','BPnum'),measure.vars=c('x','y','z'))#
+d_md=melt(df,id.vars=c('Time','BPnum'),measure.vars=c('x','y','z'))#
+d_c$data='Initial'#
+d_md$data='MD'#
+d=rbind(d_c,d_md)#
+#
+d$BPnum=d$BPnum-20#
+# d=d[d$BPnum>0&d$BPnum<148,]#
+#
+head(d)
+d$BPnum=d$BPnum-74
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+####################
+dnaseq<-"ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAAAAGGCATGTTCAGCTGGAATCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATACACTTTTGGTAGTATCTGCAGGTGGATATTGAT"#
+seqdf=data.frame(sequence=substring(dnaseq, seq(1,nchar(dnaseq)),seq(1,nchar(dnaseq))),X=seq(-73,73,1))#
+###############
+################
+##Loading data frames#
+# dna<-read.csv('../analysis_data/dna2_param_df_md.csv',na.strings=c("NA",'---'))#
+# nf=length(table(dna$Time))#
+#
+# ???df=dna[dna$Time %in% seq(250,nf,10),c('Time','BPnum','x','y','z')]#
+# write.csv(df, file="../analysis_data/dna2_param_df_md_xyz.csv")#
+#
+df<-read.csv('../analysis_data/dna2_param_df_md_xyz.csv',na.strings=c("NA",'---'))#
+# print(nf)#
+head(df)#
+dna_cryst<-read.csv('../analysis_data/dna2_param_df_cryst.csv')#
+dna_cryst$Time=1#
+#
+d_c=melt(dna_cryst,id.vars=c('Time','BPnum'),measure.vars=c('x','y','z'))#
+d_md=melt(df,id.vars=c('Time','BPnum'),measure.vars=c('x','y','z'))#
+d_c$data='Initial'#
+d_md$data='MD'#
+d=rbind(d_c,d_md)#
+#
+d$BPnum=d$BPnum-20#
+# d=d[d$BPnum>0&d$BPnum<148,]#
+#
+head(d)
+df<-read.csv('../analysis_data/dna2_param_df_md_xyz.csv',na.strings=c("NA",'---'))
+head(df)
+dna_cryst
+head(df)
+summary(dna_cryst)
+dnaseq<-"ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAAAAGGCATGTTCAGCTGGAATCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATACACTTTTGGTAGTATCTGCAGGTGGATATTGAT"#
+seqdf=data.frame(sequence=substring(dnaseq, seq(1,nchar(dnaseq)),seq(1,nchar(dnaseq))),X=seq(-73,73,1))#
+###############
+################
+##Loading data frames#
+# dna<-read.csv('../analysis_data/dna2_param_df_md.csv',na.strings=c("NA",'---'))#
+# nf=length(table(dna$Time))#
+#
+# ???df=dna[dna$Time %in% seq(250,nf,10),c('Time','BPnum','x','y','z')]#
+# write.csv(df, file="../analysis_data/dna2_param_df_md_xyz.csv")#
+#
+df<-read.csv('../analysis_data/dna2_param_df_md_xyz.csv',na.strings=c("NA",'---'))#
+# print(nf)#
+head(df)#
+dna_cryst<-read.csv('../analysis_data/dna2_param_df_cryst.csv')#
+dna_cryst=dna_cryst[,c('Time','BPnum','x','y','z')]#
+dna_cryst$Time=1#
+df=df[,c('Time','BPnum','x','y','z')]#
+df$data='MD'#
+dna_cryst$data='X-ray'#
+d=rbind(df,dna_cryst)
+summary(dna_cryst)
+dna_cryst=dna_cryst[,c('Time','BPnum','x','y','z')]
+summary(dna_cryst)
+df<-read.csv('../analysis_data/dna2_param_df_md_xyz.csv',na.strings=c("NA",'---'))
+dna_cryst$Time=1
+df=df[,c('Time','BPnum','x','y','z')]
+df$data='MD'
+dna_cryst$data='X-ray'
+d=rbind(df,dna_cryst)
+head(d)
+?merge
+df<-read.csv('../analysis_data/dna2_param_df_md_xyz.csv',na.strings=c("NA",'---'))#
+# print(nf)#
+head(df)#
+dna_cryst<-read.csv('../analysis_data/dna2_param_df_cryst.csv')#
+dna_cryst=dna_cryst[,c('Time','BPnum','x','y','z')]#
+dna_cryst$Time=1#
+df=df[,c('Time','BPnum','x','y','z')]#
+df$data='MD'#
+dna_cryst$data='X-ray'#
+d=rbind(df,dna_cryst)#
+#
+d$BPnum=d$BPnum-94#
+#
+d1=subset(d,BPnum>0)#
+d2=subset(d,BPnum<0)#
+d2$BPnum=d2$BPnum*(-1)#
+#
+d=merge(d1,d2,by=c('Time','data','BPnum'))
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+####################
+dnaseq<-"ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAAAAGGCATGTTCAGCTGGAATCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATACACTTTTGGTAGTATCTGCAGGTGGATATTGAT"#
+seqdf=data.frame(sequence=substring(dnaseq, seq(1,nchar(dnaseq)),seq(1,nchar(dnaseq))),X=seq(-73,73,1))#
+###############
+################
+##Loading data frames#
+# dna<-read.csv('../analysis_data/dna2_param_df_md.csv',na.strings=c("NA",'---'))#
+# nf=length(table(dna$Time))#
+#
+# ???df=dna[dna$Time %in% seq(250,nf,10),c('Time','BPnum','x','y','z')]#
+# write.csv(df, file="../analysis_data/dna2_param_df_md_xyz.csv")#
+#
+df<-read.csv('../analysis_data/dna2_param_df_md_xyz.csv',na.strings=c("NA",'---'))#
+# print(nf)#
+head(df)#
+dna_cryst<-read.csv('../analysis_data/dna2_param_df_cryst.csv')#
+dna_cryst=dna_cryst[,c('Time','BPnum','x','y','z')]#
+dna_cryst$Time=1#
+df=df[,c('Time','BPnum','x','y','z')]#
+df$data='MD'#
+dna_cryst$data='X-ray'#
+d=rbind(df,dna_cryst)#
+#
+d$BPnum=d$BPnum-94#
+#
+d1=subset(d,BPnum>0)#
+d2=subset(d,BPnum<0)#
+d2$BPnum=d2$BPnum*(-1)#
+#
+d=merge(d1,d2,by=c('Time','data','BPnum'))
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+####################
+dnaseq<-"ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAAAAGGCATGTTCAGCTGGAATCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATACACTTTTGGTAGTATCTGCAGGTGGATATTGAT"#
+seqdf=data.frame(sequence=substring(dnaseq, seq(1,nchar(dnaseq)),seq(1,nchar(dnaseq))),X=seq(-73,73,1))#
+###############
+################
+##Loading data frames#
+# dna<-read.csv('../analysis_data/dna2_param_df_md.csv',na.strings=c("NA",'---'))#
+# nf=length(table(dna$Time))#
+#
+# ???df=dna[dna$Time %in% seq(250,nf,10),c('Time','BPnum','x','y','z')]#
+# write.csv(df, file="../analysis_data/dna2_param_df_md_xyz.csv")#
+#
+df<-read.csv('../analysis_data/dna2_param_df_md_xyz.csv',na.strings=c("NA",'---'))#
+# print(nf)#
+head(df)#
+dna_cryst<-read.csv('../analysis_data/dna2_param_df_cryst.csv')#
+dna_cryst=dna_cryst[,c('Time','BPnum','x','y','z')]#
+dna_cryst$Time=1#
+df=df[,c('Time','BPnum','x','y','z')]#
+df$data='MD'#
+dna_cryst$data='X-ray'#
+d=rbind(df,dna_cryst)#
+#
+d$BPnum=d$BPnum-94#
+#
+d1=subset(d,BPnum>0)#
+d2=subset(d,BPnum<0)#
+d2$BPnum=d2$BPnum*(-1)
+df<-read.csv('../analysis_data/dna2_param_df_md_xyz.csv',na.strings=c("NA",'---'))#
+# print(nf)#
+head(df)#
+dna_cryst<-read.csv('../analysis_data/dna2_param_df_cryst.csv')#
+dna_cryst=dna_cryst[,c('Time','BPnum','x','y','z')]#
+dna_cryst$Time=1#
+df=df[,c('Time','BPnum','x','y','z')]#
+df$data='MD'#
+dna_cryst$data='X-ray'#
+d=rbind(df,dna_cryst)
+df<-read.csv('../analysis_data/dna2_param_df_md_xyz.csv',na.strings=c("NA",'---'))
+dna_cryst<-read.csv('../analysis_data/dna2_param_df_cryst.csv')#
+dna_cryst=dna_cryst[,c('Time','BPnum','x','y','z')]#
+dna_cryst$Time=1#
+df=df[,c('Time','BPnum','x','y','z')]#
+df$data='MD'#
+dna_cryst$data='X-ray'#
+d=rbind(df,dna_cryst)
+df<-read.csv('../analysis_data/dna2_param_df_md_xyz.csv',na.strings=c("NA",'---'))#
+# print(nf)#
+head(df)#
+dna_cryst<-read.csv('../analysis_data/dna2_param_df_cryst.csv')#
+dna_cryst=dna_cryst[,c('BPnum','x','y','z')]#
+dna_cryst$Time=1#
+df=df[,c('Time','BPnum','x','y','z')]#
+df$data='MD'#
+dna_cryst$data='X-ray'#
+d=rbind(df,dna_cryst)#
+#
+d$BPnum=d$BPnum-94#
+#
+d1=subset(d,BPnum>0)#
+d2=subset(d,BPnum<0)#
+d2$BPnum=d2$BPnum*(-1)#
+#
+d=merge(d1,d2,by=c('Time','data','BPnum'))
+head(d)
+?merge
+ls
+?merge
+head(d)
+2**2
+sqrt(4)
+d$dist=sqrt((d$x.x-d$x.y)**2+(d$y.x-d$y.y)**2+(d$z.x-d$z.y)**2)
+head(d)
+?nls
+dna<-read.csv('../analysis_data/dna2_param_df_md.csv',na.strings=c("NA",'---'))
+nf=length(table(dna$Time))
+z=subset(dna,BPnum==190)
+head(z)
+head(dna)
+z=subset(dna,BPnum==180)
+head(dna)
+z=subset(dna,c('z'))
+z=z[,c('z')]
+z
+acf(z)
+1/e
+1/2.7
+z=subset(dna,BPnum==180)
+x=z[,c('x')]
+acf(x)
+head(x)
+x
+?acf
+plot(x)
+x=x[250:1000]
+x
+acf(x)
+dna_prot_avr<-read.csv('../analysis_data/dna_prot_avr_df.csv')
+summary(dna_prot_avr)
+library(ggplot2)#
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(reshape2)#
+library(gridExtra)#
+library(plyr)#
+#dfcryst$X<-as.factor(dfcryst$X)#
+dna_prot_avr<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+dna_prot<-subset(dna_prot_avr,type=='SC' & av_num>0.8)#
+# dfm=melt(df,id.var=c("Time"))#
+#
+img <- readPNG(paste("seq_img/",'H3_full_inv',".png",sep=''))#
+h3 <- rasterGrob(img, interpolate=TRUE,width=1)#
+img <- readPNG(paste("seq_img/",'H4_full_inv',".png",sep=''))#
+h4 <- rasterGrob(img, interpolate=TRUE,width=1)#
+img <- readPNG(paste("seq_img/",'H2A_full_inv',".png",sep=''))#
+h2a <- rasterGrob(img, interpolate=TRUE,width=1)#
+img <- readPNG(paste("seq_img/",'H2B_full_inv',".png",sep=''))#
+h2b <- rasterGrob(img, interpolate=TRUE,width=1)#
+#
+theme_set(theme_bw()+theme(panel.border =element_rect(linetype = "dashed", colour = "white")))#
+#
+dna_prot$PROT_chain=revalue(dna_prot$PROT_chain, c("CHA"="A","CHB"="B","CHC"="C","CHD"="D","CHE"="E","CHF"="F","CHG"="G","CHH"="H"))#
+# ggplot(data=df,aes(x=as.numeric(as.character(variable)),y=Time))+#
+h3data=dna_prot[dna_prot$PROT_chain=='A' | dna_prot$PROT_chain=='E',]#
+# h3data=ddply(h3data,c('Resid'),summarize,sasa_fract=mean(sasa_fract))#
+# h3data$ss_type=factor(h3data$ss_type, levels=c('B','H','G','C'))#
+h3data=ddply(h3data,c('PROT_chain','PROT_resid'),summarize,tot_num=sum(av_num))
+h3dataD=dcast(h3data,PROT_resid~PROT_chain)
+head(h3dataS)
+head(h3dataD)
+subset(h3dataD,E>A)
+subset(h3dataD,E>A | is.na(A))
+subset(h3dataD,is.na(A))
+subset(h3dataD,is.na(E))
+?mely
+?melt
+h3dataE=dcast(h3data,PROT_resid~PROT_chain)#
+h3dataE=subset(h3dataE,is.na(A))
+melt(h3dataE,id.vars=c(PROT_resid),measure.vars=c(E))
+h3dataE
+melt(h3dataE,id.vars=c('PROT_resid'),measure.vars=c('E'))
+?melt
+melt(h3dataE,id.vars=c('PROT_resid'),measure.vars=c('E'),variable.name='Chain')
+melt(h3dataE,id.vars=c('PROT_resid'),measure.vars=c('E'),variable.name='Chain',value.name='tot_num')
+dna_avr<-read.csv('../analysis_data/dna2_param_df_md_avr.csv')
+summary(dna_avr)
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+####################
+dnaseq<-"ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAAAAGGCATGTTCAGCTGGAATCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATACACTTTTGGTAGTATCTGCAGGTGGATATTGAT"#
+seqdf=data.frame(sequence=substring(dnaseq, seq(1,nchar(dnaseq)),seq(1,nchar(dnaseq))),X=seq(-73,73,1))#
+###############
+################
+##Loading data frames#
+# dna<-read.csv('../analysis_data/dna2_param_df_md.csv',na.strings=c("NA",'---'))#
+# nf=length(table(dna$Time))#
+#
+# ???df=dna[dna$Time %in% seq(250,nf,10),c('Time','BPnum','x','y','z')]#
+# write.csv(df, file="../analysis_data/dna2_param_df_md_xyz.csv")#
+#
+dna_avr<-read.csv('../analysis_data/dna2_param_df_md_avr.csv')#
+# dna_avr=subset(dna_avr,BPnum<168&BPnum>20)
+summary(dna_avr)
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+####################
+dnaseq<-"ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAAAAGGCATGTTCAGCTGGAATCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATACACTTTTGGTAGTATCTGCAGGTGGATATTGAT"#
+seqdf=data.frame(sequence=substring(dnaseq, seq(1,nchar(dnaseq)),seq(1,nchar(dnaseq))),X=seq(-73,73,1))#
+###############
+################
+##Loading data frames#
+df<-read.csv('../analysis_data/dna2_param_df_md.csv',na.strings=c("NA",'---'))#
+# nf=length(table(dna$Time))#
+#
+# ???df=dna[dna$Time %in% seq(250,nf,10),c('Time','BPnum','x','y','z')]#
+# write.csv(df, file="../analysis_data/dna2_param_df_md_xyz.csv")#
+#
+# df<-read.csv('../analysis_data/dna2_param_df_md_xyz.csv',na.strings=c("NA",'---'))#
+# print(nf)#
+head(df)#
+dna_cryst<-read.csv('../analysis_data/dna2_param_df_cryst.csv')#
+dna_cryst=dna_cryst[,c('BPnum','x','y','z')]#
+dna_cryst$Time=1#
+df=df[,c('Time','BPnum','x','y','z')]#
+df$data='MD'#
+dna_cryst$data='X-ray'#
+d=rbind(df,dna_cryst)#
+#
+d$BPnum=d$BPnum-94#
+#
+d1=subset(d,BPnum>0)#
+d2=subset(d,BPnum<0)#
+d2$BPnum=d2$BPnum*(-1)#
+#
+d=merge(d1,d2,by=c('Time','data','BPnum'))
+sumary(d)
+summary(d)
+?merge
+dna_avr<-read.csv('../analysis_data/dna2_param_df_md_avr.csv')#
+# dna_avr=subset(dna_avr,BPnum<168&BPnum>20)#
+dna_avr=rename(dna_avr, c("x_av"='x',"y_av"='y',"z_av"='z', "Roll_av"="Roll",'Twist_av'='Twist','Slide_av'='Slide','P_1_av'='P_1','P_2_av'='P_2','chi_1_av'='chi_1','chi_2_av'='chi_2'))
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+####################
+dnaseq<-"ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAAAAGGCATGTTCAGCTGGAATCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATACACTTTTGGTAGTATCTGCAGGTGGATATTGAT"#
+seqdf=data.frame(sequence=substring(dnaseq, seq(1,nchar(dnaseq)),seq(1,nchar(dnaseq))),X=seq(-73,73,1))#
+###############
+################
+##Loading data frames#
+# dna<-read.csv('../analysis_data/dna2_param_df_md.csv',na.strings=c("NA",'---'))#
+# nf=length(table(dna$Time))#
+#
+# ???df=dna[dna$Time %in% seq(250,nf,10),c('Time','BPnum','x','y','z')]#
+# write.csv(df, file="../analysis_data/dna2_param_df_md_xyz.csv")#
+#
+dna_avr<-read.csv('../analysis_data/dna2_param_df_md_avr.csv')#
+# dna_avr=subset(dna_avr,BPnum<168&BPnum>20)#
+dna_avr=rename(dna_avr, c("x_av"='x',"y_av"='y',"z_av"='z', "Roll_av"="Roll",'Twist_av'='Twist','Slide_av'='Slide','P_1_av'='P_1','P_2_av'='P_2','chi_1_av'='chi_1','chi_2_av'='chi_2'))#
+#
+dna_avr$r_sd=sqrt(dna_avr$x_sd**2+dna_avr$y_sd**2+dna_avr$z_sd**2)#
+#
+# print(nf)#
+head(dna_avr)
+summary(dna_avr)
+dna_avr$BPnum=dna_avr$BPnum-20-74
+summary(dna_avr)
+dna_avr<-read.csv('../analysis_data/dna2_param_df_md_avr.csv')
+dna_avr=rename(dna_avr, c("x_av"='x',"y_av"='y',"z_av"='z', "Roll_av"="Roll",'Twist_av'='Twist','Slide_av'='Slide','P_1_av'='P_1','P_2_av'='P_2','chi_1_av'='chi_1','chi_2_av'='chi_2'))
+summary(dna_avr)
+dna_avr$BPnum=dna_avr$BPnum-94
+d1=subset(dna_avr,BPnum<-73)
+d1=subset(dna_avr,BPnum< -73)
+d2=subset(dna_avr,BPnum>73)
+d1
+d1=d1[,c('BPnum','x','y','z')]
+d2=d2[,c('BPnum','x','y','z')]
+d1
+merge(d1,d2,by=c())
+d=merge(d1,d2,by=c())
+d
+d$dist=sqrt((d$x.x-d$x.y)**2+(d$y.x-d$y.y)**2+(d$z.x-d$z.y)**2)
+d$dist
+max(d$dist)
+min(d$dist)
+setwd("/Users/alexeyshaytan/work_HD/histones_work/6md_nucl_expl/6md_1kx5_link_cons_zw/simul/analysis_scripts_link_zw")
+df<-read.csv('../analysis_data/dna2_param_df_md_xyz.csv',na.strings=c("NA",'---'))
+summary(df)
+df$Time
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+###############
+################
+#core H3 > 43 < 132#
+#H4 > 23 < 99#
+#H2A > 15 < 118#
+#H2B > 29 < 124#
+# dna_prot_cryst<-read.csv('../analysis_data/dna_prot_avr_df_cryst.csv')#
+dna_prot_avr<-read.csv('../analysis_data/dna_prot_avr_df.csv')
+dna_prot_cryst<-read.csv('../analysis_data/dna_prot_avr_df_cryst.csv')#
+dna_prot<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+#
+#Let's define levels order for better graphics#
+prot_rn_lev=c('ARG','LYS','THR','SER','TYR','HSE','GLN','ASN','VAL','ILE','ALA','GLY','PRO','PHE','LEU','GLU','ASP','MET','CYS')#
+prot_rn_lev=c('ARG','LYS','THR','SER','VAL','GLY','ILE','PHE','GLN','ALA','LEU','PRO','GLU','TYR','MET','HSE','ASP','CYS','ASN')#
+prot_rn_levn=c('ARG','LYS','THR','SER','VAL','GLY','ILE','PHE','GLN','ALA','LEU','PRO','GLU','TYR','MET','HIS','ASP','CYS','ASN')#
+#
+type_lev=c('SC','SB','HB','vdW','IM','WM')#
+# head(subset(dna_prot_cryst,type=='SB'))#
+#Let's assign level order#
+dna_prot_cryst$type<-factor(dna_prot_cryst$type,levels=type_lev)#
+dna_prot$type<-factor(dna_prot$type,levels=type_lev)#
+#
+dna_prot$DNA_part<-factor(dna_prot$DNA_part,levels=c('phosphate','sugar','base'))#
+dna_prot_cryst$DNA_part<-factor(dna_prot_cryst$DNA_part,levels=c('phosphate','sugar','base'))#
+dna_prot_cryst$PROT_resname<-factor(dna_prot_cryst$PROT_resname,levels=prot_rn_lev)#
+dna_prot$PROT_resname<-factor(dna_prot$PROT_resname,levels=prot_rn_lev)#
+dna_prot_core=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+dna_prot_tails=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+dna_prot_core$hist_part='Core'#
+dna_prot_tails$hist_part='Tails'#
+dna_prot=rbind(dna_prot_core,dna_prot_tails)#
+#
+dna_prot_core_cryst=subset(dna_prot_cryst, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+dna_prot_tails_cryst=subset(dna_prot_cryst, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+dna_prot_core_cryst$hist_part='Core'#
+dna_prot_tails_cryst$hist_part='Tails'#
+dna_prot_cryst=rbind(dna_prot_core_cryst,dna_prot_tails_cryst)
+summary(dna_prot)
+a=subset(dna_prot,PROT_resname=='GLY')
+summary(a)
+subset(a,hist_part=='Tails')
+b=subset(a,hist_part=='Tails')
+sumamry(b)
+summary(b)
+?summary
+summary(b,n=10)
+?summary
+summary(b,maxsum=10)
+b=subset(s,type=='SC')
+b=subset(b,type=='SC')
+summary(b,maxsum=10)
+head(b)
+summary(b,maxsum=10)
+ddply(b,c('PROT_chain'),summarize,tot=sum(av_num))
+ggplot(data=b,aes(x=PROT_resid,color=PROT_chain,weight=av_num))+geom_hist()
+ggplot(data=b,aes(x=PROT_resid,color=PROT_chain,weight=av_num))+geom_histogram()
+ggplot(data=b,aes(x=PROT_resid,fill=PROT_chain,weight=av_num))+geom_histogram()
+ggplot(data=b,aes(x=PROT_resid,fill=PROT_chain,weight=av_num))+geom_histogram(position='dodge')
+ggplot(data=subset(b,PROT_chain=='CHB'),aes(x=PROT_resid,fill=PROT_chain,weight=av_num))+geom_histogram(position='dodge')
+ggplot(data=b,aes(x=DNA_part,fill=PROT_chain,weight=av_num))+geom_histogram(position='dodge')
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+###############
+################
+#core H3 > 43 < 132#
+#H4 > 23 < 99#
+#H2A > 15 < 118#
+#H2B > 29 < 124#
+# dna_prot_cryst<-read.csv('../analysis_data/dna_prot_avr_df_cryst.csv')#
+dna_prot_avr<-read.csv('../analysis_data/dna_prot_avr_df_cryst.csv')
+subset(dna_prot_avr,DNA_resid%in%c(66,67))
+subset(dna_prot_avr,DNA_resid%in%c(66,67,-66,-67))
+subset(dna_prot_avr,DNA_resid%in%c(66,67,-66,-67)&type=='SC')
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)
+dna<-read.csv('../analysis_data/dna2_param_df_md.csv',na.strings=c("NA",'---'))#
+nf=length(table(dna$Time))
+head(dna)
+a=subset(dna,BPnum==108)
+a
+hist(a$x)
+b=a$x -mean(a$x)
+hist(b)
+min(b)
+max(b)
+?mean
+?stdev
+?disp
+?mean
+?base
+library(help='base')
+var(b)
+?var
+var(subset(dna,BPnum==108)$x)
+var(subset(dna,BPnum==108)$x)**0.5
+var(subset(dna,BPnum==108)$y)**0.5
+var(subset(dna,BPnum==108)$z)**0.5
+?range
+range(subset(dna,BPnum==108)$z)
+range(subset(dna,BPnum==108)$x)
+max(subset(dna,BPnum==108)$x)-min(subset(dna,BPnum==108)$x)
+max(subset(dna,BPnum==108)$z)-min(subset(dna,BPnum==108)$z)
+max(subset(dna,BPnum==148)$z)-min(subset(dna,BPnum==148)$z)
+max(subset(dna,BPnum==148)$x)-min(subset(dna,BPnum==148)$x)
+max(subset(dna,BPnum==148)$y)-min(subset(dna,BPnum==148)$y)
+hist(subset(dna,BPnum==148)$z)
+var(subset(dna,BPnum==148)$z)
+var(subset(dna,BPnum==148)$z)**0.5
+head(dna)
+dna$BPnum=dna$BPnum-74-20
+head(dna)
+dna<-read.csv('../analysis_data/dna2_param_df_md_avr.csv',na.strings=c("NA",'---'))
+head(dna)
+dna$BPnum=dna$BPnum-74-20
+head(dna)
+plot(dna$BPnum,dna$Roll_av)
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+###############
+################
+#core H3 > 43 < 132#
+#H4 > 23 < 99#
+#H2A > 15 < 118#
+#H2B > 29 < 124#
+dna_prot_cryst<-read.csv('../analysis_data/dna_prot_avr_df_cryst.csv')#
+dna_prot<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+#
+dna_prot<-subset(dna_prot,type=='SC')#
+dna_prot_cryst<-subset(dna_prot_cryst,type=='SC')
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+###############
+################
+#core H3 > 43 < 132#
+#H4 > 23 < 99#
+#H2A > 15 < 118#
+#H2B > 29 < 124#
+# dna_prot_cryst<-read.csv('../analysis_data/dna_prot_avr_df_cryst.csv')#
+dna_prot_avr<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+# q()#
+dna_prot<-subset(dna_prot_avr,type=='SC')#
+# dna_prot_cryst<-subset(dna_prot_cryst,type=='SC')#
+dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']=-dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']#
+dna_prot_core=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+dna_prot_tails=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+#
+dna_prot_core_temp=ddply(dna_prot_core,c('DNA_resid','PROT_chain'),summarize,tot_num_core=sum(av_num))#
+dna_prot_tails_temp=ddply(dna_prot_tails,c('DNA_resid','PROT_chain'),summarize,tot_num_tails=sum(av_num))#
+dna_prot_temp=merge(dna_prot_core_temp,dna_prot_tails_temp,all=TRUE)#
+dna_prot_temp[is.na(dna_prot_temp)] <- 0#
+# dna_prot_max_sc=ddply(dna_prot_temp,c('DNA_resid','PROT_chain'),summarize,max_sc=max(tot_num_core+tot_num_tails),core=tot_num_core[which.max(tot_num_core+tot_num_tails)],tails=tot_num_tails[which.max(tot_num_core+tot_num_tails)])#
+dna_prot_avr=ddply(dna_prot_temp,c('DNA_resid','PROT_chain'),summarize,avr_sc=mean(tot_num_core)+mean(tot_num_tails),core=mean(tot_num_core),tails=mean(tot_num_tails))#
+#
+dna_prot_avr$turn=c('positive')#
+dna_prot_avr[dna_prot_avr$DNA_resid<0,'turn']=c('negative')#
+dna_prot_avr[dna_prot_avr$DNA_resid<0,'DNA_resid']=-dna_prot_avr[dna_prot_avr$DNA_resid<0,'DNA_resid']#
+t=subset(dna_prot_avr,DNA_resid==0)#
+t$turn=c('negative')#
+dna_prot_avr=rbind(dna_prot_avr,t)#
+head(dna_prot_avr)#
+dna_prot_avr$turn<-factor(dna_prot_avr$turn,levels=c('negative','positive'),labels=c('SHL < 0','SHL > 0'))#
+#
+dna_prot_avr$PROT_chain=revalue(dna_prot_avr$PROT_chain, c("CHA"="H3","CHE"="H3","CHB"="H4","CHF"="H4","CHC"="H2A","CHG"="H2A","CHD"="H2B","CHH"="H2B"))#
+dna_prot_avr=ddply(dna_prot_avr,c('DNA_resid','PROT_chain','turn'),summarize,avr_sc=mean(avr_sc),core=mean(core),tails=mean(tails))#
+dna_prot_avr_m=melt(dna_prot_avr, id.vars=c('DNA_resid','PROT_chain','turn'),measure.vars=c('core','tails'))#
+head(dna_prot_avr_m)#
+#
+dna_prot_avr_m=arrange(dna_prot_avr_m,variable,PROT_chain)#
+dna_prot_avr_m$variable<-factor(dna_prot_avr_m$variable,levels=c('core','tails'),labels=c('CORE','TAILS'))#
+ann_text <- data.frame(x = c(8.3-0.15,0.8,4.85), y = c(36.5,36.5,36.5),lab = c('Linker DNA','Inner DNA turn','Outer DNA turn'),#
+                       variable = factor('CORE'),turn=factor('negative',levels=c('negative','positive'),labels=c('SHL < 0','SHL > 0')),PROT_chain='H3',#
+                       xmin=c(7.65-0.15,0,4.85-0.85),xmax=c(8.3+0.65-0.15,1.0+0.6,4.85+0.85),ymin=c(30,30,30),ymax=c(43,43,43))#
+#
+theme_set(theme_grey(base_size = 18))
+ann_num_outer=ddply(subset(dna_prot_avr_m,(DNA_resid>39.5)&(DNA_resid<73.5)),c('PROT_chain','turn','variable'),summarize,avr_sum=round(sum(value),0))
+ann_num_outer=ddply(subset(dna_prot_avr_m,(DNA_resid>60.5)&(DNA_resid<73.5)),c('PROT_chain','turn','variable'),summarize,avr_sum=round(sum(value),0))
+ann_num_outer
+141+43
+62+2
+dna_avr<-read.csv('../analysis_data/dna2_param_df_md_avr.csv')
+head(dna_avr)
+head(dna_avr$W_21)
+dna_avr$W_2
+dna_avr$W_21
+dna_avr$W_21_av
+dna_avr$W21_av
+a=c(1,2,3)
+c(a,2)
+dna_prot_avr<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+# q()#
+dna_prot<-subset(dna_prot_avr,type=='SC')#
+# dna_prot_cryst<-subset(dna_prot_cryst,type=='SC')#
+dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']=-dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']#
+dna_prot_core=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+# dna_prot_tails=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+#
+dna_prot_core_temp=ddply(dna_prot_core,c('DNA_resid','PROT_chain'),summarize,tot_num_core=sum(av_num))#
+# dna_prot_tails_temp=ddply(dna_prot_tails,c('DNA_resid','PROT_chain'),summarize,tot_num_tails=length(param1))#
+# dna_prot_temp=merge(dna_prot_core_temp,dna_prot_tails_temp,all=TRUE)#
+dna_prot_temp=dna_prot_core_temp#
+dna_prot_temp[is.na(dna_prot_temp)] <- 0#
+# dna_prot_max_sc=ddply(dna_prot_temp,c('DNA_resid','PROT_chain'),summarize,max_sc=max(tot_num_core+tot_num_tails),core=tot_num_core[which.max(tot_num_core+tot_num_tails)],tails=tot_num_tails[which.max(tot_num_core+tot_num_tails)])#
+dna_prot_avr=ddply(dna_prot_temp,c('DNA_resid','PROT_chain'),summarize,avr_sc=mean(tot_num_core),core=mean(tot_num_core))#
+#
+dna_prot_avr$turn=c('positive')#
+# dna_prot_avr[dna_prot_avr$DNA_resid<0,'turn']=c('negative')#
+dna_prot_avr[dna_prot_avr$DNA_resid<0,'turn']=c('positive')#
+#
+dna_prot_avr[dna_prot_avr$DNA_resid<0,'DNA_resid']=-dna_prot_avr[dna_prot_avr$DNA_resid<0,'DNA_resid']#
+# t=subset(dna_prot_avr,DNA_resid==0)#
+# t$turn=c('negative')#
+# dna_prot_avr=rbind(dna_prot_avr,t)#
+head(dna_prot_avr)#
+# dna_prot_avr$turn<-factor(dna_prot_avr$turn,levels=c('negative','positive'),labels=c('SHL < 0','SHL > 0'))#
+#
+dna_prot_avr$PROT_chain=revalue(dna_prot_avr$PROT_chain, c("CHA"="H3","CHE"="H3","CHB"="H4","CHF"="H4","CHC"="H2A","CHG"="H2A","CHD"="H2B","CHH"="H2B"))#
+dna_prot_avr=ddply(dna_prot_avr,c('DNA_resid','PROT_chain'),summarize,avr_sc=mean(avr_sc),core=mean(core))#
+dna_prot_avr_m=melt(dna_prot_avr, id.vars=c('DNA_resid','PROT_chain'),measure.vars=c('core'))#
+head(dna_prot_avr_m)#
+#
+dna_prot_avr_m=arrange(dna_prot_avr_m,variable,PROT_chain)#
+dna_prot_avr_m$variable<-factor(dna_prot_avr_m$variable,levels=c('core','tails'),labels=c('CORE','TAILS'))#
+ann_text <- data.frame(x = c(8.3-0.15,0.8,4.85), y = c(36.5,36.5,36.5),lab = c('Linker DNA','Inner DNA turn','Outer DNA turn'),#
+                       variable = factor('CORE'),turn=factor('negative',levels=c('negative','positive'),labels=c('SHL < 0','SHL > 0')),PROT_chain='H3',#
+                       xmin=c(7.65-0.15,0,4.85-0.85),xmax=c(8.3+0.65-0.15,1.0+0.6,4.85+0.85),ymin=c(30,30,30),ymax=c(43,43,43))#
+#
+theme_set(theme_grey(base_size = 18))
+library(fitdistrplus)#
+library(gtools)#
+library(png)#
+library(grid)#
+library(ggplot2)#
+library(reshape2)#
+library(xtable)#
+library(plyr)#
+library(gridExtra)#
+###############
+################
+#core H3 > 43 < 132#
+#H4 > 23 < 99#
+#H2A > 15 < 118#
+#H2B > 29 < 124#
+# dna_prot_cryst<-read.csv('../analysis_data/dna_prot_avr_df_cryst.csv')#
+#
+dna_prot_avr<-read.csv('../analysis_data/dna_prot_avr_df.csv')#
+# q()#
+dna_prot<-subset(dna_prot_avr,type=='SC')#
+# dna_prot_cryst<-subset(dna_prot_cryst,type=='SC')#
+dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']=-dna_prot[dna_prot$DNA_chain=='CHJ','DNA_resid']#
+dna_prot_core=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid > 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid > 23))|((PROT_chain %in% c('CHC','CHG'))&(PROT_resid > 15)&(PROT_resid < 119))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid > 29))))#
+# dna_prot_tails=subset(dna_prot, (((PROT_chain %in% c('CHA','CHE'))&(PROT_resid <= 43))|((PROT_chain %in% c('CHB','CHF'))&(PROT_resid <= 23))|((PROT_chain %in% c('CHC','CHG'))&((PROT_resid <= 15)|(PROT_resid >= 119)))|((PROT_chain %in% c('CHD','CHH'))&(PROT_resid <= 29))))#
+#
+dna_prot_core_temp=ddply(dna_prot_core,c('DNA_resid','PROT_chain'),summarize,tot_num_core=sum(av_num))#
+# dna_prot_tails_temp=ddply(dna_prot_tails,c('DNA_resid','PROT_chain'),summarize,tot_num_tails=length(param1))#
+# dna_prot_temp=merge(dna_prot_core_temp,dna_prot_tails_temp,all=TRUE)#
+dna_prot_temp=dna_prot_core_temp#
+dna_prot_temp[is.na(dna_prot_temp)] <- 0#
+# dna_prot_max_sc=ddply(dna_prot_temp,c('DNA_resid','PROT_chain'),summarize,max_sc=max(tot_num_core+tot_num_tails),core=tot_num_core[which.max(tot_num_core+tot_num_tails)],tails=tot_num_tails[which.max(tot_num_core+tot_num_tails)])#
+dna_prot_avr=ddply(dna_prot_temp,c('DNA_resid','PROT_chain'),summarize,avr_sc=mean(tot_num_core),core=mean(tot_num_core))#
+#
+dna_prot_avr$turn=c('positive')#
+# dna_prot_avr[dna_prot_avr$DNA_resid<0,'turn']=c('negative')#
+dna_prot_avr[dna_prot_avr$DNA_resid<0,'turn']=c('positive')#
+#
+dna_prot_avr[dna_prot_avr$DNA_resid<0,'DNA_resid']=-dna_prot_avr[dna_prot_avr$DNA_resid<0,'DNA_resid']#
+# t=subset(dna_prot_avr,DNA_resid==0)#
+# t$turn=c('negative')#
+# dna_prot_avr=rbind(dna_prot_avr,t)#
+head(dna_prot_avr)#
+# dna_prot_avr$turn<-factor(dna_prot_avr$turn,levels=c('negative','positive'),labels=c('SHL < 0','SHL > 0'))#
+#
+dna_prot_avr$PROT_chain=revalue(dna_prot_avr$PROT_chain, c("CHA"="H3","CHE"="H3","CHB"="H4","CHF"="H4","CHC"="H2A","CHG"="H2A","CHD"="H2B","CHH"="H2B"))#
+dna_prot_avr=ddply(dna_prot_avr,c('DNA_resid','PROT_chain'),summarize,avr_sc=mean(avr_sc),core=mean(core))#
+dna_prot_avr_m=melt(dna_prot_avr, id.vars=c('DNA_resid','PROT_chain'),measure.vars=c('core'))#
+head(dna_prot_avr_m)#
+#
+dna_prot_avr_m=arrange(dna_prot_avr_m,variable,PROT_chain)#
+dna_prot_avr_m$variable<-factor(dna_prot_avr_m$variable,levels=c('core','tails'),labels=c('CORE','TAILS'))#
+ann_text <- data.frame(x = c(8.3-0.15,0.8,4.85), y = c(36.5,36.5,36.5),lab = c('Linker DNA','Inner DNA turn','Outer DNA turn'),#
+                       variable = factor('CORE'),turn=factor('negative',levels=c('negative','positive'),labels=c('SHL < 0','SHL > 0')),PROT_chain='H3',#
+                       xmin=c(7.65-0.15,0,4.85-0.85),xmax=c(8.3+0.65-0.15,1.0+0.6,4.85+0.85),ymin=c(30,30,30),ymax=c(43,43,43))#
+#
+theme_set(theme_grey(base_size = 18))
+ddply(subset(dna_prot_avr_m,DNA_resid<39.5),c('PROT_chain','variable'),summarize,avr_sum=round(sum(value),0))
+ddply(subset(dna_prot_avr_m,DNA_resid<39.5),c('variable'),summarize,avr_sum=sum(value))
+ddply(subset(dna_prot_avr_m,DNA_resid<10.5),c('variable'),summarize,avr_sum=sum(value))
+ddply(subset(dna_prot_avr_m,DNA_resid<20 & DNA_resid>10),c('variable'),summarize,avr_sum=sum(value))
+ddply(subset(dna_prot_avr_m,DNA_resid<31 & DNA_resid>20),c('variable'),summarize,avr_sum=sum(value))
+ddply(subset(dna_prot_avr_m,DNA_resid<41 & DNA_resid>31),c('variable'),summarize,avr_sum=sum(value))
+ddply(subset(dna_prot_avr_m,DNA_resid<51 & DNA_resid>41),c('variable'),summarize,avr_sum=sum(value))
+ddply(subset(dna_prot_avr_m,DNA_resid<62 & DNA_resid>51),c('variable'),summarize,avr_sum=sum(value))
+ddply(subset(dna_prot_avr_m,DNA_resid>62 & DNA_resid>74),c('variable'),summarize,avr_sum=sum(value))
+ddply(subset(dna_prot_avr_m,DNA_resid>62 & DNA_resid<74),c('variable'),summarize,avr_sum=sum(value))

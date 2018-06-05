@@ -6,7 +6,7 @@
 [analisys](analisys) - scripts to perform trajectory analysis  
 
 ## Contents
-1. [Introduction](#Introduction) 
+1. [**Introduction**](#Introduction) 
 + [Objectives](#Objectives) 
 
 
@@ -40,4 +40,13 @@ Gromacs manual
 
 ### Further reading / alternative tutorials
 
+
+## 2. System description and simulation strategy choice
+### Nucleosome core particle and its PDB structures
+
+### Dealing with flexible histone tails
+
+### Ionic conditions and choosing simulation box size
+
+### Force field choice
 

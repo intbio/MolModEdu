@@ -50,3 +50,9 @@ Gromacs manual
 
 ### Force field choice
 
+## 3. Installing software
+
+## 4. Obtaining force field files
+
+## 5. Pereparing system for simulation
+

@@ -66,6 +66,23 @@ Basic knowledge of the following areas is required:
 
 ## 2. System description and simulation strategy choice
 ### Nucleosome core particle and its PDB structures
+write a few words about NCP
+Nucleosome structural studies davy 2011
+
+будем использова 1kx5, 1,9 А
+структуры с каким разрешением стоит брать для МД - бокс - ссылку на другой файл в докс - как оценить качество пдб структуры
+при каком разрешении, какие начинатся проблемы (ссылка на пдб 101) x-ray resolution
+[Protein crystallography for non-cristallographers](https://www.ncbi.nlm.nih.gov/pubmed/18034855), Wlodawer A., 2008
+
+### Understanding your PDB structure 
+
+- checking occupancy and b-factor
+открыть в химере и сделать скрины, how to examine a pdb structure
+chains number, 
+there are dna, protein, water and ions - присутствуют структуры
+наличие связанной воды - удалять или не удалять, как затем достраивать атомы водорода
+разные ионы - что с ними делать
+исследование occupancy - раскраскаа по ней и б-фактору( какие части со слишком большим факторам - их положению возможно нельз доверять, + формула для него
 
 ### Dealing with flexible histone tails
 

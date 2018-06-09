@@ -36,7 +36,7 @@ links to further reading
 
 ### Reference materials
 
-[Gromacs manual](ftp://ftp.gromacs.org/pub/manual/manual-5.0.4.pdf)
+[ftp://ftp.gromacs.org/pub/manual/manual-5.0.4.pdf](Gromacs manual)
 
 ### Further reading / alternative tutorials
 

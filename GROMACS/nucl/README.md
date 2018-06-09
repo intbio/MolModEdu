@@ -37,14 +37,11 @@ This tutorial will guide users through the process of creating a system containi
 links to further reading
 ### Hardware/Software requirements for the tutorial
 
-### Reference materials
+### Reference materials and further reading
 
-For some GROMACS issues see [GROMACS manual](http://ftp.gromacs.org/pub/manual/manual-5.0.4.pdf)
-
-### Further reading / alternative tutorials
-
-Quick and easy tutorial [Lysozyme in Water](http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/lysozyme/index.html)
-
+- [Bash CheatSheet]()
+- For some GROMACS issues see [GROMACS manual](http://ftp.gromacs.org/pub/manual/manual-5.0.4.pdf)
+- Quick and easy tutorial [Lysozyme in Water](http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/lysozyme/index.html)
 
 ## 2. System description and simulation strategy choice
 ### Nucleosome core particle and its PDB structures
@@ -54,6 +51,8 @@ Quick and easy tutorial [Lysozyme in Water](http://www.bevanlab.biochem.vt.edu/P
 ### Ionic conditions and choosing simulation box size
 
 ### Force field choice
+
+Ion parameters chosen as [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/doi/abs/10.1021/jz201501a)
 
 ## 3. Installing software
 

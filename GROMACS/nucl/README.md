@@ -49,8 +49,10 @@ Basic knowledge of the following areas is required:
 ### Reference materials and further reading
 
 - Bash CheatSheet [1](https://gist.github.com/LeCoupa/122b12050f5fb267e75f) or [2](https://devhints.io/bash)
-- For some GROMACS issues see [GROMACS manual](http://ftp.gromacs.org/pub/manual/manual-5.0.4.pdf)
+- [GROMACS manual](http://ftp.gromacs.org/pub/manual/manual-5.0.4.pdf)
 - Quick and easy tutorial [Lysozyme in Water](http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/lysozyme/index.html)
+- [Understanding Molecula Dynamics, Frenkel and Smith, 2002](https://www.sciencedirect.com/science/book/9780122673511)
+
 
 ## 2. System description and simulation strategy choice
 ### Nucleosome core particle and its PDB structures

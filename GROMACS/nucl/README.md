@@ -48,11 +48,21 @@ Basic knowledge of the following areas is required:
 
 ### Reference materials and further reading
 
-- Bash CheatSheet [1](https://gist.github.com/LeCoupa/122b12050f5fb267e75f) or [2](https://devhints.io/bash)
+#### Manuals and CheatCheets
+- Bash CheatSheet [[1]](https://gist.github.com/LeCoupa/122b12050f5fb267e75f) or [[2]](https://devhints.io/bash)
 - [GROMACS manual](http://ftp.gromacs.org/pub/manual/manual-5.0.4.pdf)
-- Quick and easy tutorial [Lysozyme in Water](http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/lysozyme/index.html)
-- [Understanding Molecula Dynamics, Frenkel and Smith, 2002](https://www.sciencedirect.com/science/book/9780122673511)
 
+
+#### Textbooks 
+
+- [Computer Simulation of Liquids](https://books.google.ru/books/about/Computer_Simulation_of_Liquids.html?id=O32VXB9e5P4C&redir_esc=y), Allen and Tildesley, 1989
+- [Understanding Molecula Dynamics](https://www.sciencedirect.com/science/book/9780122673511), Frenkel and Smith, 2002
+- [Molecular Driving Forces](https://books.google.ru/books/about/Molecular_Driving_Forces.html?id=hdeODhjp1bUC&redir_esc=y), Dill, 2003 
+- [Intermolecular and Surface forces](https://www.sciencedirect.com/science/book/9780123751829), Israelachvili, 1985
+
+#### Other useful tutorials
+
+- Quick and easy tutorial [Lysozyme in Water](http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/lysozyme/index.html)
 
 ## 2. System description and simulation strategy choice
 ### Nucleosome core particle and its PDB structures

@@ -17,11 +17,14 @@
 <a name="Introduction"/>
 
 ## 1. Introduction
-
+This tutorial will guide users through the process of creating a system containing ф nucleosome octamere with DNA and then simulating molecular dynamics of this system with GROMACS. 
 
 <a name="Objectives"/>
 
 ### Objectives
+- Understand the process of Molecular Dynamics
+- Learn how to create a proper system for further MD simulation
+- 
 
 ### Prerequisites
 
@@ -36,9 +39,11 @@ links to further reading
 
 ### Reference materials
 
-[ftp://ftp.gromacs.org/pub/manual/manual-5.0.4.pdf](Gromacs manual)
+For some GROMACS issues see [GROMACS manual](http://ftp.gromacs.org/pub/manual/manual-5.0.4.pdf)
 
 ### Further reading / alternative tutorials
+
+Quick and easy tutorial [Lysozyme in Water](http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/lysozyme/index.html)
 
 
 ## 2. System description and simulation strategy choice

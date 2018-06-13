@@ -9,9 +9,21 @@
 1. [**Introduction**](#Introduction) 
    + [Objectives](#Objectives)
    + [Prerequisites](#Prerequisites)
-     +[]()
-
-
+   + [Hardware/Software requirements](#Hardware)
+   + [Reference materials and further reading](#Reference_materials)
+      + [Manuals and CheatCheets](#Manuals)
+      + [Textbooks](#Textbooks)
+      + [Other useful tutorials](#Other_tutorials)
+2. [**System description and simulation strategy choice**](#System)
+   + [Nucleosome core particle and its PDB structures](#NCP)
+   + [Understanding your PDB structure](#Understanding_PDB)
+   + [Dealing with flexible histone tails](#H_tails)
+   + [Ionic conditions and choosing simulation box size](#Ions_box)
+   + [Force field choice](#ForceField)
+3. [**Installing software**](#installing_soft)
+4. [**Obtaining force field files**](#Obtaining_FF_files)
+5. [**Pereparing system for simulation**](#before_stimulation)
+      
 
 
 
@@ -31,12 +43,16 @@ This tutorial introduces students to molecular dynamics simulations method using
 - To learn how to visualize and analyze MD trajectories;
 - To provide a reusable set of scripts and examples that students may reuse to simulate the system of interest.
 
+<a name="Prerequisites"/>
+
 ### Prerequisites
 Basic knowledge of the following areas is required:
 - Unix-like Operating System (e.g. Linux), recommended tutorial [here](http://swcarpentry.github.io/shell-novice/);
 - Terminal / Command line interface and Bash scripting, recommended tutorial [here](http://swcarpentry.github.io/shell-novice/); 
 - Basic Physical Chemistry and Biochemistry;
 - PDB file structure, recommended tutorial [here](https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/introduction)
+
+<a name="Hardware"/>
 
 ### Hardware/Software requirements for the tutorial
 - Access to a Linux machine, ideally Ubuntu;
@@ -46,12 +62,17 @@ Basic knowledge of the following areas is required:
 - Anaconda Python, [intallations instructions]();
 ...
 
+<a name="Reference_materials"/>
+
 ### Reference materials and further reading
+
+<a name="Manuals"/>
 
 #### Manuals and CheatCheets
 - Bash CheatSheet [[1]](https://gist.github.com/LeCoupa/122b12050f5fb267e75f) or [[2]](https://devhints.io/bash)
 - [GROMACS manual](http://ftp.gromacs.org/pub/manual/manual-5.0.4.pdf)
 
+<a name="Textbooks"/>
 
 #### Textbooks 
 
@@ -60,11 +81,18 @@ Basic knowledge of the following areas is required:
 - [Molecular Driving Forces](https://books.google.ru/books/about/Molecular_Driving_Forces.html?id=hdeODhjp1bUC&redir_esc=y), Dill, 2003 
 - [Intermolecular and Surface forces](https://www.sciencedirect.com/science/book/9780123751829), Israelachvili, 1985
 
+<a name="Other_tutorials"/>
+
 #### Other useful tutorials
 
 - Quick and easy tutorial [Lysozyme in Water](http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/lysozyme/index.html)
 
+<a name="System"/>
+
 ## 2. System description and simulation strategy choice
+
+<a name="NCP"/>
+
 ### Nucleosome core particle and its PDB structures
 write a few words about NCP
 Nucleosome structural studies davy 2011
@@ -73,6 +101,8 @@ Nucleosome structural studies davy 2011
 структуры с каким разрешением стоит брать для МД - бокс - ссылку на другой файл в докс - как оценить качество пдб структуры
 при каком разрешении, какие начинатся проблемы (ссылка на пдб 101) x-ray resolution
 [Protein crystallography for non-cristallographers](https://www.ncbi.nlm.nih.gov/pubmed/18034855), Wlodawer A., 2008
+
+<a name="Understanding_PDB"/>
 
 ### Understanding your PDB structure 
 
@@ -84,17 +114,29 @@ there are dna, protein, water and ions - присутствуют структу
 разные ионы - что с ними делать
 исследование occupancy - раскраскаа по ней и б-фактору( какие части со слишком большим факторам - их положению возможно нельз доверять, + формула для него
 
+<a name="H_tails"/>
+
 ### Dealing with flexible histone tails
 
+<a name="Ions_box"/>
+
 ### Ionic conditions and choosing simulation box size
+
+<a name="ForceField"/>
 
 ### Force field choice
 
 Ion parameters chosen as [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/doi/abs/10.1021/jz201501a)
 
+<a name="installing_soft"/>
+
 ## 3. Installing software
 
+<a name="Obtaining_FF_files"/>
+
 ## 4. Obtaining force field files
+
+<a name="before_stimulation"/>
 
 ## 5. Pereparing system for simulation
 

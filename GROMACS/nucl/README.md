@@ -94,13 +94,18 @@ Basic knowledge of the following areas is required:
 <a name="NCP"/>
 
 ### Nucleosome core particle and its PDB structures
-write a few words about NCP
-Nucleosome structural studies davy 2011
+Nucleosome is a basic unit of DNA package in eucaryotes. 
+Nuclosome Core particle (NCP) consists of 1.67 left-handed super-helical turns of B-form DNA around an octamer of histone proteins. DNA wrap is about 167 bp. The octamer consists of 2 copies each of the core histones H2A, H2B, H3, and H4. 
 
-будем использова 1kx5, 1,9 А
-структуры с каким разрешением стоит брать для МД - бокс - ссылку на другой файл в докс - как оценить качество пдб структуры
-при каком разрешении, какие начинатся проблемы (ссылка на пдб 101) x-ray resolution
-[Protein crystallography for non-cristallographers](https://www.ncbi.nlm.nih.gov/pubmed/18034855), Wlodawer A., 2008
+Further information: [Nucleosome structural studies,](https://www.ncbi.nlm.nih.gov/pubmed/21176878), Davey, 2011
+
+In this tutorial we are going to use 1KX5 PDB structure. You can try to find it on RSCB PDB by yourself or download from this [link](https://www.rcsb.org/structure/1kx5). We have chosen this structure because it has the best resolution - 1.94 A.  
+
+We can 
+[Check](https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/resolution) what kind of problems you will get if you choose the structure with wrong resolution. 
+структуры с каким разрешением стоит брать для МД - бокс - ссылку на другой файл в докс
+
+Further information: [Protein crystallography for non-cristallographers](https://www.ncbi.nlm.nih.gov/pubmed/18034855), Wlodawer A., 2008
 
 <a name="Understanding_PDB"/>
 

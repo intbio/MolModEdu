@@ -120,20 +120,31 @@ Then you will see this:
 <img src="../docs/understanding1.png" width="500">
 
 
-For better and more understandable view open Graphics > Representations in VMD Main window. A new window called "Graphical Representation" will be opened. Then choose NewCartoon in "Drawing method". 
+For better and more understandable view open in VMD Main window:
+> Graphics > Representations  
+A new window called "Graphical Representation" will be opened. Then choose:
+> Drawing method > NewCartoon 
 
 You will see this: 
 
 <img src="../docs/understanding2.png" width="500">
 
 
-Coloring by occupancy and b-factor. 
-At first, we need to understand what is occupancy and b-factor. 
+Coloring by occupancy and B-factor. 
+At first, we need to understand what is occupancy and B-factor. 
 Macromolecule crystall consists of many individual molecules. These molecules are packed into a symmetrical unit. In some crystalls there are slight conformational differences between the molecules. Scienmtist use the occupancy to estimate the amount of each conformation that is observed in the crystal. 
 
-In the same window ("Graphical Representation") choose "Occupancy" in "Coloring method":
+In the same window ("Graphical Representation"):
+> Coloring Method > Occupancy
 
 <img src="../docs/understanding3.png" width="500">
+
+For coloring by B-factor choose:
+> Coloring Method > Beta
+
+B-factor:
+
+<img src="../docs/understanding4.png" width="500">
 
 
 - checking occupancy and b-factor

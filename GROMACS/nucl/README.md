@@ -116,11 +116,22 @@ Make sure you are in the exact directory where 1kx5.pdb was downloaded. Then typ
 > VMD 1kx5.pdb
 
 Then you will see this:
+
 ![](../docs/understanding1.png)
 
-For better and more understandable view open Graphics > Representations in VMD Main window. A new window called "Graphical Representation" will be opened. Then in "Coloring method" choose NewCartoon. 
+For better and more understandable view open Graphics > Representations in VMD Main window. A new window called "Graphical Representation" will be opened. Then choose NewCartoon in "Drawing method". 
+
 You will see this: 
+
 ![](../docs/understanding2.png)
+
+Coloring by occupancy and b-factor. 
+At first, we need to understand what is occupancy and b-factor. 
+Macromolecule crystall consists of many individual molecules. These molecules are packed into a symmetrical unit. In some crystalls there are slight conformational differences between the molecules. Scienmtist use the occupancy to estimate the amount of each conformation that is observed in the crystal. 
+
+In the same window ("Graphical Representation") choose "Occupancy" in "Coloring method":
+
+![](../docs/understanding3.png)
 
 - checking occupancy and b-factor
 открыть в химере и сделать скрины, how to examine a pdb structure

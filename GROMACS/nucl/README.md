@@ -115,8 +115,12 @@ Open your PDB structure in VMD using this command in command line
 Make sure you are in the exact directory where 1kx5.pdb was downloaded. Then type:
 > VMD 1kx5.pdb
 
-After 
+Then you will see this:
+![](../docs/understanding1.png)
 
+For better and more understandable view open Graphics > Representations in VMD Main window. A new window called "Graphical Representation" will be opened. Then in "Coloring method" choose NewCartoon. 
+You will see this: 
+![](../docs/understanding2.png)
 
 - checking occupancy and b-factor
 открыть в химере и сделать скрины, how to examine a pdb structure

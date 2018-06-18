@@ -111,6 +111,13 @@ Further information: [Protein crystallography for non-cristallographers](https:/
 
 ### Understanding your PDB structure 
 
+Open your PDB structure in VMD using this command in command line
+Make sure you are in the exact directory where 1kx5.pdb was downloaded. Then type:
+> VMD 1kx5.pdb
+
+After 
+
+
 - checking occupancy and b-factor
 открыть в химере и сделать скрины, how to examine a pdb structure
 chains number, 

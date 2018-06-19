@@ -158,10 +158,11 @@ For coloring by B-factor choose:
 
 *Fig.4. Coloring by B-factor*
 
-In this picture blue is an area with low B-factor. It means that these areas are more flexible than red ones. 
+In this picture blue is an area with low B-factor. It means that these areas are more flexible than red ones. Consequently, the position of these sites probably cannot be trusted  
 
 **DNA, Protein, Water and Ions**
-Let's get back to the [Fig.2](#fig2) state with NewCartoon Drawing method. Now we're going to explore other molecules inside this system. We will starty from water molecules. 
+
+Let's get back to the [Fig.2](#fig2) state with NewCartoon Drawing method. Now we're going to explore other molecules inside this system. We're going to start from water molecules. 
 
 We are still working with Graphical Representation window.
 First, you need to Create Rep. Tap on it and type "water" in Selected Atoms. Coloring method is VDW which is Van-der-Waals. You will see this:
@@ -193,7 +194,7 @@ You can also choose DNA or protein the same way as described earlier. Now  you k
 
 наличие связанной воды - удалять или не удалять, как затем достраивать атомы водорода
 разные ионы - что с ними делать
-исследование occupancy - раскраскаа по ней и б-фактору( какие части со слишком большим факторам - их положению возможно нельз доверять, + формула для него
+
 
 <a name="H_tails"/>
 

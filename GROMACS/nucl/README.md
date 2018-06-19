@@ -118,7 +118,8 @@ Make sure you are in the exact directory where 1kx5.pdb was downloaded. Then typ
 Then you will see this:
 
 <img src="../docs/understanding1.png" width="500">
-
+*Fig.1. VMD presentation of the molecule*
+For better representation I changed background from black to white which is not necessary for you. When you open your system in VMD the background is automaticaly black. 
 
 For better and more understandable view open in VMD Main window:
 > Graphics > Representations  
@@ -127,29 +128,59 @@ A new window called "Graphical Representation" will be opened. Then choose:
 > Drawing method > NewCartoon 
 
 You will see this: 
-
+<a name="fig2/">
 <img src="../docs/understanding2.png" width="500">
+*Fig.2. NewCartoon Drawing Method*
 
 
-Coloring by occupancy and B-factor. 
+**Coloring by occupancy and B-factor**. 
+
 At first, we need to understand what is occupancy and B-factor. 
-Macromolecule crystall consists of many individual molecules. These molecules are packed into a symmetrical unit. In some crystalls there are slight conformational differences between the molecules. Scienmtist use the occupancy to estimate the amount of each conformation that is observed in the crystal. 
+
+Macromolecule crystall consists of many individual molecules. These molecules are packed into a symmetrical unit. In some crystalls there are slight conformational differences between the molecules. Scienmtist use the *occupancy* to estimate the amount of each conformation that is observed in the crystal. 
 
 In the same window ("Graphical Representation"):
 > Coloring Method > Occupancy
 
 <img src="../docs/understanding3.png" width="500">
+*Fig.3. Coloring by the Occupancy*
+
+*B-factor* (often refered to as atomic displacement parameter) monitors the positional spread of each atom. It describes the displacement of the atomic positions from an average (mean) value.
 
 For coloring by B-factor choose:
 > Coloring Method > Beta
 
-B-factor:
-
 <img src="../docs/understanding4.png" width="500">
+*Fig.4. Coloring by B-factor*
+
+In this picture blue is an area with low B-factor. It means that these areas are more flexible than red ones. 
+
+**DNA, Protein, Water and Ions**
+Let's get back to the [Fig.2](#fig2) state with NewCartoon Drawing method. Now we're going to explore other molecules inside this system. We will starty from water molecules. 
+
+We are still working with Graphical Representation window.
+First, you need to Create Rep. Tap on it and type "water" in Selected Atoms. Coloring method is VDW which is Van-der-Waals. You will see this:
+
+<img src="../docs/water.png" width="500">
+*Fig.5. Showing water molecules*
+
+You will do the same to see the Ions except typing "ions" in Selected Atoms.
+
+<img src="../docs/ions.png" width="500">
+*Fig.6. Showing ions*
 
 
-- checking occupancy and b-factor
-открыть в химере и сделать скрины, how to examine a pdb structure
+
+
+
+
+
+
+
+
+
+
+
 chains number, 
 there are dna, protein, water and ions - присутствуют структуры
 наличие связанной воды - удалять или не удалять, как затем достраивать атомы водорода

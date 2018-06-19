@@ -122,6 +122,7 @@ Then you will see this:
 
 For better and more understandable view open in VMD Main window:
 > Graphics > Representations  
+
 A new window called "Graphical Representation" will be opened. Then choose:
 > Drawing method > NewCartoon 
 

@@ -130,7 +130,7 @@ A new window called "Graphical Representation" will be opened. Then choose:
 > Drawing method > NewCartoon 
 
 You will see this: 
-<a name="fig2/">
+<a name="fig2"/>
 <img src="../docs/understanding2.png" width="500">
 
 *Fig.2. NewCartoon Drawing Method*

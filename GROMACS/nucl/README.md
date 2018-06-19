@@ -118,8 +118,10 @@ Make sure you are in the exact directory where 1kx5.pdb was downloaded. Then typ
 Then you will see this:
 
 <img src="../docs/understanding1.png" width="500">
+
 *Fig.1. VMD presentation of the molecule*
-For better representation I changed background from black to white which is not necessary for you. When you open your system in VMD the background is automaticaly black. 
+
+For better representation I changed background from black to white which is not necessary for you. I also deleted axes. When you open your system in VMD the background is automaticaly black. 
 
 For better and more understandable view open in VMD Main window:
 > Graphics > Representations  
@@ -130,6 +132,7 @@ A new window called "Graphical Representation" will be opened. Then choose:
 You will see this: 
 <a name="fig2/">
 <img src="../docs/understanding2.png" width="500">
+
 *Fig.2. NewCartoon Drawing Method*
 
 
@@ -143,6 +146,7 @@ In the same window ("Graphical Representation"):
 > Coloring Method > Occupancy
 
 <img src="../docs/understanding3.png" width="500">
+
 *Fig.3. Coloring by the Occupancy*
 
 *B-factor* (often refered to as atomic displacement parameter) monitors the positional spread of each atom. It describes the displacement of the atomic positions from an average (mean) value.
@@ -151,6 +155,7 @@ For coloring by B-factor choose:
 > Coloring Method > Beta
 
 <img src="../docs/understanding4.png" width="500">
+
 *Fig.4. Coloring by B-factor*
 
 In this picture blue is an area with low B-factor. It means that these areas are more flexible than red ones. 
@@ -162,13 +167,18 @@ We are still working with Graphical Representation window.
 First, you need to Create Rep. Tap on it and type "water" in Selected Atoms. Coloring method is VDW which is Van-der-Waals. You will see this:
 
 <img src="../docs/water.png" width="500">
+
 *Fig.5. Showing water molecules*
 
 You will do the same to see the Ions except typing "ions" in Selected Atoms.
 
 <img src="../docs/ions.png" width="500">
+
 *Fig.6. Showing ions*
 
+You can also choose DNA or protein the same way as described earlier. Now  you know how to understand your PDB system.
+
+**The next step is to understand should we change water and ions condition**
 
 
 
@@ -181,8 +191,6 @@ You will do the same to see the Ions except typing "ions" in Selected Atoms.
 
 
 
-chains number, 
-there are dna, protein, water and ions - присутствуют структуры
 наличие связанной воды - удалять или не удалять, как затем достраивать атомы водорода
 разные ионы - что с ними делать
 исследование occupancy - раскраскаа по ней и б-фактору( какие части со слишком большим факторам - их положению возможно нельз доверять, + формула для него

@@ -130,6 +130,7 @@ A new window called "Graphical Representation" will be opened. Then choose:
 > Drawing method > NewCartoon 
 
 You will see this: 
+
 <a name="fig2"/>
 <img src="../docs/understanding2.png" width="500">
 
@@ -138,7 +139,7 @@ You will see this:
 
 **Coloring by occupancy and B-factor**. 
 
-At first, we need to understand what is occupancy and B-factor. 
+At first, we need to understand what are occupancy and B-factor. 
 
 Macromolecule crystall consists of many individual molecules. These molecules are packed into a symmetrical unit. In some crystalls there are slight conformational differences between the molecules. Scienmtist use the *occupancy* to estimate the amount of each conformation that is observed in the crystal. 
 

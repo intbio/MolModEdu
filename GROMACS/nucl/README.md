@@ -56,10 +56,10 @@ Basic knowledge of the following areas is required:
 
 ### Hardware/Software requirements for the tutorial
 - Access to a Linux machine, ideally Ubuntu;
-- Gromacs v. , [intallations instructions]();
-- VMD v. , [intallations instructions]();
-- Chimera v. , [intallations instructions]();
-- Anaconda Python, [intallations instructions]();
+- Gromacs v. 5.1, [intallations instructions](http://www.gromacs.org/Downloads/Installation_Instructions);
+- VMD v. 1.9.4, [intallations instructions](https://www.biostars.org/p/196147/);
+- Chimera v. 1.13, [intallations instructions](http://www.cgl.ucsf.edu/chimera/download.html);
+- Anaconda Python, [intallations instructions](https://docs.anaconda.com/anaconda/install/);
 ...
 
 <a name="Reference_materials"/>
@@ -94,8 +94,8 @@ Basic knowledge of the following areas is required:
 <a name="NCP"/>
 
 ### Nucleosome core particle and its PDB structures
-Nucleosome is a basic unit of DNA package in eucaryotes. 
-Nuclosome Core particle (NCP) consists of 1.67 left-handed super-helical turns of B-form DNA around an octamer of histone proteins. DNA wrap is about 167 bp. The octamer consists of 2 copies each of the core histones H2A, H2B, H3, and H4. 
+Nucleosome is a basic unit of DNA package in eukaryotes. 
+Nuclosome Core particle (NCP) consists of 1.67 left-handed super-helical turns of DNA around an octamer of histone proteins. NCP contains 145-147 bp of DNA. The octamer consists of 2 copies each of the core histones H2A, H2B, H3, and H4. 
 
 Further information: [Nucleosome structural studies,](https://www.ncbi.nlm.nih.gov/pubmed/21176878), Davey, 2011
 

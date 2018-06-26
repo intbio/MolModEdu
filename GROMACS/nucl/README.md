@@ -97,19 +97,20 @@ Basic knowledge of the following areas is required:
 Nucleosome is a basic unit of DNA package in eukaryotes. 
 Nuclosome Core particle (NCP) consists of 1.67 left-handed super-helical turns of DNA around an octamer of histone proteins. NCP contains 145-147 bp of DNA. The octamer consists of 2 copies each of the core histones H2A, H2B, H3, and H4. 
 
-Further information: [Nucleosome structural studies,](https://www.ncbi.nlm.nih.gov/pubmed/21176878), Davey, 2011
+  *Further information about various NCP structures by X-Ray ([Nucleosome structural studies,](https://www.ncbi.nlm.nih.gov/pubmed/21176878), Davey, 2011)*
 
 In this tutorial we are going to use 1KX5 PDB structure. You can try to find it on RSCB PDB by yourself or download from this [link](https://www.rcsb.org/structure/1kx5). We have chosen this structure because it has the best resolution - 1.94 A.  
 
 We can 
-[Check](https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/resolution) what kind of problems you will get if you choose the structure with wrong resolution. 
-структуры с каким разрешением стоит брать для МД - бокс - ссылку на другой файл в докс
+[Check](https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/resolution) what kind of problems you will get if you choose the structure with wrong resolution. The quality of the starting structure is essential for the whole analyzis. It should be choosen very carefully. 
 
-Further information: [Protein crystallography for non-cristallographers](https://www.ncbi.nlm.nih.gov/pubmed/18034855), Wlodawer A., 2008
+  *Further information of the resolution of the crystall structures ([Protein crystallography for non-cristallographers](https://www.ncbi.nlm.nih.gov/pubmed/18034855), Wlodawer A., 2008)*
 
 <a name="Understanding_PDB"/>
 
 ### Understanding your PDB structure 
+
+In this tutorial we are going to work mostly with VMD. Consequently, it should be added to the PATH. See [here]() how to do it (закончить). 
 
 Open your PDB structure in VMD using this command in command line
 Make sure you are in the exact directory where 1kx5.pdb was downloaded. Then type:
@@ -121,7 +122,7 @@ Then you will see this:
 
 *Fig.1. VMD presentation of the molecule*
 
-For better representation I changed background from black to white which is not necessary for you. I also deleted axes. When you open your system in VMD the background is automaticaly black. 
+The background was changed from black to white for better representation. It is not necessary for you. When you open your system in VMD the background is automaticaly black. Axes were also deleted.
 
 For better and more understandable view open in VMD Main window:
 > Graphics > Representations  
@@ -150,7 +151,17 @@ In the same window ("Graphical Representation"):
 
 *Fig.3. Coloring by the Occupancy*
 
-*B-factor* (often refered to as atomic displacement parameter) monitors the positional spread of each atom. It describes the displacement of the atomic positions from an average (mean) value.
+Zero occupancy meaans that these parts of the structure was completed by computer programs and were not observed experimentally. 
+*CAUTION! You should always read the original article of the structure you use.*
+
+*B-factor* (often refered to as atomic displacement parameter/*The Debye–Waller factor (DWF)*/temperature factor) monitors the positional spread of each atom. It describes the displacement of the atomic positions from an average (mean) value. Lower resolution tends to correlate with high B-factor. 
+The formula for the B-factor is: 
+
+ B = 8\pi^2 \langle u^2 \rangle
+ 
+ It is measured in units of Å^2.
+
+The B-factors can be taken as indicating the relative vibrational motion of different parts of the structure. Atoms with low B-factors belong to a part of the structure that is well ordered. Atoms with large B-factors generally belong to part of the structure that is very flexible.
 
 For coloring by B-factor choose:
 > Coloring Method > Beta
@@ -159,7 +170,7 @@ For coloring by B-factor choose:
 
 *Fig.4. Coloring by B-factor*
 
-In this picture blue is an area with low B-factor. It means that these areas are more flexible than red ones. Consequently, the position of these sites probably cannot be trusted  
+In this picture blue is an area with low B-factor. It means that these areas are more flexible than red ones. Consequently, atomic positions are less accurate in these zones. 
 
 **DNA, Protein, Water and Ions**
 
@@ -172,16 +183,25 @@ First, you need to Create Rep. Tap on it and type "water" in Selected Atoms. Col
 
 *Fig.5. Showing water molecules*
 
+The high resolution of this structure has allowed to define the location of bound water. In the articles with lower resolution this would be inpossible, but it doesn't mean that there is no bound water in it, it is just not defined. 
+
 You will do the same to see the Ions except typing "ions" in Selected Atoms.
 
 <img src="../docs/ions.png" width="500">
 
 *Fig.6. Showing ions*
 
+Not only Na, K and Cl but heavy ions like are often used for proper protein crystallization. These usually divalent ions are very difficult for dynamics because they can polarize the space around them which leads to changes in water localization. 
+
 You can also choose DNA or protein the same way as described earlier. Now  you know how to understand your PDB system.
 
 **The next step is to understand should we change water and ions condition**
 
+So, at first we will remain the bound water. 
+Then you need to check the ions through VMD program or by reading the .pdb file. Once you have noticed ions you need to decide leave them or delete. 
+In the chosen structure there are only Mn and Cl. Mn is divalent ions, consequently, it should be deleted because of the reasons showed above. Cl is not divalent, it is located in the places of high positive potential, so we are going to leave it. 
+
+Then you need to check the **side chain conformation**. 
 
 
 

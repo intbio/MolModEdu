@@ -157,9 +157,9 @@ Zero occupancy meaans that these parts of the structure was completed by compute
 *B-factor* (often refered to as atomic displacement parameter/*The Debye–Waller factor (DWF)*/temperature factor) monitors the positional spread of each atom. It describes the displacement of the atomic positions from an average (mean) value. Lower resolution tends to correlate with high B-factor. 
 The formula for the B-factor is: 
 
- B = 8\pi^2 \langle u^2 \rangle
+<a href="http://www.codecogs.com/eqnedit.php?latex=B&space;=&space;8\pi^2&space;\langle&space;u^2&space;\rangle" target="_blank"><img src="http://latex.codecogs.com/gif.latex?B&space;=&space;8\pi^2&space;\langle&space;u^2&space;\rangle" title="B = 8\pi^2 \langle u^2 \rangle" /></a>
  
- It is measured in units of Å^2.
+Where  <a href="http://www.codecogs.com/eqnedit.php?latex=\langle&space;u^2&space;\rangle" target="_blank"><img src="http://latex.codecogs.com/gif.latex?\langle&space;u^2&space;\rangle" title="\langle u^2 \rangle" /></a>  is the mean squared displacement. It is measured in units of *Å^2*.
 
 The B-factors can be taken as indicating the relative vibrational motion of different parts of the structure. Atoms with low B-factors belong to a part of the structure that is well ordered. Atoms with large B-factors generally belong to part of the structure that is very flexible.
 
@@ -185,11 +185,15 @@ First, you need to Create Rep. Tap on it and type "water" in Selected Atoms. Col
 
 The high resolution of this structure has allowed to define the location of bound water. In the articles with lower resolution this would be inpossible, but it doesn't mean that there is no bound water in it, it is just not defined. 
 
-You will do the same to see the Ions except typing "ions" in Selected Atoms.
+For ions you need to create another representation.
+> Create Rep > Selection > Keyword: name > Value: CL MN
+
+We have choosen these atoms because they are stated in .pdb structure. 
+Then go back to Drawing style and choose VDW. You will see this: 
 
 <img src="../docs/ions.png" width="500">
 
-*Fig.6. Showing ions*
+*Fig.6. Showing ions. Cl is red and Mn is blue.*
 
 Not only Na, K and Cl but heavy ions like are often used for proper protein crystallization. These usually divalent ions are very difficult for dynamics because they can polarize the space around them which leads to changes in water localization. 
 
@@ -204,6 +208,7 @@ In the chosen structure there are only Mn and Cl. Mn is divalent ions, consequen
 Then you need to check the **side chain conformation**. 
 
 
+ *Basic information about side chain conformation [here](http://www.cryst.bbk.ac.uk/PPS95/course/3_geometry/conform.html)*
 
 
 

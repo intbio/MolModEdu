@@ -60,6 +60,8 @@ Basic knowledge of the following areas is required:
 - VMD v. 1.9.4, [intallations instructions](https://www.biostars.org/p/196147/);
 - Chimera v. 1.13, [intallations instructions](http://www.cgl.ucsf.edu/chimera/download.html);
 - Anaconda Python, [intallations instructions](https://docs.anaconda.com/anaconda/install/);
+- FoldX, [download here](http://foldxsuite.crg.eu/academic-license-info)
+- Propka, [installation instructions](https://github.com/jensengroup/propka-3.1)
 ...
 
 <a name="Reference_materials"/>
@@ -77,7 +79,7 @@ Basic knowledge of the following areas is required:
 #### Textbooks 
 
 - [Computer Simulation of Liquids](https://books.google.ru/books/about/Computer_Simulation_of_Liquids.html?id=O32VXB9e5P4C&redir_esc=y), Allen and Tildesley, 1989
-- [Understanding Molecula Dynamics](https://www.sciencedirect.com/science/book/9780122673511), Frenkel and Smith, 2002
+- [Understanding Molecular Dynamics](https://www.sciencedirect.com/science/book/9780122673511), Frenkel and Smith, 2002
 - [Molecular Driving Forces](https://books.google.ru/books/about/Molecular_Driving_Forces.html?id=hdeODhjp1bUC&redir_esc=y), Dill, 2003 
 - [Intermolecular and Surface forces](https://www.sciencedirect.com/science/book/9780123751829), Israelachvili, 1985
 
@@ -207,24 +209,71 @@ In the chosen structure there are only Mn and Cl. Mn is divalent ions, consequen
 
 Then you need to check the **side chain conformation**. 
 
+*Basic information about side chain conformation [here](http://www.cryst.bbk.ac.uk/PPS95/course/3_geometry/conform.html)*
 
- *Basic information about side chain conformation [here](http://www.cryst.bbk.ac.uk/PPS95/course/3_geometry/conform.html)*
+The residues we need to check are asparagine, glutamine and histidine. Asn and Gln residues play important  structural  roles  in  proteins  because of their side-chain amide groups. These groups can act as both hydrogen  bond  acceptors  and  donors.  Such hydrogen bonds can stabilise the protein structure. In addition, these residues (also with His) are often found on the surface of proteins or in the active site of enzymes where the hydrogen bonds they form can be important in stabilising protein–protein or protein-substrate interactions. 
+
+We are going to use the FoldX program to check the side chain conformation.  
+FoldX is a protein design algorithm that uses an empirical force field. It can determine the energetic effect of point mutations as well as the interaction energy of protein complexes (including Protein-DNA). 
+
+We are using command *RepairPDB* which identifies those residues which have bad torsion angles, or VanderWaals' clashes, or total energy, and repairs them. The way it operates is the following: First it looks for all Asn, Gln and His residues and flips them by 180 degrees. This is done to prevent incorrect rotamer assignment in the structure due to the fact that the electron density of Asn and Gln carboxamide groups is almost symmetrical and the correct placement can only be discerned by calculating the interactions with the surrounding atoms. The same applies to His.
+
+Type 
+> foldx --command=PDBFile --pdb=1kx5.pdb
+And you will get an error: foldx: command not found
+
+It means that the program is not in your PATH. Once you have downloaded FoldX, you need to put it in PATH. The FoldX docs were downloaded to the Soft directory and renamed to foldx. At first, type pwd which is Print Working Directory.
+> pwd
+
+You will get this, copy it. 
+> /home/username/Soft/foldx
+
+Then 
+> echo $PATH
+> export PATH=$PATH:/home/pospelova/Soft/foldx
+
+This is how we can add the directory to your PATH. But it is right only for one time, after closing this terminal you will not call FoldX again. If you need your program to work everywhere, you may write inside the main Bash file - .bashrc. Type this:  
+> pluma ~/.bashrc
+
+It will open the file .bashrc. In the end of the file put this:
+> export PATH=$PATH:/home/pospelova/Soft/foldx
+
+Now you have added FoldX to your path so you can call it every time you need. Now let's get back to our work. 
+Get back to your working directory where the .pdb file is and then type:
+> foldx --command=PDBFile --pdb=1kx5.pdb
+
+Notice that program prints in Bash what it found: any missed atoms and energies. After running RepairPDB you'll get two files to look at. The first one .pdb is a repaired one and the other .fxout contains energies of the repaired residues.
+
+We have repaired our .pdb file. Now we are going to conduct **protein pKa calculations**. They are used to estimate the pKa values of amino acids as they exist within proteins. Install propka as it is showed [here](https://github.com/jensengroup/propka-3.1), click download to get the repository. After installation get back to your working directory and type this in terminal:
+> propka31 1kx5.pdb
+
+The program needs time. After it has finished its calculation you'll get another file 1kx5.pka which contains pKa of all residues. pKa values play an important role in defining the pH-dependent characteristics of a protein.
 
 
 
-
-
-
-
-
-
-наличие связанной воды - удалять или не удалять, как затем достраивать атомы водорода
-разные ионы - что с ними делать
 
 
 <a name="H_tails"/>
 
 ### Dealing with flexible histone tails
+
+You have downloaded Chimera. Here is the installation guide:
+We need to make this file executable. In the directory with downloaded file type this:
+> chmod +x chimera-1.13-linux_x86_64.bin 
+> ./chimera-1.13-linux_x86_64.bin 
+
+Then in Enter install location delete what is written and type this: 
+> ~/chimera/
+> yes
+> 1
+
+That's all. 
+
+
+
+
+
+
 
 <a name="Ions_box"/>
 

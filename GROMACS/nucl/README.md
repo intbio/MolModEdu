@@ -139,7 +139,7 @@ You will see this:
 
 *Fig.2. NewCartoon Drawing Method*
 
-
+<a name="occupancy"/>
 **Coloring by occupancy and B-factor**. 
 
 At first, we need to understand what are occupancy and B-factor. 
@@ -269,9 +269,12 @@ Then in Enter install location delete what is written and type this:
 
 That's all. 
 
-
-
-
+Now we need to choose what to do with flexible histone tails. There are a lot of crystal structures where these parts of nucleosomes aren't proved experimentally. It was shown by [the occupancy and B-factor](#occupancy) as you remember. 
+There are three ways of dealing with histone tails:
+1) Leave 
+2) Stretch 
+3) Cut 
+In this tutorial we're going to cut them as it is shown in [this](https://www.sciencedirect.com/science/article/pii/S0022283615006956) article by A.K. Shaytan. 
 
 
 

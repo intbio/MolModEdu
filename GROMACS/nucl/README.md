@@ -340,20 +340,21 @@ We will use a rectangular box with a minimum distance between the solute and the
 ***Ionic conditions***
 
 There are two questions we need to solve about ionic conditions which ions should be used and in which concentration. 
-Usually sodium and chloride are used for molecular dynamics, but our system is located in the nucleus. There are more potassium than sodium in nucleus, but modelling of potassim ions is complicated bacause of their bigger size. These conditions are proved to be different. It was showd by FRET method. In this tutorial we will add sodium ions for neutralization and then we will additionally add sodium and chloride for neutralisation at a concentration of 150 mM with respect to the volume of water.
+Usually sodium and chloride are used for molecular dynamics, but our system is located in the nucleus. There are more potassium than sodium in nucleus, but modelling of potassim ions is complicated bacause of their bigger size. These conditions are proved to be different. It was showed by FRET method. In this tutorial we will add sodium ions for neutralization and then we will additionally add sodium and chloride for neutralisation at a concentration of 150 mM with respect to the volume of water.
 
 There are two delicate moments - how to add and how to arrange them. The first one was discussed above. At first, we will add ions for neutralization. Secondary, we will add ions to get requisite concentration. 
 The other question is how to arrange ions inside your system. We will use GROMAX commands to do this. The program puts ions to the location of electrostatic maximum or minimum. 
 
-*Further information about ionic conditions here: [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/doi/abs/10.1021/jz201501a)*
 
 <a name="ForceField"/>
 
 ### Force field choice
 
+The main problem in molecular dynamics is a right choice of the Force Field. Force Field refers to the functional form and parameter sets used to calculate the potential energy of a system of atoms. 
 
+There are two main Force Fields for protein molecular dynamics - [AMBER](http://ambermd.org/) amd [CHARMM](https://www.charmm.org/charmm/?CFID=b9369a15-a3b5-4cd7-adca-570d4f9de662&CFTOKEN=0). 
 
-
+We will use McKerrel CHARMM36 because it has improvements in ionic conditions, which are shown in the article by [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/doi/abs/10.1021/jz201501a)
 
 
 <a name="installing_soft"/>

@@ -305,8 +305,8 @@ Now with the new knowledge let's get back to the work. You have opened Chimera, 
 On the top bar:
 >Favourites > Sequence
 
-You will see chains in the new window. We're going to start with histone H3, consequently, choose chain A.
-In the histone H3 we will delete from 1st to 36th residue including. Highlight chosen residues using your mouse. Then look at the main Chimera window where the whole system is. The chosen place should be also highlighted in green. 
+You will see chains in the new window. We're going to start with histone H3, consequently, choose chain A. We will make minimalistic system without any tails.
+In the histone H3 we will delete from 1st to 43th residue including. Highlight chosen residues using your mouse. Then look at the main Chimera window where the whole system is. The chosen place should be also highlighted in green. 
 
 Then still in the main window top bar: 
 > Actions > Atoms/Bonds > delete
@@ -318,22 +318,29 @@ We will also delete the last three residues - ERA, which are 134, 135, 136.
 *Fig.8 Histone H3 tail*
 
 That's all. Now you need to do the same to all other histones. Don't forget that they're paired! 
-In H4 histone we will cut up to 24th residue. (спросить про 25 остаток, там начинается альфа спираль, нужно ли его удалять) 
-In H2A - up to 11th and from 118th to the end. 
-In H2B - up to Lys 20,
+In H4 histone we will cut up to 24th residue. As it is shown in fig.8, 24th residue (D) is a part of secondary structure, but we delete it to save the equilibrium of charges. 
+In H2A - up to 15th and from 119th to the end. 
+In H2B - up to 29th
 All the numbers including! 
+
+<img src="../docs/cutting3.png">
+
+*Fig.9 Final structure*
 
 <a name="Ions_box"/>
 
 ### Сhoosing ionic conditions and simulation box size
 
 ***Box size***
+
 Box size choice is very important for further analysis. Box size is a very tough question when it comes to charged systems. 
 In this tutorial we will use the same box size as it is shown in the article above. Usually scientists conduct series of experiments with different box size to understand which one is better for their system. 
 We are going to use 145 × 141 × 101 angstrem box size. 
 
 ***Ionic conditions***
 
+There are two questions we need to solve about ionic conditions which ions should be used and in which concentration. 
+Usually Na and Cl are used for molecular dynamics, but our system is located in the nucleus. There are more K than Na in nucleus, but modelling of potassim ions is complicated bacause of their bigger size. These conditions are proved to be different. It was showd by FRET method.  In this tutorial we will use only Na and Cl.   
 
 
 <a name="ForceField"/>
@@ -356,7 +363,7 @@ Ion parameters chosen as [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/
 
 Now our system is almost ready and can be input into the first GROMACS module, *pdb2gmx*. The command *gmx pdb2gmx* reads a .pdb (or .gro) fileThe purpose of pdb2gmx is to generate three files: 
 
-1. The topology for the molecule. 
+1. The topology for the molecular system. 
 2. A position restraint file. 
 3. A post - processed structure file. 
 

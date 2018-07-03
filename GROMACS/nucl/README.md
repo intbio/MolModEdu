@@ -335,19 +335,26 @@ All the numbers including!
 
 Box size choice is very important for further analysis. Box size is a very tough question when it comes to charged systems. 
 In this tutorial we will use the same box size as it is shown in the article above. Usually scientists conduct series of experiments with different box size to understand which one is better for their system. 
-We are going to use 145 × 141 × 101 angstrem box size. 
+We will use a rectangular box with a minimum distance between the solute and the box boundaries of 20 Å.
 
 ***Ionic conditions***
 
 There are two questions we need to solve about ionic conditions which ions should be used and in which concentration. 
-Usually Na and Cl are used for molecular dynamics, but our system is located in the nucleus. There are more K than Na in nucleus, but modelling of potassim ions is complicated bacause of their bigger size. These conditions are proved to be different. It was showd by FRET method.  In this tutorial we will use only Na and Cl.   
+Usually sodium and chloride are used for molecular dynamics, but our system is located in the nucleus. There are more potassium than sodium in nucleus, but modelling of potassim ions is complicated bacause of their bigger size. These conditions are proved to be different. It was showd by FRET method. In this tutorial we will add sodium ions for neutralization and then we will additionally add sodium and chloride for neutralisation at a concentration of 150 mM with respect to the volume of water.
 
+There are two delicate moments - how to add and how to arrange them. The first one was discussed above. At first, we will add ions for neutralization. Secondary, we will add ions to get requisite concentration. 
+The other question is how to arrange ions inside your system. We will use GROMAX commands to do this. The program puts ions to the location of electrostatic maximum or minimum. 
+
+*Further information about ionic conditions here: [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/doi/abs/10.1021/jz201501a)*
 
 <a name="ForceField"/>
 
 ### Force field choice
 
-Ion parameters chosen as [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/doi/abs/10.1021/jz201501a)
+
+
+
+
 
 <a name="installing_soft"/>
 

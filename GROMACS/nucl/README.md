@@ -113,8 +113,8 @@ We can
 ### Understanding your PDB structure 
 
 In this tutorial we are going to work mostly with VMD. Consequently, it should be added to the PATH. See [here]() how to do it (закончить). 
-
-Open your PDB structure in VMD using this command in command line
+Always check your .pdb file for entries listed under the comment MISSING, as these entries indicate either atoms or whole residues that are not present in the crystal structure.
+Then open your PDB structure in VMD using this command in command line
 Make sure you are in the exact directory where 1kx5.pdb was downloaded. Then type:
 > VMD 1kx5.pdb
 
@@ -250,7 +250,7 @@ We have repaired our .pdb file. Now we are going to conduct **protein pKa calcul
 The program needs time. After it has finished its calculation you'll get another file 1kx5.pka which contains pKa of all residues. pKa values play an important role in defining the pH-dependent characteristics of a protein.
 
 
-
+Тут, наверное, нужно закончить про пК , зачем это было нужно
 
 
 <a name="H_tails"/>
@@ -270,17 +270,71 @@ Then in Enter install location delete what is written and type this:
 That's all. 
 
 Now we need to choose what to do with flexible histone tails. There are a lot of crystal structures where these parts of nucleosomes aren't proved experimentally. It was shown by [the occupancy and B-factor](#occupancy) as you remember. 
+
 There are three ways of dealing with histone tails:
 1) Leave 
 2) Stretch 
 3) Cut 
+
 In this tutorial we're going to cut them as it is shown in [this](https://www.sciencedirect.com/science/article/pii/S0022283615006956) article by A.K. Shaytan. 
+Let's look at the Fig.2 of the article:
+<img src="../docs/cutting.jpg">
+<a name="fig7"/>
+*Fig.7. Maximum observed RMSD deviations of individual amino acids (Cα atoms are blue; side-chain atoms are green) during simulations with respect to their positions in the initial X-ray structure (Shaytan et al.)*
 
+In this article scientists truncated histone tails at the sites specified in [Fig.7](#fig7) by triangles. In this tutorial we're going to truncate histone tails by Chimera. In your command line type:
 
+> chimera 1kx5.pdb
+
+You can also open the program using your desctop icon. 
+Once you've opened Chimera with your structure you need to understand which chains you showld change. The easiest way to do this is to go back to your structure in RCSB PDB. 'Annotation' contains the domain classification and chain numbers. 
+
+That is what we've got:
+*Table 1. Chain letter and meaning*
+
+| Chains |  Polymer  |
+| ------ |:---------:| 
+|   I    |    DNA    |
+|   J    |    DNA    |
+|  A,E   |     H3    |
+|  B,F   |     H4    |
+|  C,G   |   H2A.1   |
+|  D,H   |   H2B.2   |
+
+Now with the new knowledge let's get back to the work. You have opened Chimera, the next step is to cut flexible histone tails. 
+On the top bar:
+>Favourites > Sequence
+
+You will see chains in the new window. We're going to start with histone H3, consequently, choose chain A.
+In the histone H3 we will delete from 1st to 36th residue including. Highlight chosen residues using your mouse. Then look at the main Chimera window where the whole system is. The chosen place should be also highlighted in green. 
+
+Then still in the main window top bar: 
+> Actions > Atoms/Bonds > delete
+
+We will also delete the last three residues - ERA, which are 134, 135, 136. 
+
+<img src="../docs/cutting2.png">
+
+*Fig.8 Histone H3 tail*
+
+That's all. Now you need to do the same to all other histones. Don't forget that they're paired! 
+In H4 histone we will cut up to 24th residue. (спросить про 25 остаток, там начинается альфа спираль, нужно ли его удалять) 
+In H2A - up to 11th and from 118th to the end. 
+In H2B - up to Lys 20,
+All the numbers including! 
 
 <a name="Ions_box"/>
 
-### Ionic conditions and choosing simulation box size
+### Сhoosing ionic conditions and simulation box size
+
+***Box size***
+Box size choice is very important for further analysis. Box size is a very tough question when it comes to charged systems. 
+In this tutorial we will use the same box size as it is shown in the article above. Usually scientists conduct series of experiments with different box size to understand which one is better for their system. 
+We are going to use 145 × 141 × 101 angstrem box size. 
+
+***Ionic conditions***
+
+
 
 <a name="ForceField"/>
 
@@ -299,4 +353,10 @@ Ion parameters chosen as [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/
 <a name="before_stimulation"/>
 
 ## 5. Pereparing system for simulation
+
+Now our system is almost ready and can be input into the first GROMACS module, *pdb2gmx*. The command *gmx pdb2gmx* reads a .pdb (or .gro) fileThe purpose of pdb2gmx is to generate three files: 
+
+1. The topology for the molecule. 
+2. A position restraint file. 
+3. A post - processed structure file. 
 

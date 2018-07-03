@@ -327,6 +327,8 @@ All the numbers including!
 
 *Fig.9 Final structure*
 
+Don't forget to save your structure.
+
 <a name="Ions_box"/>
 
 ### Сhoosing ionic conditions and simulation box size

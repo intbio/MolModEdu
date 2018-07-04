@@ -251,7 +251,9 @@ The program needs time. After it has finished its calculation you'll get another
 
 
 Тут, наверное, нужно закончить про пК , зачем это было нужно
-
+Как указать состояние гистидина , как в громаксе ротонировать гистидин (HID, His, Hie)
+pdb2gmx
+таблица АК pK protonation state, пК сравнивается ph, определить, какой атом протонируется -> надо не забыть об этом 
 
 <a name="H_tails"/>
 
@@ -354,14 +356,22 @@ The other question is how to arrange ions inside your system. We will use GROMAX
 
 The main problem in molecular dynamics is a right choice of the Force Field. Force Field refers to the functional form and parameter sets used to calculate the potential energy of a system of atoms. 
 
-There are two main Force Fields for protein molecular dynamics - [AMBER](http://ambermd.org/) amd [CHARMM](https://www.charmm.org/charmm/?CFID=b9369a15-a3b5-4cd7-adca-570d4f9de662&CFTOKEN=0). 
+There are two main Force Fields for protein and DNA molecular dynamics - [AMBER](http://ambermd.org/) and [CHARMM](https://www.charmm.org/charmm/?CFID=b9369a15-a3b5-4cd7-adca-570d4f9de662&CFTOKEN=0). 
+Historically, amber is used more for dna simulations. Non the less charmm was also recently improved and also used for DNA dynamics
+
+расписать версии чармм
 
 We will use McKerrel CHARMM36 because it has improvements in ionic conditions, which are shown in the article by [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/doi/abs/10.1021/jz201501a)
+
+статья new ticks for old dogs ю и аксимент
+
 
 
 <a name="installing_soft"/>
 
 ## 3. Installing software
+
+установка громакса, 
 
 <a name="Obtaining_FF_files"/>
 

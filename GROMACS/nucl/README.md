@@ -390,7 +390,8 @@ Historically, amber is used more for dna simulations. Non the less charmm was al
 
 We will use McKerrel CHARMM36 because it has improvements in ionic conditions, which are shown in the article by [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/doi/abs/10.1021/jz201501a)
 
-статья new ticks for old dogs ю и аксимент
+In the latest [article](http://pubs.rsc.org/en/Content/ArticleLanding/2018/CP/C7CP08185E#!divAbstract) by Yoo and Aksiementiev 
+there are two tables: table 1 and table 2 where all corrections stated. For beeter understanding read the full article.
 
 
 
@@ -398,11 +399,19 @@ We will use McKerrel CHARMM36 because it has improvements in ionic conditions, w
 
 ## 3. Installing software
 
-установка громакса, 
+GROMAX installation instructions [here](http://www.gromacs.org/Documentation/Installation_Instructions_5.0)
 
 <a name="Obtaining_FF_files"/>
 
 ## 4. Obtaining force field files
+
+There is only one thing left before the stimulation start. We need to obtain force field files. Let's go to the [MacKerell lab website](http://mackerell.umaryland.edu/charmm_ff.shtml#gromacs), which regularly produces up-to-date CHARMM force field files in GROMACS format.
+
+Download this file:
+> charmm36-jul2017.ff.tgz
+
+Then unpack it inside the directory you're working it. 
+
 
 <a name="before_stimulation"/>
 

@@ -120,7 +120,7 @@ Make sure you are in the exact directory where 1kx5.pdb was downloaded. Then typ
 
 Then you will see this:
 
-<img src="../docs/understanding1.png" width="500">
+<img src="docs/understanding1.png" width="500">
 
 *Fig.1. VMD presentation of the molecule*
 
@@ -135,7 +135,7 @@ A new window called "Graphical Representation" will be opened. Then choose:
 You will see this: 
 
 <a name="fig2"/>
-<img src="../docs/understanding2.png" width="500">
+<img src="docs/understanding2.png" width="500">
 
 *Fig.2. NewCartoon Drawing Method*
 
@@ -149,7 +149,7 @@ Macromolecule crystall consists of many individual molecules. These molecules ar
 In the same window ("Graphical Representation"):
 > Coloring Method > Occupancy
 
-<img src="../docs/understanding3.png" width="500">
+<img src="docs/understanding3.png" width="500">
 
 *Fig.3. Coloring by the Occupancy*
 
@@ -168,7 +168,7 @@ The B-factors can be taken as indicating the relative vibrational motion of diff
 For coloring by B-factor choose:
 > Coloring Method > Beta
 
-<img src="../docs/understanding4.png" width="500">
+<img src="docs/understanding4.png" width="500">
 
 *Fig.4. Coloring by B-factor*
 
@@ -181,7 +181,7 @@ Let's get back to the [Fig.2](#fig2) state with NewCartoon Drawing method. Now w
 We are still working with Graphical Representation window.
 First, you need to Create Rep. Tap on it and type "water" in Selected Atoms. Coloring method is VDW which is Van-der-Waals. You will see this:
 
-<img src="../docs/water.png" width="500">
+<img src="docs/water.png" width="500">
 
 *Fig.5. Showing water molecules*
 
@@ -193,7 +193,7 @@ For ions you need to create another representation.
 We have choosen these atoms because they are stated in .pdb structure. 
 Then go back to Drawing style and choose VDW. You will see this: 
 
-<img src="../docs/ions.png" width="500">
+<img src="docs/ions.png" width="500">
 
 *Fig.6. Showing ions. Cl is red and Mn is blue.*
 
@@ -276,7 +276,7 @@ Now let's open .pka file. You can scroll down to the "SUMMARY" and look for HIS 
 
 Let's look at the histidine titration curve:
 
-<img src="../docs/histidine.png">
+<img src="docs/histidine.png">
 
 Now we need to compare pKa from propka and pH of our system.
 pH = 7 
@@ -307,7 +307,7 @@ There are three ways of dealing with histone tails:
 
 In this tutorial we're going to cut them as it is shown in [this](https://www.sciencedirect.com/science/article/pii/S0022283615006956) article by A.K. Shaytan. 
 Let's look at the Fig.2 of the article:
-<img src="../docs/cutting.jpg">
+<img src="docs/cutting.jpg">
 <a name="fig7"/>
 *Fig.7. Maximum observed RMSD deviations of individual amino acids (Cα atoms are blue; side-chain atoms are green) during simulations with respect to their positions in the initial X-ray structure (Shaytan et al.)*
 
@@ -342,7 +342,7 @@ Then still in the main window top bar:
 
 We will also delete the last three residues - ERA, which are 134, 135, 136. 
 
-<img src="../docs/cutting2.png">
+<img src="docs/cutting2.png">
 
 *Fig.8 Histone H3 tail*
 
@@ -352,7 +352,7 @@ In H2A - up to 15th and from 119th to the end.
 In H2B - up to 29th
 All the numbers including! 
 
-<img src="../docs/cutting3.png">
+<img src="docs/cutting3.png">
 
 *Fig.9 Final structure*
 

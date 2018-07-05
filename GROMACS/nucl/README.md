@@ -249,11 +249,38 @@ We have repaired our .pdb file. Now we are going to conduct **protein pKa calcul
 
 The program needs time. After it has finished its calculation you'll get another file 1kx5.pka which contains pKa of all residues. pKa values play an important role in defining the pH-dependent characteristics of a protein.
 
+Now let's open .pka file. You can scroll down to the "SUMMARY" and look for HIS residues. This table shows all Histidine pKas. Protonation state was done by comparing to pI and pH by hands. 
 
-Тут, наверное, нужно закончить про пК , зачем это было нужно
-Как указать состояние гистидина , как в громаксе ротонировать гистидин (HID, His, Hie)
-pdb2gmx
-таблица АК pK protonation state, пК сравнивается ph, определить, какой атом протонируется -> надо не забыть об этом 
+*Table 1. His residues and pKa*
+
+ Residue | Number | Chain |  pKa  | Protonation state |
+ --------|--------|-------|-------|-------------------|
+   HIS   |  39    |   A   |  5.65 |    protonated     |   
+   HIS   |  113   |   A   |  6.19 |    protonated     |              
+   HIS   |  18    |   B   |  5.94 |    protonated     |                        
+   HIS   |  75    |   B   |  5.56 |    protonated     |                        
+   HIS   |  31    |   C   |  2.19 |    protonated     |                           
+   HIS   |  82    |   C   |  4.02 |    protonated     |                         
+   HIS   |  46    |   D   |  6.54 |    protonated     |                       
+   HIS   |  79    |   D   |  5.27 |    protonated     |                          
+   HIS   |  106   |   D   |  6.62 |    protonated     |                            
+   HIS   |  39    |   E   |  5.70 |    protonated     |                           
+   HIS   |  113   |   E   |  5.60 |    protonated     |                            
+   HIS   |  18    |   F   |  6.79 |    protonated     |                           
+   HIS   |  75    |   F   |  5.61 |    protonated     |                           
+   HIS   |  31    |   G   |  2.75 |    protonated     |                   
+   HIS   |  82    |   G   |  4.14 |    protonated     |                           
+   HIS   |  46    |   H   |  6.56 |    protonated     |                          
+   HIS   |  79    |   H   |  4.80 |    protonated     |                        
+   HIS   |  106   |   H   |  6.68 |    protonated     |     
+
+Let's look at the histidine titration curve:
+
+<img src="../docs/histidine.png">
+
+Now we need to compare pKa from propka and pH of our system.
+pH = 7 
+In this pH Histidine has NH3+ group and COO- group which means it is neutral. Our propka results showed that all histidines are protonated. That means that we should change protonation state before conducting molecular dynamics. How to make histidine neutral will be shown below.
 
 <a name="H_tails"/>
 
@@ -292,7 +319,7 @@ You can also open the program using your desctop icon.
 Once you've opened Chimera with your structure you need to understand which chains you showld change. The easiest way to do this is to go back to your structure in RCSB PDB. 'Annotation' contains the domain classification and chain numbers. 
 
 That is what we've got:
-*Table 1. Chain letter and meaning*
+*Table 2. Chain letter and meaning*
 
 | Chains |  Polymer  |
 | ------ |:---------:| 

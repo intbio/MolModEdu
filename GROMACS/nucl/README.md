@@ -281,6 +281,7 @@ Let's look at the histidine titration curve:
 Now we need to compare pKa from propka and pH of our system.
 pH = 7 
 In this pH Histidine has NH3+ group and COO- group which means it is neutral. Our propka results showed that all histidines are protonated. That means that we should change protonation state before conducting molecular dynamics. How to make histidine neutral will be shown below.
+There are no histidine residues that have pKa > pH.
 
 <a name="H_tails"/>
 
@@ -386,8 +387,6 @@ The main problem in molecular dynamics is a right choice of the Force Field. For
 There are two main Force Fields for protein and DNA molecular dynamics - [AMBER](http://ambermd.org/) and [CHARMM](https://www.charmm.org/charmm/?CFID=b9369a15-a3b5-4cd7-adca-570d4f9de662&CFTOKEN=0). 
 Historically, amber is used more for dna simulations. Non the less charmm was also recently improved and also used for DNA dynamics
 
-расписать версии чармм
-
 We will use McKerrel CHARMM36 because it has improvements in ionic conditions, which are shown in the article by [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/doi/abs/10.1021/jz201501a)
 
 In the latest [article](http://pubs.rsc.org/en/Content/ArticleLanding/2018/CP/C7CP08185E#!divAbstract) by Yoo and Aksiementiev 
@@ -399,8 +398,20 @@ there are two tables: table 1 and table 2 where all corrections stated. For beet
 
 ## 3. Installing software
 
-GROMAX installation instructions [here](http://www.gromacs.org/Documentation/Installation_Instructions_5.0)
+GROMAX installation instructions [here](http://www.gromacs.org/Documentation/Installation_Instructions_5.0). At first, download latest version of GROMAX.
+Installation requires administration rights. This is the way of local installation:
 
+>tar xfz gromacs-5.1.4.tar.gz
+>cd gromacs-5.1.4
+>mkdir build
+>cd build
+>cmake .. -DGMX_BUILD_OWN_FFTW=ON -DCMAKE_INSTALL_PREFIX=/home/usr/dir_where_gromacx_will_be
+>make
+>make check
+>make install
+>source /usr/local/gromacs/bin/GMXRC
+
+Everytime you will use GROMAX, you need to put the last string (with your address)
 <a name="Obtaining_FF_files"/>
 
 ## 4. Obtaining force field files
@@ -410,16 +421,60 @@ There is only one thing left before the stimulation start. We need to obtain for
 Download this file:
 > charmm36-jul2017.ff.tgz
 
-Then unpack it inside the directory you're working it. 
+Then unpack it inside the directory you're working it. Installation of the Force Field is done.  
 
 
 <a name="before_stimulation"/>
 
 ## 5. Pereparing system for simulation
 
-Now our system is almost ready and can be input into the first GROMACS module, *pdb2gmx*. The command *gmx pdb2gmx* reads a .pdb (or .gro) fileThe purpose of pdb2gmx is to generate three files: 
+Now our system is almost ready and can be input into the first GROMACS module, *pdb2gmx*. The command *gmx pdb2gmx* reads a .pdb (or .gro) file. It searches for force fields by looking for a forcefield.itp file in subdirectories <forcefield>.ff of the current working directory. 
+This command has a lot of additional functions. We're going to use *-ter* argument that stands for the protonation state of N- and C-termini, because we have cut the histone tails. 
+
+The purpose of pdb2gmx is to generate three files: 
 
 1. The topology for the molecular system. 
 2. A position restraint file. 
 3. A post - processed structure file. 
 
+*topol.top* file which is the topology contains the information that defines molecules within the stimulation.
+
+Execute *pdb2gmx* by this command:
+> gmx pdb2gmx -f 1kx5.pdb -o 1kx5_processed.gro -water tip3p -ter 
+
+The first question will be asced about the Force Field. 
+
+*Select the Force Field:
+From current directory:
+ 1: CHARMM36 all-atom force field (July 2017)
+From '/home/pospelova/Soft/share/gromacs/top':
+ 2: AMBER03 protein, nucleic AMBER94 (Duan et al., J. Comp. Chem. 24, 1999-2012, 2003)
+ 3: AMBER94 force field (Cornell et al., JACS 117, 5179-5197, 1995)
+ 4: AMBER96 protein, nucleic AMBER94 (Kollman et al., Acc. Chem. Res. 29, 461-469, 1996)
+ 5: AMBER99 protein, nucleic AMBER94 (Wang et al., J. Comp. Chem. 21, 1049-1074, 2000)
+ 6: AMBER99SB protein, nucleic AMBER94 (Hornak et al., Proteins 65, 712-725, 2006)
+ 7: AMBER99SB-ILDN protein, nucleic AMBER94 (Lindorff-Larsen et al., Proteins 78, 1950-58, 2010)
+ 8: AMBERGS force field (Garcia & Sanbonmatsu, PNAS 99, 2782-2787, 2002)
+ 9: CHARMM27 all-atom force field (CHARM22 plus CMAP for proteins)
+10: GROMOS96 43a1 force field
+11: GROMOS96 43a2 force field (improved alkane dihedrals)
+12: GROMOS96 45a3 force field (Schuler JCC 2001 22 1205)
+13: GROMOS96 53a5 force field (JCC 2004 vol 25 pag 1656)
+14: GROMOS96 53a6 force field (JCC 2004 vol 25 pag 1656)
+15: GROMOS96 54a7 force field (Eur. Biophys. J. (2011), 40,, 843-856, DOI: 10.1007/s00249-011-0700-9)
+16: OPLS-AA/L all-atom force field (2001 aminoacid dihedrals)*
+
+As it was discussed above we will choose CHARMM36 FF. Type 1.
+
+>sed s/OP1/O1P/g 1kx5.pdb 
+>sed s/OP1/O1P/g 1kx5.pdb > 1kx5_edited.pdb
+
+You will have a few more mistakes. This is how you can solve them.
+
+>sed s/OP2/O2P/g 1kx5_edited.pdb 
+>sed s/OP2/O2P/g 1kx5_edited.pdb > 1kx5_edited_2.pdb
+
+>sed s/\ C7/C5M/g 1kx5_edited_2.pdb 
+>sed s/\ C7/C5M/g 1kx5_edited_2.pdb > 1kx5_edited_3.pdb
+
+So we have got the final version of our .pdb structure. 

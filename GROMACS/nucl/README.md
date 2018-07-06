@@ -444,25 +444,11 @@ Execute *pdb2gmx* by this command:
 
 The first question will be asced about the Force Field. 
 
-*Select the Force Field:
-From current directory:
- 1: CHARMM36 all-atom force field (July 2017)
-From '/home/pospelova/Soft/share/gromacs/top':
- 2: AMBER03 protein, nucleic AMBER94 (Duan et al., J. Comp. Chem. 24, 1999-2012, 2003)
- 3: AMBER94 force field (Cornell et al., JACS 117, 5179-5197, 1995)
- 4: AMBER96 protein, nucleic AMBER94 (Kollman et al., Acc. Chem. Res. 29, 461-469, 1996)
- 5: AMBER99 protein, nucleic AMBER94 (Wang et al., J. Comp. Chem. 21, 1049-1074, 2000)
- 6: AMBER99SB protein, nucleic AMBER94 (Hornak et al., Proteins 65, 712-725, 2006)
- 7: AMBER99SB-ILDN protein, nucleic AMBER94 (Lindorff-Larsen et al., Proteins 78, 1950-58, 2010)
- 8: AMBERGS force field (Garcia & Sanbonmatsu, PNAS 99, 2782-2787, 2002)
- 9: CHARMM27 all-atom force field (CHARM22 plus CMAP for proteins)
-10: GROMOS96 43a1 force field
-11: GROMOS96 43a2 force field (improved alkane dihedrals)
-12: GROMOS96 45a3 force field (Schuler JCC 2001 22 1205)
-13: GROMOS96 53a5 force field (JCC 2004 vol 25 pag 1656)
-14: GROMOS96 53a6 force field (JCC 2004 vol 25 pag 1656)
-15: GROMOS96 54a7 force field (Eur. Biophys. J. (2011), 40,, 843-856, DOI: 10.1007/s00249-011-0700-9)
-16: OPLS-AA/L all-atom force field (2001 aminoacid dihedrals)*
+*Select the Force Field:*
+
+*From current directory:*
+*1: CHARMM36 all-atom force field (July 2017) 
+...*
 
 As it was discussed above we will choose CHARMM36 FF. Type 1.
 

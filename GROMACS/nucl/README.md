@@ -101,7 +101,9 @@ Nuclosome Core particle (NCP) consists of 1.67 left-handed super-helical turns o
 
   *Further information about various NCP structures by X-Ray ([Nucleosome structural studies,](https://www.ncbi.nlm.nih.gov/pubmed/21176878), Davey, 2011)*
 
-In this tutorial we are going to use 1KX5 PDB structure. You can try to find it on RSCB PDB by yourself or download from this [link](https://www.rcsb.org/structure/1kx5). We have chosen this structure because it has the best resolution - 1.94 A.  
+In this tutorial we are going to use 1KX5 PDB structure. You can try to find it on RSCB PDB by yourself or download from this [link](https://www.rcsb.org/structure/1kx5). We have chosen this structure because it has the best resolution - 1.94 A. 
+
+The original article of this structure [here](https://www.sciencedirect.com/science/article/pii/S0022283602003868?via%3Dihub).
 
 We can 
 [Check](https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/resolution) what kind of problems you will get if you choose the structure with wrong resolution. The quality of the starting structure is essential for the whole analyzis. It should be choosen very carefully. 
@@ -112,11 +114,11 @@ We can
 
 ### Understanding your PDB structure 
 
-In this tutorial we are going to work mostly with VMD. Consequently, it should be added to the PATH. See [here]() how to do it (закончить). 
+In this tutorial we are going to work mostly with VMD. Consequently, it should be added to the PATH. 
 Always check your .pdb file for entries listed under the comment MISSING, as these entries indicate either atoms or whole residues that are not present in the crystal structure.
 Then open your PDB structure in VMD using this command in command line
 Make sure you are in the exact directory where 1kx5.pdb was downloaded. Then type:
-> VMD 1kx5.pdb
+> vmd 1kx5.pdb
 
 Then you will see this:
 
@@ -140,7 +142,7 @@ You will see this:
 *Fig.2. NewCartoon Drawing Method*
 
 <a name="occupancy"/>
-**Coloring by occupancy and B-factor**. 
+#### Coloring by occupancy and B-factor. 
 
 At first, we need to understand what are occupancy and B-factor. 
 
@@ -156,7 +158,7 @@ In the same window ("Graphical Representation"):
 Zero occupancy meaans that these parts of the structure was completed by computer programs and were not observed experimentally. 
 *CAUTION! You should always read the original article of the structure you use.*
 
-*B-factor* (often refered to as atomic displacement parameter/*The Debye–Waller factor (DWF)*/temperature factor) monitors the positional spread of each atom. It describes the displacement of the atomic positions from an average (mean) value. Lower resolution tends to correlate with high B-factor. 
+*B-factor* (often refered to as atomic displacement parameter/*The Debye–Waller factor (DWF)*/temperature factor) monitors the positional spread of each atom. It describes the displacement of the atomic positions from an average (mean) value. Lower resolution tends to correlate with higher B-factor. 
 The formula for the B-factor is: 
 
 <a href="http://www.codecogs.com/eqnedit.php?latex=B&space;=&space;8\pi^2&space;\langle&space;u^2&space;\rangle" target="_blank"><img src="http://latex.codecogs.com/gif.latex?B&space;=&space;8\pi^2&space;\langle&space;u^2&space;\rangle" title="B = 8\pi^2 \langle u^2 \rangle" /></a>
@@ -174,7 +176,7 @@ For coloring by B-factor choose:
 
 In this picture blue is an area with low B-factor. It means that these areas are more flexible than red ones. Consequently, atomic positions are less accurate in these zones. 
 
-**DNA, Protein, Water and Ions**
+#### DNA, Protein, Water and Ions
 
 Let's get back to the [Fig.2](#fig2) state with NewCartoon Drawing method. Now we're going to explore other molecules inside this system. We're going to start from water molecules. 
 
@@ -197,19 +199,21 @@ Then go back to Drawing style and choose VDW. You will see this:
 
 *Fig.6. Showing ions. Cl is red and Mn is blue.*
 
-Not only Na, K and Cl but heavy ions like are often used for proper protein crystallization. These usually divalent ions are very difficult for dynamics because they can polarize the space around them which leads to changes in water localization. 
+Not only Na, K and Cl but heavy, ions like Mn or Ca, are often used for proper protein crystallization. These usually divalent ions are very difficult for dynamics because they can polarize the space around them. Such effects are difficult to describe using non-polarized force fields. 
 
 You can also choose DNA or protein the same way as described earlier. Now  you know how to understand your PDB system.
 
-**The next step is to understand should we change water and ions condition**
+##### The next step is to understand should we change water and ions condition
 
-So, at first we will remain the bound water. 
+So, at first we will retain the bound water. 
 Then you need to check the ions through VMD program or by reading the .pdb file. Once you have noticed ions you need to decide leave them or delete. 
-In the chosen structure there are only Mn and Cl. Mn is divalent ions, consequently, it should be deleted because of the reasons showed above. Cl is not divalent, it is located in the places of high positive potential, so we are going to leave it. 
+In the chosen structure there are only Mn and Cl. Mn is a divalent ion, consequently, it should be deleted because of the reasons showed above. Cl is not divalent, it is located in the places of high positive potential, so we are going to retain it. 
 
 Then you need to check the **side chain conformation**. 
 
 *Basic information about side chain conformation [here](http://www.cryst.bbk.ac.uk/PPS95/course/3_geometry/conform.html)*
+
+Side chain conformation is not always determined correctly in the original .pdb structure. For example, the location of nitrogen or oxygen atoms in the end of asparagine and glutamine cannot usually be discern because they have similar electron densities.
 
 The residues we need to check are asparagine, glutamine and histidine. Asn and Gln residues play important  structural  roles  in  proteins  because of their side-chain amide groups. These groups can act as both hydrogen  bond  acceptors  and  donors.  Such hydrogen bonds can stabilise the protein structure. In addition, these residues (also with His) are often found on the surface of proteins or in the active site of enzymes where the hydrogen bonds they form can be important in stabilising protein–protein or protein-substrate interactions. 
 
@@ -219,33 +223,52 @@ FoldX is a protein design algorithm that uses an empirical force field. It can d
 We are using command *RepairPDB* which identifies those residues which have bad torsion angles, or VanderWaals' clashes, or total energy, and repairs them. The way it operates is the following: First it looks for all Asn, Gln and His residues and flips them by 180 degrees. This is done to prevent incorrect rotamer assignment in the structure due to the fact that the electron density of Asn and Gln carboxamide groups is almost symmetrical and the correct placement can only be discerned by calculating the interactions with the surrounding atoms. The same applies to His.
 
 Type 
-> foldx --command=PDBFile --pdb=1kx5.pdb
-And you will get an error: foldx: command not found
+
+` foldx --command=PDBFile --pdb=1kx5.pdb`
+
+And you will get an error: 
+>foldx: command not found
 
 It means that the program is not in your PATH. Once you have downloaded FoldX, you need to put it in PATH. The FoldX docs were downloaded to the Soft directory and renamed to foldx. At first, type pwd which is Print Working Directory.
-> pwd
+
+`pwd`
 
 You will get this, copy it. 
 > /home/username/Soft/foldx
 
 Then 
-> echo $PATH
-> export PATH=$PATH:/home/pospelova/Soft/foldx
 
-This is how we can add the directory to your PATH. But it is right only for one time, after closing this terminal you will not call FoldX again. If you need your program to work everywhere, you may write inside the main Bash file - .bashrc. Type this:  
-> pluma ~/.bashrc
+``` 
+echo $PATH
+export PATH=$PATH:/home/pospelova/Soft/foldx
+```
+
+This is how we can add the directory to your PATH. But it is right only for one time, after closing this terminal you will not call FoldX again. If you need your program to work everywhere, you may write inside the main Bash file - .bashrc. Type this:
+
+```
+pluma ~/.bashrc
+```
 
 It will open the file .bashrc. In the end of the file put this:
-> export PATH=$PATH:/home/pospelova/Soft/foldx
+
+```
+export PATH=$PATH:/home/pospelova/Soft/foldx
+```
 
 Now you have added FoldX to your path so you can call it every time you need. Now let's get back to our work. 
 Get back to your working directory where the .pdb file is and then type:
-> foldx --command=PDBFile --pdb=1kx5.pdb
+
+```
+foldx --command=PDBFile --pdb=1kx5.pdb
+```
 
 Notice that program prints in Bash what it found: any missed atoms and energies. After running RepairPDB you'll get two files to look at. The first one .pdb is a repaired one and the other .fxout contains energies of the repaired residues.
 
 We have repaired our .pdb file. Now we are going to conduct **protein pKa calculations**. They are used to estimate the pKa values of amino acids as they exist within proteins. Install propka as it is showed [here](https://github.com/jensengroup/propka-3.1), click download to get the repository. After installation get back to your working directory and type this in terminal:
-> propka31 1kx5.pdb
+
+```
+propka31 1kx5.pdb
+```
 
 The program needs time. After it has finished its calculation you'll get another file 1kx5.pka which contains pKa of all residues. pKa values play an important role in defining the pH-dependent characteristics of a protein.
 
@@ -289,13 +312,19 @@ There are no histidine residues that have pKa > pH.
 
 You have downloaded Chimera. Here is the installation guide:
 We need to make this file executable. In the directory with downloaded file type this:
-> chmod +x chimera-1.13-linux_x86_64.bin 
-> ./chimera-1.13-linux_x86_64.bin 
+
+``` 
+chmod +x chimera-1.13-linux_x86_64.bin 
+./chimera-1.13-linux_x86_64.bin 
+```
 
 Then in Enter install location delete what is written and type this: 
-> ~/chimera/
-> yes
-> 1
+
+```
+~/chimera/
+ yes
+ 1
+ ```
 
 That's all. 
 
@@ -314,7 +343,7 @@ Let's look at the Fig.2 of the article:
 
 In this article scientists truncated histone tails at the sites specified in [Fig.7](#fig7) by triangles. In this tutorial we're going to truncate histone tails by Chimera. In your command line type:
 
-> chimera 1kx5.pdb
+` chimera 1kx5.pdb`
 
 You can also open the program using your desctop icon. 
 Once you've opened Chimera with your structure you need to understand which chains you showld change. The easiest way to do this is to go back to your structure in RCSB PDB. 'Annotation' contains the domain classification and chain numbers. 
@@ -333,7 +362,7 @@ That is what we've got:
 
 Now with the new knowledge let's get back to the work. You have opened Chimera, the next step is to cut flexible histone tails. 
 On the top bar:
->Favourites > Sequence
+> Favourites > Sequence
 
 You will see chains in the new window. We're going to start with histone H3, consequently, choose chain A. We will make minimalistic system without any tails.
 In the histone H3 we will delete from 1st to 43th residue including. Highlight chosen residues using your mouse. Then look at the main Chimera window where the whole system is. The chosen place should be also highlighted in green. 
@@ -401,15 +430,17 @@ there are two tables: table 1 and table 2 where all corrections stated. For beet
 GROMAX installation instructions [here](http://www.gromacs.org/Documentation/Installation_Instructions_5.0). At first, download latest version of GROMAX.
 Installation requires administration rights. This is the way of local installation:
 
->tar xfz gromacs-5.1.4.tar.gz
->cd gromacs-5.1.4
->mkdir build
->cd build
->cmake .. -DGMX_BUILD_OWN_FFTW=ON -DCMAKE_INSTALL_PREFIX=/home/usr/dir_where_gromacx_will_be
->make
->make check
->make install
->source /usr/local/gromacs/bin/GMXRC
+```
+tar xfz gromacs-5.1.4.tar.gz
+cd gromacs-5.1.4
+mkdir build
+cd build
+cmake .. -DGMX_BUILD_OWN_FFTW=ON -DCMAKE_INSTALL_PREFIX=/home/usr/dir_where_gromacx_will_be
+make
+make check
+make install
+source /usr/local/gromacs/bin/GMXRX 
+``` 
 
 (In my case - source /home/pospelova/Soft/bin/GMXRC)
 
@@ -442,7 +473,10 @@ The purpose of pdb2gmx is to generate three files:
 *topol.top* file which is the topology contains the information that defines molecules within the stimulation.
 
 Execute *pdb2gmx* by this command:
-> gmx pdb2gmx -f 1kx5.pdb -o 1kx5_processed.gro -water tip3p -ter 
+
+```
+gmx pdb2gmx -f 1kx5.pdb -o 1kx5_processed.gro -water tip3p -ter 
+```
 
 The first question will be asced about the Force Field. 
 
@@ -461,18 +495,22 @@ Then the selection of termini will be offered. First in DNA Chains choose 5TER a
 
 It means that the name of the atom in your .pdb is different from the same in the FF. At first you need to understand what is wrong with the atom. When you open your structure you understand that some atoms have different names. Do these commands:
 
->sed s/OP1/O1P/g 1kx5.pdb 
->sed s/OP1/O1P/g 1kx5.pdb > 1kx5_edited.pdb
+```
+sed s/OP1/O1P/g 1kx5.pdb 
+sed s/OP1/O1P/g 1kx5.pdb > 1kx5_edited.pdb
+```
 
 It looks for OP1 names in your .pdb and changes them to O1P. Then it creates the new .pdb file.
 Then try again the command above (with gmx2pdb).
 You will have a few more mistakes. This is how you can solve them.
 
->sed s/OP2/O2P/g 1kx5_edited.pdb 
->sed s/OP2/O2P/g 1kx5_edited.pdb > 1kx5_edited_2.pdb
+```
+sed s/OP2/O2P/g 1kx5_edited.pdb 
+sed s/OP2/O2P/g 1kx5_edited.pdb > 1kx5_edited_2.pdb
 
->sed s/\ C7/C5M/g 1kx5_edited_2.pdb 
->sed s/\ C7/C5M/g 1kx5_edited_2.pdb > 1kx5_edited_3.pdb
+sed s/\ C7/C5M/g 1kx5_edited_2.pdb 
+sed s/\ C7/C5M/g 1kx5_edited_2.pdb > 1kx5_edited_3.pdb
+```
 
 So we have got the final version of our .pdb structure which is 1kx5_edited.pdb.  
 After you finish choosing termini in DNA chains, you will have to choose histone tails termini. We need non-charged termini (GLY-NH2/COOH/NH2)
@@ -483,6 +521,9 @@ Then after a few answers you will have another problem:
 
 It is almost the same error as above. Go to merged.rtp in CHARMM36 directory. Look for CL. You will find that the residue calls CLA, not CL.
 
-
+```
+sed s/\ CL/CLA/g 1kx5_edited_3.pdb 
+sed s/\ CL/CLA/g 1kx5_edited_3.pdb > 1kx5_edited_4.pdb
+```
 
 

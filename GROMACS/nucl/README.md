@@ -411,6 +411,8 @@ Installation requires administration rights. This is the way of local installati
 >make install
 >source /usr/local/gromacs/bin/GMXRC
 
+(In my case - source /home/pospelova/Soft/bin/GMXRC)
+
 Everytime you will use GROMAX, you need to put the last string (with your address)
 <a name="Obtaining_FF_files"/>
 
@@ -452,9 +454,18 @@ The first question will be asced about the Force Field.
 
 As it was discussed above we will choose CHARMM36 FF. Type 1.
 
+Then the selection of termini will be offered. First in DNA Chains choose 5TER and 3TER. Then you will have this error:
+
+>Fatal error:
+>Atom OP1 in residue DT -72 was not found in rtp entry DT with 32 atoms while sorting atoms.
+
+It means that the name of the atom in your .pdb is different from the same in the FF. At first you need to understand what is wrong with the atom. When you open your structure you understand that some atoms have different names. Do these commands:
+
 >sed s/OP1/O1P/g 1kx5.pdb 
 >sed s/OP1/O1P/g 1kx5.pdb > 1kx5_edited.pdb
 
+It looks for OP1 names in your .pdb and changes them to O1P. Then it creates the new .pdb file.
+Then try again the command above (with gmx2pdb).
 You will have a few more mistakes. This is how you can solve them.
 
 >sed s/OP2/O2P/g 1kx5_edited.pdb 
@@ -463,4 +474,15 @@ You will have a few more mistakes. This is how you can solve them.
 >sed s/\ C7/C5M/g 1kx5_edited_2.pdb 
 >sed s/\ C7/C5M/g 1kx5_edited_2.pdb > 1kx5_edited_3.pdb
 
-So we have got the final version of our .pdb structure. 
+So we have got the final version of our .pdb structure which is 1kx5_edited.pdb.  
+After you finish choosing termini in DNA chains, you will have to choose histone tails termini. We need non-charged termini (GLY-NH2/COOH/NH2)
+Then after a few answers you will have another problem:
+
+>Fatal error:
+>Residue 'CL' not found in residue topology database
+
+It is almost the same error as above. Go to merged.rtp in CHARMM36 directory. Look for CL. You will find that the residue calls CLA, not CL.
+
+
+
+

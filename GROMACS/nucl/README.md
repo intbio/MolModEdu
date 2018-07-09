@@ -418,16 +418,18 @@ The other question is how to arrange ions inside your system. We will use GROMAC
 
 The main problem in molecular dynamics is the right choice of a Force Field. Force Field refers to the functional form and parameter sets used to calculate the potential energy of a system of atoms. 
 
-There are two main Force Fields for protein and DNA molecular dynamics - [AMBER](http://ambermd.org/) and [CHARMM](https://www.charmm.org/charmm/?CFID=b9369a15-a3b5-4cd7-adca-570d4f9de662&CFTOKEN=0). 
+There are two main Force Fields for protein and DNA molecular dynamics - [AMBER](http://ambermd.org/) and [CHARMM](http://mackerell.umaryland.edu/charmm_ff.shtml). 
 Historically, AMBER is used more for DNA simulations. Non the less charmm was also recently improved and is also used for DNA dynamics
 
-We will use CHARMM36 force field because it has improvements in ionic conditions, which are shown in the article by [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/doi/abs/10.1021/jz201501a)
+We will use CHARMM36 force field with the following improvements from these papers:[(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/doi/abs/10.1021/jz201501a)
+2 статьи 
+In the latest [article](http://pubs.rsc.org/en/Content/ArticleLanding/2018/CP/C7CP08185E#!divAbstract) by Yoo and Aksiementiev there are two tables: table 1 and table 2 where all corrections stated. For beeter understanding read the full article. -
+The original FF files should be modified to include these ionic paramters. 
 
-In the latest [article](http://pubs.rsc.org/en/Content/ArticleLanding/2018/CP/C7CP08185E#!divAbstract) by Yoo and Aksiementiev 
-there are two tables: table 1 and table 2 where all corrections stated. For beeter understanding read the full article.
-
-
-
+вернуться
+cu-fix non bonded fix 
+charmm36+ latest nbfixes from yoo and aksimentiev (http://bionano.physics.illinois.edu/CUFIX)
+пока мы используем базовый чармм 36
 <a name="installing_soft"/>
 
 ## 3. Installing software
@@ -473,7 +475,7 @@ The purpose of pdb2gmx is to generate three files:
 
 1. The topology for the molecular system. 
 2. A position restraint file. 
-3. A post - processed structure file. 
+3. A post-processed structure file. 
 
 *topol.top* file which is the topology contains the information that defines molecules within the stimulation.
 
@@ -483,7 +485,7 @@ Execute *pdb2gmx* by this command:
 gmx pdb2gmx -f 1kx5.pdb -o 1kx5_processed.gro -water tip3p -ter 
 ```
 
-The first question will be asced about the Force Field. 
+The first question will be asked about the Force Field. 
 
 *Select the Force Field:*
 
@@ -524,7 +526,7 @@ Then after a few answers you will have another problem:
 >Fatal error:
 >Residue 'CL' not found in residue topology database
 
-It is almost the same error as above. Go to merged.rtp in CHARMM36 directory. Look for CL. You will find that the residue calls CLA, not CL.
+It is almost the same error as above. Go to merged.rtp in CHARMM36 directory. Look for CL. You will find that the residue called CLA, not CL.
 
 ```
 sed s/\ CL/CLA/g 1kx5_edited_3.pdb 

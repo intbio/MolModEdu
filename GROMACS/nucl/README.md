@@ -170,7 +170,7 @@ The B-factors can be taken as indicating the relative vibrational motion of diff
 For coloring by B-factor choose:
 > Coloring Method > Beta
 
-<img src="docs/understanding4.png" width="500">
+<img src="docs/beta.png" width="500">
 
 *Fig.4. Coloring by B-factor*
 
@@ -318,7 +318,7 @@ chmod +x chimera-1.13-linux_x86_64.bin
 ./chimera-1.13-linux_x86_64.bin 
 ```
 
-Then in Enter install location delete what is written and type this: 
+When asked for installation location delete what is written and type this: 
 
 ```
 ~/chimera/
@@ -328,25 +328,23 @@ Then in Enter install location delete what is written and type this:
 
 That's all. 
 
-Now we need to choose what to do with flexible histone tails. There are a lot of crystal structures where these parts of nucleosomes aren't proved experimentally. It was shown by [the occupancy and B-factor](#occupancy) as you remember. 
+Now we need to choose what to do with flexible histone tails. There are a lot of crystal structures where these parts of nucleosomes are not resolved experimentally. And in 1kx5 structure their postions are not very certain which was shown by [the occupancy and B-factor](#occupancy) earlier
 
-There are three ways of dealing with histone tails:
-1) Leave 
-2) Stretch 
-3) Cut 
+There are a few possible strategies to deal with histone tails. Retain the original conformation of 1kx5 structure, truncate the flexible tails or reassign their conformation to some extended state. 
 
-In this tutorial we're going to cut them as it is shown in [this](https://www.sciencedirect.com/science/article/pii/S0022283615006956) article by A.K. Shaytan. 
+In this tutorial we're going to truncate them as it is shown in [this](https://www.sciencedirect.com/science/article/pii/S0022283615006956) article. 
 Let's look at the Fig.2 of the article:
 <img src="docs/cutting.jpg">
 <a name="fig7"/>
+
 *Fig.7. Maximum observed RMSD deviations of individual amino acids (Cα atoms are blue; side-chain atoms are green) during simulations with respect to their positions in the initial X-ray structure (Shaytan et al.)*
 
-In this article scientists truncated histone tails at the sites specified in [Fig.7](#fig7) by triangles. In this tutorial we're going to truncate histone tails by Chimera. In your command line type:
+In this article the histone tails were truncated at the sites specified in [Fig.7](#fig7) by triangles. In this tutorial we're going to truncate histone tails at the different places by Chimera. Open your 1kx5 in Chimera. For example, in Unix command line type:
 
 ` chimera 1kx5.pdb`
 
-You can also open the program using your desctop icon. 
-Once you've opened Chimera with your structure you need to understand which chains you showld change. The easiest way to do this is to go back to your structure in RCSB PDB. 'Annotation' contains the domain classification and chain numbers. 
+You can also open the program using your desktop icon. 
+Once you've opened Chimera with your structure you need to understand which chains you should change. The easiest way to do this is to go back to your structure in RCSB PDB. 'Annotation' contains the domain classification and chain names. 
 
 That is what we've got:
 *Table 2. Chain letter and meaning*
@@ -360,17 +358,17 @@ That is what we've got:
 |  C,G   |   H2A.1   |
 |  D,H   |   H2B.2   |
 
-Now with the new knowledge let's get back to the work. You have opened Chimera, the next step is to cut flexible histone tails. 
-On the top bar:
+Now with the new knowledge let's get back to work. You have opened Chimera, the next step is to cut flexible histone tails. 
+In the top bar open:
 > Favourites > Sequence
 
 You will see chains in the new window. We're going to start with histone H3, consequently, choose chain A. We will make minimalistic system without any tails.
-In the histone H3 we will delete from 1st to 43th residue including. Highlight chosen residues using your mouse. Then look at the main Chimera window where the whole system is. The chosen place should be also highlighted in green. 
+In the histone H3 we will delete residue 1 through 43 (the last should be also included). Highlight chosen residues using your mouse. Then look at the main Chimera window where the whole system is. The chosen place should be also highlighted in green. 
 
 Then still in the main window top bar: 
 > Actions > Atoms/Bonds > delete
 
-We will also delete the last three residues - ERA, which are 134, 135, 136. 
+We will also delete the last three residues - ERA, numbers 134-136. 
 
 <img src="docs/cutting2.png">
 
@@ -378,9 +376,12 @@ We will also delete the last three residues - ERA, which are 134, 135, 136.
 
 That's all. Now you need to do the same to all other histones. Don't forget that they're paired! 
 In H4 histone we will cut up to 24th residue. As it is shown in fig.8, 24th residue (D) is a part of secondary structure, but we delete it to save the equilibrium of charges. 
-In H2A - up to 15th and from 119th to the end. 
+In H2A - 15th and from 119th to the end. 
 In H2B - up to 29th
-All the numbers including! 
+ 
+CAUTION! The numbering of residues in .pdb is different from real protein. You should always pay attention on the numbering. 
+For instance in this case the recombinant version of H2B histone was used that lacks the first three aminoacids, consequently, the numbering differs. 
+
 
 <img src="docs/cutting3.png">
 
@@ -394,29 +395,33 @@ Don't forget to save your structure.
 
 ***Box size***
 
-Box size choice is very important for further analysis. Box size is a very tough question when it comes to charged systems. 
-In this tutorial we will use the same box size as it is shown in the article above. Usually scientists conduct series of experiments with different box size to understand which one is better for their system. 
+Simulation box size choice is very important for further analysis. Choosing the box size is a very delicate question when it comes to charged systems. 
+In this tutorial we will use the same box size as was used in Ref. Shaytan et al. Usually a series of experiments with different box size should be conducted to understand which one is better for the system under study. 
 We will use a rectangular box with a minimum distance between the solute and the box boundaries of 20 Å.
 
 ***Ionic conditions***
 
-There are two questions we need to solve about ionic conditions which ions should be used and in which concentration. 
-Usually sodium and chloride are used for molecular dynamics, but our system is located in the nucleus. There are more potassium than sodium in nucleus, but modelling of potassim ions is complicated bacause of their bigger size. These conditions are proved to be different. It was showed by FRET method. In this tutorial we will add sodium ions for neutralization and then we will additionally add sodium and chloride for neutralisation at a concentration of 150 mM with respect to the volume of water.
+There are two questions we need to address about ionic conditions: which ions should be used and in which concentration. 
+Usually sodium and chloride ions are used for molecular dynamics, because they are well parametrized.
+Our system is located in the nucleus, there are more potassium than sodium ions in nucleus, but modeling of potassim ions is complicated because force field parametrs are considered less reliable and less parametrized. Althogh we need to keep in mind that there are specific differences between potassium and sodium. (гарик папоян) In this tutorial we will add sodium ions for neutralization and then we will additionally add sodium and chloride for neutralisation at a concentration of 150 mM with respect to the volume of water.
 
-There are two delicate moments - how to add and how to arrange them. The first one was discussed above. At first, we will add ions for neutralization. Secondary, we will add ions to get requisite concentration. 
-The other question is how to arrange ions inside your system. We will use GROMAX commands to do this. The program puts ions to the location of electrostatic maximum or minimum. 
+There are two delicate moments - how to add and how to arrange them. The first one was discussed above. At first, we will add ions for neutralization. Secondary, we will add ions to get desired concentration. 
+The other question is how to arrange ions inside your system. We will use GROMACS commands to do this. The program puts ions to the location of electrostatic maximum or minimum. 
 
+ссылка на сайт бионамберс - concentration of ions in cells
+если добавлять не объему, а по воде
+расчитать, сколько молекул воды, затем сколько ионов
 
 <a name="ForceField"/>
 
 ### Force field choice
 
-The main problem in molecular dynamics is a right choice of the Force Field. Force Field refers to the functional form and parameter sets used to calculate the potential energy of a system of atoms. 
+The main problem in molecular dynamics is the right choice of a Force Field. Force Field refers to the functional form and parameter sets used to calculate the potential energy of a system of atoms. 
 
 There are two main Force Fields for protein and DNA molecular dynamics - [AMBER](http://ambermd.org/) and [CHARMM](https://www.charmm.org/charmm/?CFID=b9369a15-a3b5-4cd7-adca-570d4f9de662&CFTOKEN=0). 
-Historically, amber is used more for dna simulations. Non the less charmm was also recently improved and also used for DNA dynamics
+Historically, AMBER is used more for DNA simulations. Non the less charmm was also recently improved and is also used for DNA dynamics
 
-We will use McKerrel CHARMM36 because it has improvements in ionic conditions, which are shown in the article by [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/doi/abs/10.1021/jz201501a)
+We will use CHARMM36 force field because it has improvements in ionic conditions, which are shown in the article by [(Yoo & Aksiementiev, JPC, 2012)](https://pubs.acs.org/doi/abs/10.1021/jz201501a)
 
 In the latest [article](http://pubs.rsc.org/en/Content/ArticleLanding/2018/CP/C7CP08185E#!divAbstract) by Yoo and Aksiementiev 
 there are two tables: table 1 and table 2 where all corrections stated. For beeter understanding read the full article.

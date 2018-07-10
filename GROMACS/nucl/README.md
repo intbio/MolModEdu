@@ -533,4 +533,7 @@ sed s/\ CL/CLA/g 1kx5_edited_3.pdb
 sed s/\ CL/CLA/g 1kx5_edited_3.pdb > 1kx5_edited_4.pdb
 ```
 
+adding water and ions 
+prepare mdp files 
+
 

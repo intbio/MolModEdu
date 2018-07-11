@@ -540,13 +540,19 @@ If you did everything right you will get this:
 >The Charmm36-jul2017 force field and the tip3p water model are used.
 
 We have finally converted our PDB file into GROMACS native .gro file format. 
+This command also shows you some useful info:
+
+>Now there are 30548 atoms and 4154 residues
+>Total mass in system 228455.904 a.m.u.
+>Total charge in system -234.000 e
 
 Now we will put our dimer into a periodic box using the following command 
+
 ```
-gmx editconf -f 1kx5_processed.gro -o 1kx5_newbox.gro -c -d 2.0 -bt cubic
+gmx editconf -f 1kx5_processed.gro -o 1kx5_newbox.gro -c -d 2.0 -bt triclinic
 ```
 
-The above command centers the protein in the box (-c), and places it at least 1.0 nm from the box edge (-d 2.0). The box type is defined as a cube (-bt cubic).
+The above command centers the protein in the box (-c), and places it at least 1.0 nm from the box edge (-d 2.0). The box type is defined as a rectangular (-bt triclinic).
 
 
 

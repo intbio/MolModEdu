@@ -529,9 +529,26 @@ Then after a few answers you will have another problem:
 It is almost the same error as above. Go to merged.rtp in CHARMM36 directory. Look for CL. You will find that the residue called CLA, not CL.
 
 ```
-sed s/\ CL/CLA/g 1kx5_edited_3.pdb 
-sed s/\ CL/CLA/g 1kx5_edited_3.pdb > 1kx5_edited_4.pdb
+sed s/CL\ /CLA/g 1kx5_edited_3.pdb 
+sed s/CL\ /CLA/g 1kx5_edited_3.pdb > 1kx5_edited_4.pdb
 ```
+Check your file through VMD program. You will see there are some weird connections between atoms. It happend because we have edited our file. Open in by the text editor and delet all the strings statrting with "CONECT".
+Then try again the command. 
+
+If you did everything right you will get this:
+>You have successfully generated a topology from: 1kx5_edited_4.pdb.
+>The Charmm36-jul2017 force field and the tip3p water model are used.
+
+We have finally converted our PDB file into GROMACS native .gro file format. 
+
+Now we will put our dimer into a periodic box using the following command 
+```
+gmx editconf -f 1kx5_processed.gro -o 1kx5_newbox.gro -c -d 2.0 -bt cubic
+```
+
+The above command centers the protein in the box (-c), and places it at least 1.0 nm from the box edge (-d 2.0). The box type is defined as a cube (-bt cubic).
+
+
 
 adding water and ions 
 prepare mdp files 

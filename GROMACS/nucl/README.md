@@ -593,13 +593,13 @@ At first you need to download or create an [ions.mdp]() file which is necessary 
 We will count how many ions we should add to get this concentration.
 N(ions) = C*N(water)/55,5(mol H2O)
 
-We have got 111294 water molecules
+We have got 111270 water molecules. This is the sum of prevous bounded water molecules and new solvate molecules.
 
 0,15/55,5*111294=300 (it should actually be 301, but we will use 300)
-We need to add 234 positive ions and the 300-234=66 ions => 33 positive and 33 negative. It means that we need to add 267 positive and 33 negative ions. 
+We need to add 300 positive ions and the 300 negative ions 
 ```
 gmx grompp -f ions.mdp -c 1kx5_solv.gro -p topol.top -o ions.tpr
-gmx genion -s ions.tpr -o 1kx5_solv_ions.gro -p topol.top -pname NA -nname CL -np 267 -nn 33
+gmx genion -s ions.tpr -o 1kx5_solv_ions.gro -p topol.top -pname NA -nname CL -np 300 -nn 300
 ```
 When it is promted choose "SOL" (17). It will replace solvent molecules with positive ions. 
 -pname and -nname defines names of positive and negative charges

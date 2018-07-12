@@ -556,6 +556,34 @@ gmx editconf -f 1kx5_processed.gro -o 1kx5_newbox.gro -c -d 2.0 -bt triclinic
 ```
 
 The above command centers the protein in the box (-c), and places it at least 1.0 nm from the box edge (-d 2.0). The box type is defined as a rectangular (-bt triclinic).
+That is what you have got:
+
+>Read 30548 atoms
+>Volume: 2101.66 nm^3, corresponds to roughly 945700 electrons
+>No velocities found
+>system size : 12.907 15.325  6.969 (nm)
+>center      :  4.539  8.970  0.651 (nm)
+>box vectors : 10.595 18.117 10.949 (nm)
+>box angles  :  90.00  90.00  90.00 (degrees)
+>box volume  :2101.66               (nm^3)
+>shift       :  3.914  0.692  4.833 (nm)
+>new center      :  8.453  9.663  5.484 (nm)
+>new box vectors : 16.907 19.325 10.969 (nm)
+>new box angles  :  90.00  90.00  90.00 (degrees)
+>new box volume  :3583.88               (nm^3)
+
+
+Then we will add solvation.
+```
+gmx solvate -cp 1kx5_newbox.gro -cs spc216.gro -o 1kx5_solv.gro -p topol.top
+```
+-cs spc216.gro determines the water structure file 
+The configuration of the protein (-cp) is contained in the output of the previous editconf step, and the configuration of the solvent (-cs) is part of the standard GROMACS installation.
+
+>Output configuration contains 354968 atoms in 112294 residues
+>Volume                 :     3583.88 (nm^3)
+>Density                :     1011.77 (g/l)
+>Number of SOL molecules:  111270 
 
 #### Adding ions.
 
@@ -565,19 +593,18 @@ At first you need to download or create an [ions.mdp]() file which is necessary 
 We will count how many ions we should add to get this concentration.
 N(ions) = C*N(water)/55,5(mol H2O)
 
-0,15/55,5*111270=300
+We have got 111294 water molecules
+
+0,15/55,5*111294=300 (it should actually be 301, but we will use 300)
 We need to add 234 positive ions and the 300-234=66 ions => 33 positive and 33 negative. It means that we need to add 267 positive and 33 negative ions. 
 ```
 gmx grompp -f ions.mdp -c 1kx5_solv.gro -p topol.top -o ions.tpr
-gmx genion -s ions.tpr -o 1AKI_solv_ions.gro -p topol.top -pname NA -nname CL -np 234
+gmx genion -s ions.tpr -o 1kx5_solv_ions.gro -p topol.top -pname NA -nname CL -np 267 -nn 33
 ```
 When it is promted choose "SOL" (17). It will replace solvent molecules with positive ions. 
 -pname and -nname defines names of positive and negative charges
 -np defines the amount of the positive charges 
-
-We have got 111270 water molecules
-
-
+-nn defines the amount of negative charges
 
 #### Relaxation
 
@@ -585,7 +612,7 @@ The system is now ready for relaxation. Before we can begin dynamics, we must en
 
 ##### 1. Energy minimization
 
-File [minim.mdp]() contains the input parameters for energy minimization.\
+File [minim.mdp]() contains the input parameters for energy minimization.
 
 ```
 gmx grompp -f minim.mdp -c 1kx5_solv_ions.gro -p topol.top -o em.tpr

@@ -596,15 +596,24 @@ N(ions) = C*N(water)/55,5(mol H2O)
 We have got 111270 water molecules. This is the sum of prevous bounded water molecules and new solvate molecules.
 
 0,15/55,5*111294=300 (it should actually be 301, but we will use 300)
-We need to add 300 positive ions and the 300 negative ions 
+We need to add 300 positive ions + 234 additional positive ions and the 300 negative ions 
 ```
 gmx grompp -f ions.mdp -c 1kx5_solv.gro -p topol.top -o ions.tpr
-gmx genion -s ions.tpr -o 1kx5_solv_ions.gro -p topol.top -pname NA -nname CL -np 300 -nn 300
+gmx genion -s ions.tpr -o 1kx5_solv_ions.gro -p topol.top -pname NA -nname CL -np 534 -nn 300
 ```
 When it is promted choose "SOL" (17). It will replace solvent molecules with positive ions. 
 -pname and -nname defines names of positive and negative charges
 -np defines the amount of the positive charges 
 -nn defines the amount of negative charges
+
+Now let's open the latest edition of our system 
+```
+vmd 1kx5_solv_ions.gro
+```
+In Representation/Select atoms type 'not water' instead of 'all'
+Then in Extensions/TK Console type 'pbc box', it will show you the periodic boundary conditions. 
+
+<img src="docs/ready_sys.png">
 
 #### Relaxation
 
@@ -654,18 +663,48 @@ Type "15 0" at the prompt to select the temperature of the system and exit.
 The resulting plot should look something like this.
 
 
-<img src="docs/cutting3.png">
-
-
-
-
-
-
-
-
-
-
+<img src="docs/temperature.png">
 
 
 
 ##### 3. NPT ensemble equilibration.
+
+The previous step, NVT equilibration, stabilized the temperature of the system.  Equilibration of pressure is conducted under an NPT ensemble, wherein the Number of particles, Pressure, and Temperature are all constant. 
+It means that in this step only water and ions move
+
+We will call grompp and mdrun just as we did for NVT equilibration. Note that we are now including the -t flag to include the checkpoint file from the NVT equilibration; this file contains all the necessary state variables to continue our simulation.
+```
+gmx grompp -f npt.mdp -c nvt.gro -t nvt.cpt -p topol.top -o npt.tpr
+gmx mdrun -deffnm npt
+```
+For analyzing:
+```
+gmx energy -f npt.edr -o pressure.xvg
+```
+Type "15 0" at the prompt to select the temperature of the system and exit.
+The resulting plot should look something like this.
+
+<img src="docs/pressure.png">
+
+We will also look at the density
+```
+gmx energy -f npt.edr -o density.xvg
+```
+Type "22 0" at the prompt to select the pressure and the density of the system and exit.
+
+Then we will unfix protein. Create npt1.mdp from npt.mdp commenting the second string in it.
+```
+gmx grompp -f npt1.mdp -c nvt.gro -t nvt.cpt -p topol.top -o npt1.tpr
+gmx mdrun -deffnm npt1
+```
+
+#### MD Calculation
+Now we are ready to run MD
+```
+gmx grompp -f md.mdp -c npt1.gro -t npt1.cpt -p topol.top -o md100ns.tpr
+gmx mdrun -deffnm md100ns
+```
+
+
+
+

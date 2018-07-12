@@ -534,6 +534,9 @@ sed s/CL\ /CLA/g 1kx5_edited_3.pdb > 1kx5_edited_4.pdb
 ```
 Check your file through VMD program. You will see there are some weird connections between atoms. It happend because we have edited our file. Open in by the text editor and delet all the strings statrting with "CONECT".
 Then try again the command. 
+```
+gmx pdb2gmx -f 1kx5_edited_4.pdb -o 1kx5_processed.gro -water tip3p -ter 
+```
 
 If you did everything right you will get this:
 >You have successfully generated a topology from: 1kx5_edited_4.pdb.
@@ -554,9 +557,88 @@ gmx editconf -f 1kx5_processed.gro -o 1kx5_newbox.gro -c -d 2.0 -bt triclinic
 
 The above command centers the protein in the box (-c), and places it at least 1.0 nm from the box edge (-d 2.0). The box type is defined as a rectangular (-bt triclinic).
 
+#### Adding ions.
+
+As the first command (pdb2gmx) told you - the system has -234 e charge. It means that you have to add ions to neutralize them and then add extra ions for 150 mM concentration.
+At first you need to download or create an [ions.mdp]() file which is necessary for genion. 
+
+We will count how many ions we should add to get this concentration.
+N(ions) = C*N(water)/55,5(mol H2O)
+
+0,15/55,5*111270=300
+We need to add 234 positive ions and the 300-234=66 ions => 33 positive and 33 negative. It means that we need to add 267 positive and 33 negative ions. 
+```
+gmx grompp -f ions.mdp -c 1kx5_solv.gro -p topol.top -o ions.tpr
+gmx genion -s ions.tpr -o 1AKI_solv_ions.gro -p topol.top -pname NA -nname CL -np 234
+```
+When it is promted choose "SOL" (17). It will replace solvent molecules with positive ions. 
+-pname and -nname defines names of positive and negative charges
+-np defines the amount of the positive charges 
+
+We have got 111270 water molecules
 
 
-adding water and ions 
-prepare mdp files 
+
+#### Relaxation
+
+The system is now ready for relaxation. Before we can begin dynamics, we must ensure that the system has no steric clashes or inappropriate geometry. The structure is relaxed through a process called energy minimization (EM).
+
+##### 1. Energy minimization
+
+File [minim.mdp]() contains the input parameters for energy minimization.\
+
+```
+gmx grompp -f minim.mdp -c 1kx5_solv_ions.gro -p topol.top -o em.tpr
+```
+We are now ready to invoke mdrun to carry out the EM:
+
+```
+gmx mdrun -v -deffnm em
+```
+-v makes mdrun verbose, it makes mdrun write every step it makes on the screen. 
+-deffnm - defines file names 
+
+There are two very important factors to evaluate to determine if EM was successful. The first is the potential energy (printed at the end of the EM process, even without -v). Epot should be negative, and (for a simple protein in water) on the order of 105-106, depending on the system size and number of water molecules. The second important feature is the maximum force, Fmax, the target for which was set in minim.mdp - "emtol = 1000.0" - indicating a target Fmax of no greater than 1000 kJ mol-1 nm-1.
+
+Now let's do some analysis. The em.edr file contains all of the energy terms that GROMACS collects during EM. We are going to analyze them via GROMACS energy module.
+```
+gmx energy -f em.edr -o potential.xvg
+```
+At the prompt, type "10 0" to select Potential (10); zero (0) terminates input.
+You can use GNUplot or Xmgrace for visualization, the resulting plot should look something like this.
 
 
+<img src="docs/EM.png">
+
+##### 2. NVT ensemble equilibration.
+Energy minimization proved that everything is alright (geometry and solvent orientation). To begin real dynamics, we must equilibrate the solvent and ions around the protein.
+The first phase is conducted under an NVT ensemble (constant Number of particles, Volume, and Temperature). This ensemble is also referred to as "isothermal-isochoric" or "canonical." The timeframe for such a procedure is dependent upon the contents of the system, but in NVT, the temperature of the system should reach a plateau at the desired value. 
+
+In this step we will fix water and let move only water and ions. Use [nvt.mdp](). file nvt.mdp contains the input parameters for NVT equilibration.
+```
+gmx grompp -f nvt.mdp -c em.gro -p topol.top -o nvt.tpr
+gmx mdrun -deffnm nvt
+```
+Then make a plot by this command and analyze it:
+```
+gmx energy -f nvt.edr -o temperature.xvg
+```
+Type "15 0" at the prompt to select the temperature of the system and exit.
+The resulting plot should look something like this.
+
+
+<img src="docs/cutting3.png">
+
+
+
+
+
+
+
+
+
+
+
+
+
+##### 3. NPT ensemble equilibration.

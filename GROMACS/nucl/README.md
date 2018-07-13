@@ -640,7 +640,7 @@ Now let's do some analysis. The em.edr file contains all of the energy terms tha
 ```
 gmx energy -f em.edr -o potential.xvg
 ```
-At the prompt, type "10 0" to select Potential (10); zero (0) terminates input.
+At the prompt, type "11 0" to select Potential (10); zero (0) terminates input.
 You can use GNUplot or Xmgrace for visualization, the resulting plot should look something like this.
 
 

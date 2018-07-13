@@ -505,7 +505,7 @@ It means that the name of the atom in your .pdb is different from the same in th
 ```
 sed s/OP1/O1P/g 1kx5.pdb 
 sed s/OP1/O1P/g 1kx5.pdb > 1kx5_edited.pdb
-```
+``` 
 
 It looks for OP1 names in your .pdb and changes them to O1P. Then it creates the new .pdb file.
 Then try again the command above (with gmx2pdb).

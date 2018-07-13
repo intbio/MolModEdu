@@ -174,7 +174,7 @@ For coloring by B-factor choose:
 
 *Fig.4. Coloring by B-factor*
 
-In this picture blue is an area with low B-factor. It means that these areas are more flexible than red ones. Consequently, atomic positions are less accurate in these zones. 
+In this picture red is an area with low B-factor. It means that these areas are more flexible than blue ones. Consequently, atomic positions are less accurate in these zones. 
 
 #### DNA, Protein, Water and Ions
 

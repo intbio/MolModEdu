@@ -1,15 +1,15 @@
-# This is a shell script, which replicates system on the local linux machine and send the replicas to the server. 
-# it is very useful to study dynamical behaviour of the system under various physical parameters.
 # In this example we perform molecular dynamics simulations with Gromacs of lipid bilayer under different temperatures. 
 # All simulations are going to be performed in NPT conditions with Nose-Hoover thermostat and Parrinello-Rahman barostat on the typical model of the
-# POPC membrane bilayer that has been pre-equilibrated during 120 ns in the same conditions;
+# POPC membrane bilayer that has been pre-equilibrated during 100 ns at the same conditions;
 # Here is a tutotial for lipid simulations in gromacs, which explains how to build and equilibrate that same system
 # http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/membrane_protein/index.html
+# You can assembly any biomembrane system using http://www.charmm-gui.org/
 # After execution the script takes gro, ndx and topol top files (from ./ref/) and creates input files required for GROMACS (mdp)
 # as well as input script (run.pbs) to run the simulations on the mpi server ( should be adapted for your server!!!).
 # Finally, the script also creates additional *.sh scripts within of the output folder to manage simulations on the server
 # NB! Check the strings 153 and 199 of the script to adapt it for your server and version of gromacs!
-
+#
+#
 #!/bin/bash
 
 home=$(pwd)
@@ -52,9 +52,9 @@ for i in "${mega_array[@]}"
 do
    cp -r ${ref_md} ${output}/${project}_${i}K
    cd ${output}/${project}_${i}K
-# print mpd files for the equilibration
+# print mpd files for the equilibration: step-by-step increase temperature to equilibrate system in NPT
 # since we use several steps of the equilibration we can script it in loop
-# adapt for your protocol and than change in run.pbs
+# adapt for your protocol and than change it in run.pbs
   for step in {1..5}; do
   let "temp=310 + (${step} * 10)"
   printf "integrator              = md

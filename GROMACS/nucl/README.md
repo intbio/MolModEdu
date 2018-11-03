@@ -102,9 +102,7 @@ Nuclosome Core particle (NCP) consists of 1.67 left-handed super-helical turns o
 In this tutorial we are going to use 1KX5 PDB structure. You can try to find it on [RSCB PDB](http://rcsb.org/) by yourself or download from this [link](https://www.rcsb.org/structure/1kx5). We have chosen this structure because it has the best resolution among other nucleosome structures - 1.94 A. 
 
 ---
-**TIP**
-
-The quality of the starting structure is essential for the whole analysis. It should be choosen very carefully. 
+**TIP:** The quality of the starting structure is essential for the whole analysis. It should be choosen very carefully. 
 The X-ray structure resolution is the first parameter to look at.
 [Check here](https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/resolution) to understand how X-ray resolution is related to the quality of the structure.
 

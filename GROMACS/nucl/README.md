@@ -22,7 +22,7 @@
    + [Force field choice](#ForceField)
 3. [**Installing software**](#installing_soft)
 4. [**Obtaining force field files**](#Obtaining_FF_files)
-5. [**Pereparing system for simulation**](#before_stimulation)
+5. [**Pereparing system for simulations**](#before_stimulation)
       
 
 <a name="Introduction"/>
@@ -94,14 +94,14 @@ Basic knowledge of the following areas is required:
 <a name="NCP"/>
 
 ### Nucleosome core particle and its PDB structures
-Nucleosome is a basic unit of DNA package in eukaryotes. 
-Nuclosome Core particle (NCP) consists of 1.67 left-handed super-helical turns of DNA around an octamer of histone proteins. NCP contains 145-147 bp of DNA. The octamer consists of 2 copies each of the core histones H2A, H2B, H3, and H4. 
+Nucleosome is a basic unit of DNA packaging in eukaryotes. 
+Nuclosome Core particle (NCP) consists of 1.67 left-handed super-helical turns of DNA wrapped around an octamer of histone proteins. NCP contains 145-147 bp of DNA. The octamer consists of 2 copies of each of the core histones H2A, H2B, H3, and H4. 
 
   *Further information about various NCP structures by X-Ray ([Nucleosome structural studies,](https://www.ncbi.nlm.nih.gov/pubmed/21176878), Davey, 2011)*
 
-In this tutorial we are going to use 1KX5 PDB structure. You can try to find it on RSCB PDB by yourself or download from this [link](https://www.rcsb.org/structure/1kx5). We have chosen this structure because it has the best resolution - 1.94 A. 
+In this tutorial we are going to use 1KX5 PDB structure. You can try to find it on [RSCB PDB](http://rcsb.org/) by yourself or download from this [link](https://www.rcsb.org/structure/1kx5). We have chosen this structure because it has the best resolution among other nucleosome structures - 1.94 A. 
 
-The original article of this structure [here](https://www.sciencedirect.com/science/article/pii/S0022283602003868?via%3Dihub).
+The original article describing this structure is [here](https://www.sciencedirect.com/science/article/pii/S0022283602003868?via%3Dihub). NB: it is always advisable to read the orginial paper, it may provided details that are otherwise non-obvious from the PDB file alone.
 
 We can 
 [Check](https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/resolution) what kind of problems you will get if you choose the structure with wrong resolution. The quality of the starting structure is essential for the whole analyzis. It should be choosen very carefully. 

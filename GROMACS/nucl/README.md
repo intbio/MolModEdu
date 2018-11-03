@@ -103,6 +103,7 @@ In this tutorial we are going to use 1KX5 PDB structure. You can try to find it 
 
 ---
 **TIP**
+
 The quality of the starting structure is essential for the whole analysis. It should be choosen very carefully. 
 The X-ray structure resolution is the first parameter to look at.
 [Check here](https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/resolution) to understand how X-ray resolution is related to the quality of the structure.

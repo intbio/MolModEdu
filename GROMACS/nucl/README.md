@@ -101,12 +101,19 @@ Nuclosome Core particle (NCP) consists of 1.67 left-handed super-helical turns o
 
 In this tutorial we are going to use 1KX5 PDB structure. You can try to find it on [RSCB PDB](http://rcsb.org/) by yourself or download from this [link](https://www.rcsb.org/structure/1kx5). We have chosen this structure because it has the best resolution among other nucleosome structures - 1.94 A. 
 
+---
+**TIP**
+The quality of the starting structure is essential for the whole analysis. It should be choosen very carefully. 
+The X-ray structure resolution is the first parameter to look at.
+[Check here](https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/resolution) to understand how X-ray resolution is related to the quality of the structure.
+
+However, high X-ray resolution does not garantee a good structure, other metrics such as R-factor should be considered.
+See this paper for further details ([Protein crystallography for non-cristallographers](https://www.ncbi.nlm.nih.gov/pubmed/18034855), Wlodawer A., 2008).
+  
+---
+
 The original article describing this structure is [here](https://www.sciencedirect.com/science/article/pii/S0022283602003868?via%3Dihub). NB: it is always advisable to read the orginial paper, it may provided details that are otherwise non-obvious from the PDB file alone.
 
-We can 
-[Check](https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/resolution) what kind of problems you will get if you choose the structure with wrong resolution. The quality of the starting structure is essential for the whole analyzis. It should be choosen very carefully. 
-
-  *Further information of the resolution of the crystall structures ([Protein crystallography for non-cristallographers](https://www.ncbi.nlm.nih.gov/pubmed/18034855), Wlodawer A., 2008)*
 
 <a name="Understanding_PDB"/>
 

@@ -1,6 +1,6 @@
-# Tutorial on simulating molecular dynamics of a nucleosome core particle in Gromacs
-## Directory structure
-[docs](docs) - documentation for the current tutorial  
+# A detailed Molecular Dynamics tutorial: simulating a nucleosome in Gromacs
+## Directory and file structure
+[docs](docs) - documentation files for the current tutorial  
 [prep](prep) - scripts to prepare the structure for simulations  
 [simul](simul) - directory to perform simulations  
 [analysis](analysis) - scripts to perform trajectory analysis  
@@ -25,8 +25,6 @@
 5. [**Pereparing system for simulation**](#before_stimulation)
       
 
-
-
 <a name="Introduction"/>
 
 ## 1. Introduction
@@ -36,12 +34,12 @@ This tutorial introduces students to molecular dynamics simulations method using
 
 ### Objectives
 
-- To gain an understanding of Molecular Dynamics Simulations method;
-- To learn how to prepare a molecular system for MD simulations from a PDB file;
-- To understand how to choose ForceField and correct stimulation conditions;
-- To learn how to run MD simulations using GROMACS on a parallel computer cluster;
-- To learn how to visualize and analyze MD trajectories;
-- To provide a reusable set of scripts and examples that students may reuse to simulate the system of interest.
+- Understand Molecular Dynamics Simulations method;
+- Learn how to prepare a molecular system for MD simulations from a PDB file;
+- Understand how to choose ForceField and correct stimulation conditions;
+- Learn how to run MD simulations using GROMACS on a parallel computer cluster;
+- Learn how to visualize and analyze MD trajectories;
+- Provide a reusable set of scripts and examples that students may reuse to simulate their system of interest.
 
 <a name="Prerequisites"/>
 
@@ -50,18 +48,18 @@ Basic knowledge of the following areas is required:
 - Unix-like Operating System (e.g. Linux), recommended tutorial [here](http://swcarpentry.github.io/shell-novice/);
 - Terminal / Command line interface and Bash scripting, recommended tutorial [here](http://swcarpentry.github.io/shell-novice/); 
 - Basic Physical Chemistry and Biochemistry;
-- PDB file structure, recommended tutorial [here](https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/introduction)
+- PDB structure files format, recommended tutorial [here](https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/introduction)
 
 <a name="Hardware"/>
 
 ### Hardware/Software requirements for the tutorial
-- Access to a Linux machine, ideally Ubuntu;
-- Gromacs v. 5.1, [intallations instructions](http://www.gromacs.org/Downloads/Installation_Instructions);
-- VMD v. 1.9.4, [intallations instructions](https://www.biostars.org/p/196147/);
-- Chimera v. 1.13, [intallations instructions](http://www.cgl.ucsf.edu/chimera/download.html);
-- Anaconda Python, [intallations instructions](https://docs.anaconda.com/anaconda/install/);
-- FoldX, [download here](http://foldxsuite.crg.eu/academic-license-info)
-- Propka, [installation instructions](https://github.com/jensengroup/propka-3.1)
+- REQUIRED: Access to a Linux-like machine, ideally Ubuntu OS;
+- REQUIRED: Gromacs v. 5.1, [intallations instructions](http://www.gromacs.org/Downloads/Installation_Instructions);
+- REQUIRED: VMD v. 1.9.4, [intallations instructions](https://www.biostars.org/p/196147/);
+- OPTIONAL: Chimera v. 1.13, [intallations instructions](http://www.cgl.ucsf.edu/chimera/download.html);
+- OPTIONAL: Anaconda Python, [intallations instructions](https://docs.anaconda.com/anaconda/install/);
+- OPTIONAL: FoldX, [download here](http://foldxsuite.crg.eu/academic-license-info)
+- OPTIONAL: Propka, [installation instructions](https://github.com/jensengroup/propka-3.1)
 ...
 
 <a name="Reference_materials"/>
@@ -76,7 +74,7 @@ Basic knowledge of the following areas is required:
 
 <a name="Textbooks"/>
 
-#### Textbooks 
+#### Theory textbooks 
 
 - [Computer Simulation of Liquids](https://books.google.ru/books/about/Computer_Simulation_of_Liquids.html?id=O32VXB9e5P4C&redir_esc=y), Allen and Tildesley, 1989
 - [Understanding Molecular Dynamics](https://www.sciencedirect.com/science/book/9780122673511), Frenkel and Smith, 2002

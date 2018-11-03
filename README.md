@@ -1,10 +1,10 @@
 # MolModEdu
-Educational Notes, Tutorials and Code examples for Molecular Modeling
+Educational Materials on Molecular Modeling: Slides, Tutorials, Code Examples
 
-## Molecular Dynamics
+## Molecular Dynamics Tutorials and Examples
 
 ### Gromacs
-- Running a nucleosome simulation in Gromacs Turorial (UNDER DEV) [GROMACS/nucl](GROMACS/nucl)
+- A comprehensive tutorial based on nucleosome simulation [GROMACS/nucl](GROMACS/nucl)
 
 ### NAMD
 - Example of a pipeline to simulate nucleosome dynamics and perform trajectory analysis from [JMB paper](https://www.ncbi.nlm.nih.gov/pubmed/26699921) - [here](MD/NAMD/nucl). 

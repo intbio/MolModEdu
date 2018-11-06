@@ -1,0 +1,47 @@
+;
+;	File 'topol.top' was generated
+;	By user: armeev (1000)
+;	On host: armeev-WS
+;	At date: Tue Nov  6 13:40:53 2018
+;
+;	This is a standalone topology file
+;
+;	Created by:
+;	                    :-) GROMACS - gmx pdb2gmx, 2018.3 (-:
+;	
+;	Executable:   /usr/local/gromacs/bin/gmx
+;	Data prefix:  /usr/local/gromacs
+;	Working dir:  /home/armeev/Projects/Modelling/MolModEdu/MDanalysis/GMX_system
+;	Command line:
+;	  gmx pdb2gmx -f ../h2a_h2b_tr.pdb -o init.pdb -p topol.top -i posre.itp -water tip3p -ff charmm36-jul2017
+;	Force field was read from current directory or a relative path - path added.
+;
+
+; Include forcefield parameters
+#include "./charmm36-jul2017.ff/forcefield.itp"
+
+; Include chain topologies
+#include "topol_Protein_chain_C.itp"
+#include "topol_Protein_chain_D.itp"
+
+; Include water topology
+#include "./charmm36-jul2017.ff/tip3p.itp"
+
+#ifdef POSRES_WATER
+; Position restraint for each water oxygen
+[ position_restraints ]
+;  i funct       fcx        fcy        fcz
+   1    1       1000       1000       1000
+#endif
+
+; Include topology for ions
+#include "./charmm36-jul2017.ff/ions.itp"
+
+[ system ]
+; Name
+DNA; 3 (5'(ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAA; 4 AAGGCATGTTCAGCTGGAATCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATA; 5 CACTTTTGGTAGTATCTGCAGGTGGATATTGAT)3');; 9 EXCEPTION OF POSITION 0;; DNA; 12 (5'(ATCAATATCCACCTGCAGATACTACCAAAAGTGTATTTGGAAACTGCTCCATCAA; 13 AAGGCATGTTCAGCTGGATTCCAGCTGAACATGCCTTTTGATGGAGCAGTTTCCAAATA; 14 CACTTTTGGTAGTATCTGCAGGTGGATATTGAT)3');; 18 EXCEPTION OF POSITION 0;; HISTONE H3;; HISTONE H4;; HISTONE H2A.1;; HISTONE H2B.2;
+
+[ molecules ]
+; Compound        #mols
+Protein_chain_C     1
+Protein_chain_D     1

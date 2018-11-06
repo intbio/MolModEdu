@@ -1,0 +1,15 @@
+[ bondtypes ]
+;     i       j  func           b0           kb 
+    CT2   CG2O3     1   0.15220000    167360.00  ; = CG2O3-CF321
+
+ [ angletypes ] 
+;      i        j        k  func       theta0       ktheha          ub0          kub 
+     CT2      CT2    CG2O3     5   108.000000   435.136000   0.00000000         0.00  ; = CG2O3-CG321-CG321
+     CT2    CG2O3    OG2D2     5   116.000000   334.720000   0.23530000     41840.00  ; = CG321-CG2O3-OG2D2
+     HA2      CT2    CG2O3     5   109.500000   276.144000   0.21630000     25104.00
+     
+
+ [ dihedraltypes ] 
+;      i        j        k        l  func         phi0         kphi  mult 
+     CT2      CT2    CG2O3    OG2D2     9  1.800000e+02  2.092000e-01      6 ; = CT2-CT2-CC-OC 
+     HA2      CT2    CG2O3    OG2D2     9  1.800000e+02  2.092000e-01      6 ; = HA2-CT2-CC-OC

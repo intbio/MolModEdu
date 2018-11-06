@@ -1,0 +1,79 @@
+[ bondedtypes ] 
+; Col 1: Type of bond 
+; Col 2: Type of angles 
+; Col 3: Type of proper dihedrals 
+; Col 4: Type of improper dihedrals 
+; Col 5: Generate all dihedrals if 1, only heavy atoms of 0. 
+; Col 6: Number of excluded neighbors for nonbonded interactions 
+; Col 7: Generate 1,4 interactions between pairs of hydrogens if 1 
+; Col 8: Remove propers over the same bond as an improper if it is 1 
+; bonds  angles  dihedrals	impropers all_dihedrals nrexcl HH14 RemoveDih 
+	 1		 5			9		 2		  1			  3		 1	   0 
+[ SLYS ] 
+ [ atoms ] 
+      N	      NH1	-0.470	0
+      HN	  H	    0.310	1
+      CA	  CT1	0.070	2
+      HA	  HB1	0.090	3
+      CB	  CT2	-0.180	4
+      HB1	  HA2	0.090	5
+      HB2	  HA2	0.090	6
+      CG	  CT2	-0.180	7
+      HG1	  HA2	0.090	8
+      HG2	  HA2	0.090	9
+      CD	  CT2	-0.180	10
+      HD1	  HA2	0.090	11
+      HD2	  HA2	0.090	12
+      CE	  CT2	0.507	13
+      HE1	  HA2	0.050	14
+      HE2	  HA2	0.050	15
+      NZ	  NH1	-0.300	16
+      HZ3	  H	    0.330	17
+      C	      C	    0.330	18
+      O	      O	    0.330	19
+      CF	  C	    0.510	20
+      CH	  CT2	-0.510	21
+      CI	  CT2	-0.246	22
+      CJ	  CG2O3	0.620	23
+      OF	  O	    -0.511	24
+      OJ1	  OG2D2	-0.760	25
+      OJ2	  OG2D2	-0.760	26
+      HH1	  HA2	0.090	27
+      HH2	  HA2	0.090	28
+      HI1	  HA2	0.090	29
+      HI2	  HA2	0.090	30
+      
+
+
+
+ [ bonds ] 
+       CB     CA
+       CG     CB
+       CD     CG
+       CE     CD
+       NZ     CE
+        N     HN
+        N     CA
+        C     CA
+       CA     HA
+       CB    HB1
+       CB    HB2
+       CG    HG1
+       CG    HG2
+       CD    HD1
+       CD    HD2
+       CE    HE1
+       CE    HE2
+       NZ    HZ3
+        O      C
+       NZ     CF
+       CF     CH
+       CH     CI
+       CI     CJ
+       CF     OF
+       CJ    OJ1
+       CJ    OJ2
+       CH    HH1
+       CH    HH2
+       CI    HI1
+       CI    HI2

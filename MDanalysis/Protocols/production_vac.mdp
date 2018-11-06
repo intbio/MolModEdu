@@ -1,0 +1,40 @@
+integrator              = md
+dt                      = 0.001
+nsteps                  = 100000
+nstlog                  = 1000
+nstxout                 = 1000
+nstvout                 = 0
+nstfout                 = 0
+nstcalcenergy           = 1000
+nstenergy               = 1000
+;
+cutoff-scheme           = Verlet
+nstlist                 = 20
+rlist                   = 1.2
+coulombtype             = Cut-off
+rcoulomb                = 1.2
+vdwtype                 = Cut-off
+vdw-modifier            = Force-switch
+rvdw_switch             = 1.0
+rvdw                    = 1.2
+;
+tcoupl                  = v-rescale
+tc_grps                 = system  
+tau_t                   = 1.0
+ref_t                   = 303.15
+;
+;pcoupl                  = berendsen
+;pcoupltype              = semiisotropic 
+;tau_p                   = 5.0
+;compressibility         = 4.5e-5  4.5e-5
+;ref_p                   = 1.0     1.0
+;
+constraints             = none
+;constraint_algorithm    = LINCS
+continuation            = yes
+;
+nstcomm                 = 100
+comm_mode               = linear
+comm_grps               = system  
+;
+refcoord_scaling        = com

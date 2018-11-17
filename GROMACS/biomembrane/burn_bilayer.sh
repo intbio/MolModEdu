@@ -4,10 +4,10 @@
 # Here is a tutotial for lipid simulations in gromacs, which explains how to build and equilibrate that same system
 # http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/membrane_protein/index.html
 # You can assembly any biomembrane system using http://www.charmm-gui.org/
+# here the methodological tutorial of the selection of barostat and thermostat: http://molsim.org/ru/methods/MD_basics_2
 # After execution the script takes gro, ndx and topol top files (from ./ref/) and creates input files required for GROMACS (mdp)
 # as well as input script (run.pbs) to run the simulations on the mpi server ( should be adapted for your server!!!).
 # NB! Check the strings 153 and 199 of the script to adapt it for your server and version of gromacs!
-#
 #
 #!/bin/bash
 

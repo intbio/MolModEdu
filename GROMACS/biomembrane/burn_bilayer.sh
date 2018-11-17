@@ -1,4 +1,4 @@
-# In this example we perform molecular dynamics simulations with Gromacs of lipid bilayer under different temperatures. 
+# In this example we perform molecular dynamics simulations with Gromacs of lipid bilayer at different temperatures. 
 # All simulations are going to be performed in NPT conditions with Nose-Hoover thermostat and Parrinello-Rahman barostat on the typical model of the
 # POPC membrane bilayer that has been pre-equilibrated during 100 ns at the same conditions;
 # Here is a tutotial for lipid simulations in gromacs, which explains how to build and equilibrate that same system
@@ -6,7 +6,6 @@
 # You can assembly any biomembrane system using http://www.charmm-gui.org/
 # After execution the script takes gro, ndx and topol top files (from ./ref/) and creates input files required for GROMACS (mdp)
 # as well as input script (run.pbs) to run the simulations on the mpi server ( should be adapted for your server!!!).
-# Finally, the script also creates additional *.sh scripts within of the output folder to manage simulations on the server
 # NB! Check the strings 153 and 199 of the script to adapt it for your server and version of gromacs!
 #
 #
@@ -17,7 +16,7 @@ output_sys="${home}"/output
 mkdir ${output_sys}
 
 # folder with the system which is going to be replicated
-# it is possible to add several system and change it within the loop of script
+# it is possible to add several system and change it within the replication loop of script
 ref_folder="${home}"/ref
 
 
@@ -38,7 +37,7 @@ mega_array=('323' '350' '400' '450' '500'); # temprerature in K
 
 
 # we take an input gro file with the gromacs topology and ndx file and prepare for it MDP files as well as run.pbs file
-
+# this is begining of replication loop
 for ref_md in ${ref_folder}/popc_bilayer; do
   ref_title=$(basename "$ref_md")
   echo "System ${ref_title} will be replicated "${#mega_array[*]}" times"
@@ -177,7 +176,7 @@ done
 cd -
 done
 
-# Print additional SH scripts which will be used to manage simulations on server.
+# print submit.sh script to run all jobs in parallel on multi-CPU server
 
 # this script submit all md jobs in parallel
 {
@@ -203,56 +202,6 @@ for sim in "${output}"/* ; do
 done
 EOF
 } > "${root}/submitter.sh"
-
-
-# this script takes trajectories and energies for each of the md jobs
-{
-  ## print the header, and substitute our own value for HOME
-  printf '#!/bin/bash\n'
-  printf "tit=\'${project}\'\n"
-  printf "max=\'${max}\'\n"
-  ## EVERYTHING BELOW HERE UNTIL THE EOF IS LITERAL
-  cat <<'EOF'
-server=$(pwd)
-results=${server}/results
-output=${server}/simulations
-
-rm -r ${server}/results*
-mkdir ${results}
-
-date=$(date +"%m_%d_%Y")
-declare -a file_array=()
-
-for sim in "$output"/* ; do
- if [[ -d $sim ]]; then
-  for k in $(seq 1 $max); do
-  simulation=$(basename "$sim")
-  file=( "${sim}"/${tit}*_$k.xtc  )
-  file2=( "${sim}"/${tit}*_$k.edr )
-  file_name=$(basename "${file}")
-  traj_name=${file_name/.xtc/}
-  file_name2=$(basename "${file2}")
-  (cd "${sim}" && exec cp "${file}" "${results}/${traj_name}.xtc")
-  file_array+=( "$file" )
-  (cd "${sim}" && exec cp "${file2}" "${results}/${traj_name}.edr")
-  echo "${file_name} from ${simulation} has been collected!"
- done
- fi
-done
-
-#mv ${results} ${server}/results_${simulation}
-#tar -zcvf results_${simulation}.tar.gz ${server}/results_${simulation}
-
-echo "These trajectories have been collected, Sir!"
-for i in "${file_array[@]}"
-do
-    printf "%s\n" $i
-done
-
-echo "Total: ${#file_array[*]} trajectories have been collected"
-EOF
-} >"${root}/collecter.sh"
-
 
 chmod +x "${root}"/*.sh
 # upload simulations on server with your login (should be adapted!)

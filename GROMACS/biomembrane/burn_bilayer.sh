@@ -1,12 +1,12 @@
 # In this example we perform molecular dynamics simulations with Gromacs of lipid bilayer at different temperatures. 
 # All simulations are going to be performed in NPT conditions with Nose-Hoover thermostat and Parrinello-Rahman barostat on the typical model of the
 # POPC membrane bilayer that has been pre-equilibrated during 100 ns at the same conditions;
-# Here is a tutotial for lipid simulations in gromacs, which explains how to build and equilibrate that same system
+# Here is a tutotial for lipid simulations in gromacs, which explains how to build and equilibrate the same system
 # http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/membrane_protein/index.html
-# You can assembly any biomembrane system using http://www.charmm-gui.org/
+# Anyway, you can quickly assembly biomembrane system using http://www.charmm-gui.org/
 # here the methodological tutorial of the selection of barostat and thermostat: http://molsim.org/ru/methods/MD_basics_2
-# After execution the script takes gro, ndx and topol top files (from ./ref/) and creates input files required for GROMACS (mdp)
-# as well as input script (run.pbs) to run the simulations on the mpi server ( should be adapted for your server!!!).
+# After execution the script takes gro, ndx and topol top files (from ./ref/) as well as script file for gromacs (mdp)
+# 
 #
 #!/bin/bash
 

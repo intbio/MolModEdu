@@ -28,7 +28,8 @@ Educational/Research Materials on Molecular Modeling: Tutorials, Code Examples a
 <a name="MDtutorials"/>
 
 ### MD: Tutotorials
-- [A detailed Gromacs tutorial: simulating nucleosome dynamics. GROMACS/nucl](GROMACS/nucl)
+
+- [An in-depth Gromacs MD tutorial: simulating nucleosome dynamics. GROMACS/nucl](GROMACS/nucl)
 
 <a name="MDcode"/>
 

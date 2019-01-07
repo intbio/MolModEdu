@@ -22,7 +22,7 @@ Educational/Research Materials on Molecular Modeling: Tutorials, Code Examples a
 
 <a name="MDpresent"/>
 
-### MD: Courses and ecucational materials
+### MD: Courses and educational materials
 - [Overview lecture by Alexey K. Shaytan](https://www.dropbox.com/s/y971h41by5wz0io/md_presentation.pptx?dl=0)
 
 <a name="MDtutorials"/>

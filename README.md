@@ -1,5 +1,5 @@
 # MolModEdu
-Educational Materials on Molecular Modeling: Tutorials, Code Examples and Templates, Course Materials
+Educational Materials on Molecular Modeling: Tutorials, Code Examples and Templates, Resources, Course Materials
 
 ## Contents
 1. [**Molecular Dynamics Simulations**](#MD) 

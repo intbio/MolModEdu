@@ -39,6 +39,7 @@ Educational Materials on Molecular Modeling: Tutorials, Code Examples and Templa
 #### Gromacs
 - The recommended way for setting up an in-house MD simulation is to use the extensive [gmx_template]( https://github.com/intbio/gmx_template) (currently available only locally), ideally in conjunction with the customly created ```moldyn``` conda environment on Newton linux cluster and bindings to Lomonosov-2 supercomputer.
 - [A quick example of using Jupyter notebooks and MDAnalysis for preparing and running MD in GROMACS](MDanalysis/Nucleosome_dimer_MD_preparation.ipynb)
+- [Molecular dynamics simulation of biomembranes at different temperature](https://github.com/intbio/MolModEdu/tree/master/GROMACS/biomembrane)
 
 ##### Gromacs Resources
 - Gromacs force fileds https://github.com/intbio/gromacs_ff

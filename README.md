@@ -4,7 +4,7 @@ Educational/Research Materials on Molecular Modeling: Tutorials, Code Examples a
 ## Contents
 1. [**Molecular Dynamics Simulations**](#MD) 
    + [Course and educational materials](#MDpresent)
-   + [Tutorials](#MDtuturials)
+   + [Tutorials](#MDtutorials)
    + [Code examples and templates](#MDcode)
         - [Gromacs](#MDcode_gromacs)
         - [NAMD](#MDcode_namd)
@@ -28,8 +28,11 @@ Educational/Research Materials on Molecular Modeling: Tutorials, Code Examples a
 <a name="MDtutorials"/>
 
 ### MD: Tutorials
+#### General introduction to MD
+Here we offer two tutorials, a quick one for beginners and an in-depth one. The first one is indended to be as simple as possible with detailed instuctions, the second one requires more technical skills and independent work.
 
-- [An in-depth Gromacs MD tutorial: simulating nucleosome dynamics. GROMACS/nucl](GROMACS/nucl)
+1. [A basic beginner's tutorial on MD simulation in Gromacs](GROMACS/beginner)
+2. [An in-depth Gromacs MD tutorial: simulating nucleosome dynamics. GROMACS/nucl](GROMACS/nucl)
 
 <a name="MDcode"/>
 

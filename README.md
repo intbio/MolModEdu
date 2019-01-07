@@ -44,7 +44,7 @@ Educational Materials on Molecular Modeling: Tutorials, Code Examples and Templa
 ##### Gromacs Resources
 - Gromacs force fileds https://github.com/intbio/gromacs_ff
 - Typical Gromacs MDP files and protocols https://github.com/intbio/gmx_protocols
-- Gromacs packed in conda packet manager https://github.com/intbio/gromacs-conda 
+- Gromacs packed in conda package manager https://github.com/intbio/gromacs-conda 
 
 <a name="MDcode_namd"/>
 

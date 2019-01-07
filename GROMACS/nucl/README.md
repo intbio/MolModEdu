@@ -1,4 +1,4 @@
-# A Comprehensive Molecular Dynamics tutorial: simulating a nucleosome in Gromacs
+# An in-depth molecular dynamics simulations tutorial: simulating a nucleosome in Gromacs
 ## Directory and file structure
 [docs](docs) - documentation files for the current tutorial  
 [prep](prep) - scripts to prepare the structure for simulations  

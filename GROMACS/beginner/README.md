@@ -36,5 +36,5 @@ wget https://raw.githubusercontent.com/intbio/MolModEdu/master/GROMACS/beginner/
 
 ## Step 3. Start the tutorial.
 - Launch jupyter notebook `jupyter notebook`
-- Open the tutorial.ipynb file
+- Open the [tutorial.ipynb](tutorial.ipynb) file
 - You can clear all prvious output Cell->All Outputs->Clear and follow the steps in that file by running them (Press the run button).

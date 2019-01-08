@@ -2,15 +2,12 @@
 
 ; VARIOUS PREPROCESSING OPTIONS
 include                  = 
-define                   = -DPOSRES -DPOSRES_FC=500.0 ; will trigger the inclusion of posre.itp into your topology, used for implementing position restraints.
-; here we assume that in posres.itp file all force constants have been changed to POSRES_FC
-; see this link for details http://mdsquad.wikia.com/wiki/Change_position_restraint_force_constant_in_MDP
-;1000 kJ mol-1 nm-2 is the default constant
-;to match AMBER we need 100 kcal/mol/A2, which is 418 kJ/mol/A2 - we set 500
+define                   = -DPOSRES ; will trigger the inclusion of posre.itp into your topology, used for implementing position restraints.
+
 
 ; RUN CONTROL PARAMETERS
 integrator               = steep ; Steepest descent integrator
-nsteps                   = 10000 ; 10000 steps
+nsteps                   = 1000 ; 10000 steps
 init-step                = 0 ; For exact run continuation or redoing part of a run
 simulation-part          = 1 ; Part index is updated automatically on checkpointing (keeps files separate)
 comm-mode                = Linear ; mode for center of mass motion removal
@@ -27,13 +24,13 @@ emstep                   = 0.01
 
 ; OUTPUT CONTROL OPTIONS
 ; Output frequency for coords (x), velocities (v) and forces (f)
-nstxout                  = 1000
+nstxout                  = 100
 nstvout                  = 0
 nstfout                  = 0
 ; Output frequency for energies to log file and energy file
-nstlog                   = 1000
+nstlog                   = 100
 nstcalcenergy            = 100 ; why less???
-nstenergy                = 1000
+nstenergy                = 100
 
 ; Output frequency and precision for .xtc file
 nstxout-compressed       = 100 ; minimization does not output xtc anyway

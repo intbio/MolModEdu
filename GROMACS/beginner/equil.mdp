@@ -1,10 +1,7 @@
-;MDP-file for generic equilibraion:  200 ps with constraints on heavy atoms should be set via the following line.
+;MDP-file for generic equilibraion:  20 ps with constraints on heavy atoms should be set via the following line.
 ;By uncommenting it with the correct value or by adding it from a script.
-;define                   = -DPOSRES -DPOSRES_FC=50.0 ; will trigger the inclusion of posre.itp into your topology, used for implementing position restraints.
-; here we assume that in posres.itp file all force constants have been changed to POSRES_FC
-; see this link for details http://mdsquad.wikia.com/wiki/Change_position_restraint_force_constant_in_MDP
-;1000 kJ mol-1 nm-2 is the default constant
-;to match AMBER we need 100 kcal/mol/A2, which is 418 kJ/mol/A2 - we set 500
+;define                   = -DPOSRES  ; will trigger the inclusion of posre.itp into your topology, used for implementing position restraints.
+
 
 ; VARIOUS PREPROCESSING OPTIONS
 include                  = 
@@ -12,7 +9,7 @@ include                  =
 
 ; RUN CONTROL PARAMETERS
 integrator               = md ; Steepest descent integrator
-nsteps                   = 100000 ; 100 000 = 200 ps
+nsteps                   = 10000 ; 10 000 = 10 ps
 init-step                = 0 ; For exact run continuation or redoing part of a run
 simulation-part          = 1 ; Part index is updated automatically on checkpointing (keeps files separate)
 comm-mode                = Linear ; mode for center of mass motion removal
@@ -20,7 +17,7 @@ comm-mode                = Linear ; mode for center of mass motion removal
 nstcomm                  = 100 ; number of steps for center of mass motion removal
 comm-grps                =  System ; group(s) for center of mass motion removal default is the whole system;
 
-dt                      = 0.002 ; this is only for MD
+dt                      = 0.001 ; this is only for MD
 
 ; ENERGY MINIMIZATION OPTIONS
 ; Force tolerance and initial step-size
@@ -33,12 +30,12 @@ nstxout                  = 0
 nstvout                  = 0
 nstfout                  = 0
 ; Output frequency for energies to log file and energy file
-nstlog                   = 1000
-nstcalcenergy            = 100 ; why less???
-nstenergy                = 1000
+nstlog                   = 100
+nstcalcenergy            = 100 ; 
+nstenergy                = 100
 
 ; Output frequency and precision for .xtc file
-nstxout-compressed       = 5000 ; every 10 ps
+nstxout-compressed       = 100 ; every 0.1 ps
 compressed-x-precision   = 1000 
 
 ; This selects the subset of atoms for the compressed

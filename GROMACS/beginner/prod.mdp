@@ -1,4 +1,4 @@
-;MDP-file production run: 10 000 ns.
+;MDP-file production run: 1 ns.
 ; this protocol does not generate velocities (gen-vel = no), so velocities should be provided to grompp, e.g. from .cpt file
 
 ; VARIOUS PREPROCESSING OPTIONS
@@ -12,7 +12,7 @@ define                   = ; NO RESTRAINTS DEFINED HERE
 
 ; RUN CONTROL PARAMETERS
 integrator               = md ; Steepest descent integrator
-nsteps                   = 5000000000 ; 5 000 000 000 = 10 microsecond 
+nsteps                   = 500000 ; 5 00 000 = 1 ns 
 init-step                = 0 ; For exact run continuation or redoing part of a run
 simulation-part          = 1 ; Part index is updated automatically on checkpointing (keeps files separate)
 comm-mode                = Linear ; mode for center of mass motion removal
@@ -33,12 +33,12 @@ nstxout                  = 0
 nstvout                  = 0
 nstfout                  = 0
 ; Output frequency for energies to log file and energy file
-nstlog                   = 1000
+nstlog                   = 100
 nstcalcenergy            = 100 ; why less -> looks like this is needed for thermostats/barostats
-nstenergy                = 1000
+nstenergy                = 100
 
 ; Output frequency and precision for .xtc file
-nstxout-compressed       = 500000 ; every 1 ns 
+nstxout-compressed       = 500 ; every 1 ps 
 compressed-x-precision   = 1000 
 
 ; This selects the subset of atoms for the compressed

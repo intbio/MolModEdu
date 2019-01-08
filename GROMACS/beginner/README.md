@@ -18,17 +18,23 @@ Follow these preliminary steps to setup your computer.
 - Make a dedicated environment for our tutorial ```conda create --name MD```
 - Activate the environment ```source activate MD```
 - We will need to issue a number of commands to install the components needed for our tutorial:
-   + ``` conda install  ```
-   - `conda install -c intbio gromacs=2018.3`
-- `conda install -c conda-forge jupyterlab` OR `conda install jupyter`
-- `conda install -c conda-forge mdanalysis`
-- `conda install -c conda-forge wget`
-- `conda install nglview -c conda-forge`
-- `conda install -c conda-forge ffmpeg`
-- `conda install -c intbio seq_tools`
-- `conda install -c acellera propka`
+   + `conda install -c intbio gromacs=2018.3`
+   + `conda install jupyter`
+   + `conda install -c conda-forge mdanalysis wget nglview`
+   + `conda install -c intbio seq_tools`
+- Test that jupyter notebook is working `jupyter notebook`
 
 ## Step 2. Getting files.
+- You will need to copy file from this directory to your computer, if you have not alread done so.
+- One way to do it is to issue following commands
+```
+wget https://raw.githubusercontent.com/intbio/MolModEdu/master/GROMACS/beginner/README.md
+wget https://raw.githubusercontent.com/intbio/MolModEdu/master/GROMACS/beginner/tutorial.ipynb
+wget https://raw.githubusercontent.com/intbio/MolModEdu/master/GROMACS/beginner/xvg_plot.py
 
+```
 
 ## Step 3. Start the tutorial.
+- Launch jupyter notebook `jupyter notebook`
+- Open the tutorial.ipynb file
+- You can clear all prvious output Cell->All Outputs->Clear and follow the steps in that file by running them (Press the run button).

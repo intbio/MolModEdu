@@ -20,7 +20,7 @@ Follow these preliminary steps to setup your computer.
 - We will need to issue a number of commands to install the components needed for our tutorial:
    + `conda install -c intbio gromacs=2018.3`
    + `conda install jupyter`
-   + `conda install -c conda-forge mdanalysis wget nglview`
+   + `conda install -c conda-forge mdanalysis wget nglview panedr`
    + `conda install -c intbio seq_tools`
 - Test that jupyter notebook is working `jupyter notebook`
 

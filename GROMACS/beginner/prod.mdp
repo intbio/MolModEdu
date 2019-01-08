@@ -38,7 +38,7 @@ nstcalcenergy            = 100 ; why less -> looks like this is needed for therm
 nstenergy                = 100
 
 ; Output frequency and precision for .xtc file
-nstxout-compressed       = 500 ; every 1 ps 
+nstxout-compressed       = 5000 ; every 10 ps 
 compressed-x-precision   = 1000 
 
 ; This selects the subset of atoms for the compressed

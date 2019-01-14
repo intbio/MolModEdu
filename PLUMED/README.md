@@ -1,9 +1,10 @@
-# Beginner's tutorial on molecular dynamics simulations in Gromacs
+# Introductory tutorial on using PLUMED with Gromacs
 
-This a very simple tutorial with detailed instructions intended to give the very basic yet practical skills in setting up MD simulations in Gromacs.
+This an introductory tutorial on using PLUMED with Gromacs.
 Prerequisites:
-1. A computer running Linux or MacOS.
-2. Basic familiarity with command line interface/Terminal is expected.
+1. Understanding of how to use Gromacs (see other tutorials).
+2. A computer running Linux or MacOS.
+3. Basic familiarity with command line interface/Terminal is expected.
 
 
 Follow these preliminary steps to setup your computer.
@@ -18,7 +19,7 @@ Follow these preliminary steps to setup your computer.
 - Make a dedicated environment for our tutorial ```conda create --name MD```
 - Activate the environment ```source activate MD```
 - We will need to issue a number of commands to install the components needed for our tutorial:
-   + `conda install -c conda-forge -c intbio gromacs=2018.3`
+   + `conda install -c conda-forge -c intbio gromacs=2018.4_plumed_2.5.0`
    + `conda install jupyter`
    + `conda install -c conda-forge mdanalysis wget nglview panedr`
    + `conda install -c intbio seq_tools`
@@ -28,9 +29,9 @@ Follow these preliminary steps to setup your computer.
 - You will need to copy file from this directory to your computer, if you have not alread done so.
 - One way to do it is to issue following commands
 ```
-wget https://raw.githubusercontent.com/intbio/MolModEdu/master/GROMACS/beginner/README.md
-wget https://raw.githubusercontent.com/intbio/MolModEdu/master/GROMACS/beginner/tutorial.ipynb
-wget https://raw.githubusercontent.com/intbio/MolModEdu/master/GROMACS/beginner/xvg_plot.py
+wget https://raw.githubusercontent.com/intbio/MolModEdu/master/PLUMED/README.md
+wget https://raw.githubusercontent.com/intbio/MolModEdu/master/PLUMED/tutorial.ipynb
+wget https://raw.githubusercontent.com/intbio/MolModEdu/master/PLUMED/xvg_plot.py
 
 ```
 

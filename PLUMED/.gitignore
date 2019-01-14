@@ -1,0 +1,8 @@
+*.pyc
+.DS_Stores
+*
+.ipynb_checkpoints/
+!tutorial.ipynb
+!README.md
+!xvg_plot.py
+!.gitignore

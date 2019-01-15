@@ -1,15 +1,24 @@
-# Introductory tutorial on using PLUMED with Gromacs
+# Introductory tutorials on enhanced sampling techniques using PLUMED and Gromacs.
 
-This an introductory tutorial on using PLUMED with Gromacs.
-Prerequisites:
-1. Understanding of how to use Gromacs (see other tutorials).
+A number of introductory tutorials on enhanced sampling techniques in MD simulations using PLUMED and Gromacs.
+All tutorials are provided as Jupyter notebooks.
+## List of tutorials
+1. [Understanding PLUMED](plumed_intro.ipynb)
+2. MetaDynamics
+
+
+## Prerequisites:
+1. Understanding on how to use Gromacs (see other tutorials).
 2. A computer running Linux or MacOS.
 3. Basic familiarity with command line interface/Terminal is expected.
+4. Install software (see below).
 
+## Additional reading
+- [A quick introduction to PLUMED](https://www.youtube.com/watch?v=PxJP16qNCYs)
+- [Video lecture on MetaDynamics](https://www.youtube.com/watch?v=bZZggbV2r5E)
+- [PLUMED manual](https://plumed.github.io/doc-v2.3/user-doc/html/_syntax.html)
 
-Follow these preliminary steps to setup your computer.
-
-## Step 1. Getting you computer and software ready.
+## Getting you computer and software ready.
 - You'll need a computer running Linux (preferably Ubuntu Linux) or MacOS.
 - Install Miniconda Package Manager with Python 3:
    + Download archive from this link https://conda.io/miniconda.html
@@ -25,17 +34,8 @@ Follow these preliminary steps to setup your computer.
    + `conda install -c intbio seq_tools`
 - Test that jupyter notebook is working `jupyter notebook`
 
-## Step 2. Getting files.
-- You will need to copy file from this directory to your computer, if you have not alread done so.
-- One way to do it is to issue following commands
-```
-wget https://raw.githubusercontent.com/intbio/MolModEdu/master/PLUMED/README.md
-wget https://raw.githubusercontent.com/intbio/MolModEdu/master/PLUMED/tutorial.ipynb
-wget https://raw.githubusercontent.com/intbio/MolModEdu/master/PLUMED/xvg_plot.py
+## Getting and running tutorial files.
+- You will need to download and copy ipynb tutorial files from this directory to your computer and open them in jupyter notebook. Launch jupyter notebook with `jupyter notebook`.
+- You can clear all previous output Cell->All Outputs->Clear and follow the steps in the tutorial file by running them (Press the run button).
 
-```
 
-## Step 3. Start the tutorial.
-- Launch jupyter notebook `jupyter notebook`
-- Open the [tutorial.ipynb](tutorial.ipynb) file
-- You can clear all previous output Cell->All Outputs->Clear and follow the steps in that file by running them (Press the run button).

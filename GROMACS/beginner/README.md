@@ -38,3 +38,7 @@ wget https://raw.githubusercontent.com/intbio/MolModEdu/master/GROMACS/beginner/
 - Launch jupyter notebook `jupyter notebook`
 - Open the [tutorial.ipynb](tutorial.ipynb) file
 - You can clear all previous output Cell->All Outputs->Clear and follow the steps in that file by running them (Press the run button).
+
+
+### TODO
+Current mdp files are for amber ff, better to replace them with those specific for charmm ff.

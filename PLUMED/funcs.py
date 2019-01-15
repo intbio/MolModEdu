@@ -45,3 +45,46 @@ def get_files_from_git(gitapiurl,savefoldername):
             get_files_from_git(d['url'],os.path.join(savefoldername,d['name']))
 
   
+def plot_plumed(filename,figsize=(5,5),colormap='Set1', bg_color='lightgray'):
+    try:
+        import matplotlib
+        import matplotlib.pyplot as plt
+        import numpy as np
+    except ImportError as e:
+        print('[!] The required Python libraries could not be imported:', file=sys.stderr)
+        print('\t{0}'.format(e))
+        sys.exit(1)
+    num_data=[]
+    with open(filename,'r') as fhandle:
+        for line in fhandle:
+            line = line.strip()
+            if line.startswith('#!'):
+                l=line[2:].strip()
+                if l.startswith('FIELDS'):
+                    l2=l[6:].strip()
+                    labels=l2.split()
+                    print("Labels found:",labels)
+            else:
+                num_data.append(list(map(float, line.split())))
+    data=np.array(num_data)
+    
+    #n_series=1.0
+    
+    f = plt.figure(figsize=figsize)
+    ax = plt.gca()
+    
+    #color_map = getattr(plt.cm, colormap)
+    #color_list = color_map(np.linspace(0, 1, n_series))
+    #print(np.linspace(0, 1, n_series))
+    #print(color_list)
+
+
+    ax.plot(data[:,0], data[:,1])
+
+    # Formatting Labels & Appearance
+    ax.set_xlabel(labels[0])
+    ax.set_ylabel(labels[1])
+    ax.set_facecolor(bg_color)
+    ax.grid(True)
+    
+    plt.show()

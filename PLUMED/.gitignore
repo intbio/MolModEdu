@@ -2,7 +2,7 @@
 .DS_Stores
 *
 .ipynb_checkpoints/
-!tutorial.ipynb
+!*.ipynb
 !README.md
-!xvg_plot.py
+!*.py
 !.gitignore

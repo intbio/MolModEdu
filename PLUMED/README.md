@@ -3,7 +3,7 @@
 A number of introductory tutorials on enhanced sampling techniques in MD simulations using PLUMED and Gromacs.
 All tutorials are provided as Jupyter notebooks.
 ## List of tutorials
-1. [Understanding PLUMED](plumed_intro.ipynb)
+1. [Understanding PLUMED and collective variables](plumed_intro.ipynb)
 2. MetaDynamics
 
 

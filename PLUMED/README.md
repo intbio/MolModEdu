@@ -4,7 +4,8 @@ A number of introductory tutorials on enhanced sampling techniques in MD simulat
 All tutorials are provided as Jupyter notebooks.
 ## List of tutorials
 1. [Understanding PLUMED and collective variables](plumed_intro.ipynb)
-2. MetaDynamics
+2. [Biasing simulations with PLUMED](plumed_bias.ipynb)
+3. [Advanced analysis with PLUMED (in Development)](plumed_analysis.ipynb)
 
 
 ## Prerequisites:

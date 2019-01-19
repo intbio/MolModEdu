@@ -1,6 +1,6 @@
-# Introductory tutorials on enhanced sampling techniques using PLUMED and Gromacs.
+# Tutorials on enhanced sampling techniques using PLUMED and Gromacs.
 
-A number of introductory tutorials on enhanced sampling techniques in MD simulations using PLUMED and Gromacs.
+A number of  tutorials on enhanced sampling techniques in MD simulations using PLUMED and Gromacs.
 All tutorials are provided as Jupyter notebooks.
 ## List of tutorials
 1. [Understanding PLUMED and collective variables](plumed_intro.ipynb)

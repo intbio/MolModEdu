@@ -45,7 +45,7 @@ def get_files_from_git(gitapiurl,savefoldername):
             get_files_from_git(d['url'],os.path.join(savefoldername,d['name']))
 
   
-def plot_plumed(filename,figsize=(5,5),colormap='Set1', bg_color='lightgray',plot=True):
+def plot_plumed(filename,figsize=(5,5),colormap='Set1', bg_color='lightgray',plot=True,col2plot=False,xlim=False):
     try:
         import matplotlib
         import matplotlib.pyplot as plt
@@ -65,7 +65,8 @@ def plot_plumed(filename,figsize=(5,5),colormap='Set1', bg_color='lightgray',plo
                     labels=l2.split()
                     print("Labels found:",labels)
             else:
-                num_data.append(list(map(float, line.split())))
+                if(len(line.split())>1):
+                    num_data.append(list(map(float, line.split())))
     data=np.array(num_data)
     
     #n_series=1.0
@@ -73,19 +74,22 @@ def plot_plumed(filename,figsize=(5,5),colormap='Set1', bg_color='lightgray',plo
     if plot:
         grid=[1+ndata//3,3]
         plt.figure(figsize=(grid[1]*figsize[0],grid[0]*figsize[1]))
-        for i in range(1,ndata+1):
+        if(not col2plot):
+            col2plot=range(1,ndata+1)
+        for i in col2plot:
             ax=plt.subplot(*grid, i)
             #color_map = getattr(plt.cm, colormap)
             #color_list = color_map(np.linspace(0, 1, n_series))
             #print(np.linspace(0, 1, n_series))
             #print(color_list)
             ax.plot(data[:,0], data[:,i])
+            if(xlim):
+                ax.set_xlim(*xlim)
 
     # Formatting Labels & Appearance
             ax.set_xlabel(labels[0])
             ax.set_ylabel(labels[i])
             ax.set_facecolor(bg_color)
             ax.grid(True)
-    
         plt.show()
     return data

@@ -591,7 +591,7 @@ The configuration of the protein (-cp) is contained in the output of the previou
 #### Adding ions.
 
 As the first command (pdb2gmx) told you - the system has -234 e charge. It means that you have to add ions to neutralize them and then add extra ions for 150 mM concentration.
-At first you need to download or create an [ions.mdp]() file which is necessary for genion. 
+At first you need to download or create an [ions.mdp](docs/ions.mdp) file which is necessary for genion. 
 
 We will count how many ions we should add to get this concentration.
 N(ions) = C*N(water)/55,5(mol H2O)
@@ -624,7 +624,7 @@ The system is now ready for relaxation. Before we can begin dynamics, we must en
 
 ##### 1. Energy minimization
 
-File [minim.mdp]() contains the input parameters for energy minimization.
+File [minim.mdp](docs/minim.mdp) contains the input parameters for energy minimization.
 
 ```
 gmx grompp -f minim.mdp -c 1kx5_solv_ions.gro -p topol.top -o em.tpr
@@ -643,7 +643,7 @@ Now let's do some analysis. The em.edr file contains all of the energy terms tha
 ```
 gmx energy -f em.edr -o potential.xvg
 ```
-At the prompt, type "11 0" to select Potential (10); zero (0) terminates input.
+At the prompt, select Potential; and zero (0) terminates input.
 You can use GNUplot or Xmgrace for visualization, the resulting plot should look something like this.
 
 
@@ -662,7 +662,7 @@ Then make a plot by this command and analyze it:
 ```
 gmx energy -f nvt.edr -o temperature.xvg
 ```
-Type "15 0" at the prompt to select the temperature of the system and exit.
+Select Temperature at the prompt and zero exit.
 The resulting plot should look something like this.
 
 

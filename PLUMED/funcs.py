@@ -45,7 +45,7 @@ def get_files_from_git(gitapiurl,savefoldername):
             get_files_from_git(d['url'],os.path.join(savefoldername,d['name']))
 
   
-def plot_plumed(filename,figsize=(5,5),colormap='Set1', bg_color='lightgray',plot=True,col2plot=False,xlim=False):
+def plot_plumed(filename,figsize=(5,5),colormap='Set1', bg_color='lightgray',plot=True,col2plot=False,xlim=False,silent=False):
     try:
         import matplotlib
         import matplotlib.pyplot as plt
@@ -63,7 +63,8 @@ def plot_plumed(filename,figsize=(5,5),colormap='Set1', bg_color='lightgray',plo
                 if l.startswith('FIELDS'):
                     l2=l[6:].strip()
                     labels=l2.split()
-                    print("Labels found:",labels)
+                    if(not silent):
+                        print("Labels found:",labels)
             else:
                 if(len(line.split())>1):
                     num_data.append(list(map(float, line.split())))

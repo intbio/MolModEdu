@@ -5,8 +5,10 @@ All tutorials are provided as Jupyter notebooks.
 ## List of tutorials
 1. [Understanding PLUMED and collective variables](plumed_intro.ipynb)
 2. [Introduction to biasing simulations with PLUMED](plumed_bias.ipynb)
-3. [Understanding Metadynamics](plumed_metad.ipynb)
-4. [Advanced analysis with PLUMED (in Development)](plumed_analysis.ipynb)
+3. [Introduction to running Metadynamics](plumed_metad_intro.ipynb)
+4. [Understanding Metadynamics parameters](plumed_metad_params.ipynb)
+5. [Well tempered Metadynamics](plumed_WT_metad.ipynb)
+6. [Advanced analysis with PLUMED (in Development)](plumed_analysis.ipynb)
 
 
 ## Prerequisites:

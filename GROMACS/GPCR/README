@@ -6,7 +6,6 @@
 # of unresolved intracellular loop 3 (IC3). 
 # Molecular composition of the system: 1 GPCR, 120 lipids, 11729 water molecules and 155 ions
 # (corresponded to physiological concentration of NaCl).
-# This system can be used as tutorial of the modeling of membrane receptors with Gromacs. 
 # README file can be used as shell script to run equilibration and production run of the system in step-by-step routine.
 
 # All input files were optimized for GROMACS v5.0 or above, so lower version of GROMACS can cause some errors.

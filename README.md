@@ -11,7 +11,7 @@ Educational/Research Materials on Molecular Modeling: Tutorials, Code Examples a
         - [MDanalysis](#MDcode_mdanalysis)
         
      
-2. Miscelaneous
+2. Miscellaneous
    + [Phenix](#phenix)
 
 

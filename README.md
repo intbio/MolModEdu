@@ -10,8 +10,11 @@ Educational/Research Materials on Molecular Modeling: Tutorials, Code Examples a
         - [NAMD](#MDcode_namd)
         - [MDanalysis](#MDcode_mdanalysis)
         
-     
-2. Miscellaneous
+2. Homology modeling
+   + [Homology modeling using MODELLER][#modeller]
+ 
+ 
+3. Miscellaneous
    + [Phenix](#phenix)
 
 
@@ -61,6 +64,11 @@ Here we offer two tutorials, a quick one for beginners and an in-depth one. The 
 - [A quick example of using Jupyter notebooks and MDAnalysis for preparing and running MD in GROMACS](MDanalysis/Nucleosome_dimer_MD_preparation.ipynb)
 
 <a name="phenix"/>
+
+## Homology modeling using MODELLER
+- [MODELLER example](MODELLER/example.ipynb)
+
+<a name="modeller"/>
 
 ## PHENIX - Molecular modeling for X-ray crystallography
 [https://www.phenix-online.org](https://www.phenix-online.org)

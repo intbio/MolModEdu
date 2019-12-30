@@ -66,7 +66,7 @@ Here we offer two tutorials, a quick one for beginners and an in-depth one. The 
 <a name="phenix"/>
 
 ## Homology modeling using MODELLER
-- [MODELLER example](MODELLER/example.ipynb)
+- [MODELLER examples](MODELLER/examples.ipynb)
 
 <a name="modeller"/>
 

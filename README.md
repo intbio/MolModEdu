@@ -11,7 +11,7 @@ Educational/Research Materials on Molecular Modeling: Tutorials, Code Examples a
         - [MDanalysis](#MDcode_mdanalysis)
         
 2. Homology modeling
-   + [Homology modeling using MODELLER][#modeller]
+   + [Homology modeling using MODELLER](#modeller)
  
  
 3. Miscellaneous

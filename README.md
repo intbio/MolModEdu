@@ -10,8 +10,10 @@ Educational/Research Materials on Molecular Modeling: Tutorials, Code Examples a
         - [NAMD](#MDcode_namd)
         - [MDanalysis](#MDcode_mdanalysis)
         
-2. Homology modeling
+2. Protein structure prediction
    + [Homology modeling using MODELLER](#modeller)
+   + Rosetta
+   + Diffrent servers - I-TASSER, Robetta, RaptorX
  
  
 3. Miscellaneous

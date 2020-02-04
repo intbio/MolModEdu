@@ -1,0 +1,9 @@
+ _aln.pos         10        20        30        40        50        60
+1HST_A    ---S-----HPTYSEMIAAAIRAEKSRGGSSRQSIQKYIKSHYKVGHNADLQIKLSIRRLLAAGVLKQ 
+humanH1   AKASKKSTDHPKYSDMIVAAIQAEKNRAGSSRQSIQKYIKSHYKVGENADSQIKLSIKRLVTTGVLKQ 
+ _consrvd    *     ** ** ** *** *** * ****************** *** ****** **   *****
+
+ _aln.p   70        80        90
+1HST_A    TKGVGASGSFRLAK------------- 
+humanH1   TKGVGASGSFRLAKSDEPKKSVAFKKT 
+ _consrvd **************

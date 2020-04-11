@@ -1,0 +1,3 @@
+This is test system of coarse-grained MD simulations of 16 GPCR embedded within POPC membrane solvated in water and salt ions.
+Execution of run.sh runs MD simulation on local multi-CPU machine. Please check the pathways inside the script!
+Script analyse_oligomers.sh performs analysis of protein-protein binding for ensemble of PBD snapshots (see description inside) that should be extracted from md trajectory;
